@@ -1,0 +1,6 @@
+[database]
+path = "D:\\development\\chat.db"
+
+[ollama.api]
+url = "http://localhost:11434/api/chat"
+model = "gemma3"

@@ -1,5 +1,5 @@
 [database]
-path = "D:\\development\\chat.db"
+path = "D:\\development\\assistant.db"
 
 [ollama.api]
 url = "http://localhost:11434/api/chat"

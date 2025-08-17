@@ -1,7 +1,3 @@
-use crate::agent::Agent;
+pub mod email_agent;
 
-pub struct EmailAgent {}
-
-impl Agent for EmailAgent {
-    
-}
+pub use email_agent::EmailAgent;

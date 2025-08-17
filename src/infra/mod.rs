@@ -1,3 +1,3 @@
-pub mod http;
-pub mod email;
 pub mod contacts;
+pub mod email;
+pub mod http;

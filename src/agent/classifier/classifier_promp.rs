@@ -10,11 +10,11 @@ impl ClassifierPrompt {
     fn new(content: String) -> Self {
         Self { content }
     }
-    
+
     pub fn content(&self) -> &str {
-          &self.content
+        &self.content
     }
-    
+
     pub fn builder() -> ClassifierPromptBuilder {
         ClassifierPromptBuilder::new()
     }

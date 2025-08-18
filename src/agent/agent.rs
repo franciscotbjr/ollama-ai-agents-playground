@@ -22,5 +22,8 @@ impl std::fmt::Display for AgentError {
 impl Error for AgentError {}
 
 pub trait Agent {
-    async fn process(&self, input: &str) -> Result<ClassificationResult, AgentError>;
+    fn process(
+        &self,
+        input: &str,
+    ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send;
 }

@@ -26,7 +26,7 @@ impl Error for MapperError {}
 /// Mapper trait for converting between types
 pub trait Mapper<T, U> {
     type Error;
-    
+
     fn map(source: T) -> Result<U, Self::Error>;
 }
 
@@ -35,18 +35,16 @@ pub struct OllamaToClassificationMapper;
 
 impl Mapper<&OllamaResponseMessage, ClassificationResult> for OllamaToClassificationMapper {
     type Error = MapperError;
-    
+
     fn map(source: &OllamaResponseMessage) -> Result<ClassificationResult, Self::Error> {
         // Try to parse the structured content from the response
-        let parsed_content = source.parsed_content()
+        let parsed_content = source
+            .parsed_content()
             .map_err(|e| MapperError::ParseError(e.to_string()))?;
-        
+
         // Create ClassificationResult from the parsed content
-        let result = ClassificationResult::new(
-            parsed_content.intent,
-            parsed_content.params,
-        );
-        
+        let result = ClassificationResult::new(parsed_content.intent, parsed_content.params);
+
         Ok(result)
     }
 }
@@ -78,7 +76,8 @@ mod tests {
         serde_json::from_str(&format!(
             r#"{{"role": "assistant", "content": "{}"}}"#,
             content.replace('"', r#"\""#).replace('\n', r#"\n"#)
-        )).unwrap()
+        ))
+        .unwrap()
     }
 
     #[test]
@@ -92,13 +91,16 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = OllamaToClassificationMapper::map(&response).unwrap();
-        
+
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("john@example.com"));
-        assert_eq!(result.params.message(), Some("Meeting has been rescheduled"));
+        assert_eq!(
+            result.params.message(),
+            Some("Meeting has been rescheduled")
+        );
     }
 
     #[test]
@@ -112,13 +114,16 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = OllamaToClassificationMapper::map(&response).unwrap();
-        
+
         assert_eq!(result.intent, Intent::ScheduleMeeting);
         assert_eq!(result.params.recipient(), Some("alice@company.com"));
-        assert_eq!(result.params.message(), Some("Let's schedule our quarterly review"));
+        assert_eq!(
+            result.params.message(),
+            Some("Let's schedule our quarterly review")
+        );
     }
 
     #[test]
@@ -132,10 +137,10 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = OllamaToClassificationMapper::map(&response).unwrap();
-        
+
         assert_eq!(result.intent, Intent::NoAction);
         assert_eq!(result.params.recipient(), None);
         assert_eq!(result.params.message(), None);
@@ -150,10 +155,10 @@ mod tests {
     "message": "Plain JSON without markdown"
   }
 }"#;
-        
+
         let response = create_test_response_message(content);
         let result = OllamaToClassificationMapper::map(&response).unwrap();
-        
+
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("plain@example.com"));
     }
@@ -162,10 +167,10 @@ mod tests {
     fn test_map_invalid_content() {
         let content = "This is not valid JSON content";
         let response = create_test_response_message(content);
-        
+
         let result = OllamaToClassificationMapper::map(&response);
         assert!(result.is_err());
-        
+
         if let Err(MapperError::ParseError(_)) = result {
             // Expected error type
         } else {
@@ -182,10 +187,10 @@ mod tests {
     "recipient": "test@example.com"
     // Missing closing braces
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = OllamaToClassificationMapper::map(&response);
-        
+
         assert!(result.is_err());
     }
 
@@ -200,10 +205,10 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = map_ollama_to_classification(&response).unwrap();
-        
+
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("convenience@test.com"));
     }
@@ -219,10 +224,10 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = response.to_classification_result().unwrap();
-        
+
         assert_eq!(result.intent, Intent::ScheduleMeeting);
         assert_eq!(result.params.recipient(), Some("trait@test.com"));
     }
@@ -238,13 +243,13 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = response.to_classification_result().unwrap();
-        
+
         // Serialize back to JSON
         let json_string = result.to_json_string().unwrap();
-        
+
         // Should contain the expected data
         assert!(json_string.contains("SendEmail"));
         assert!(json_string.contains("roundtrip@test.com"));
@@ -261,10 +266,10 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = response.to_classification_result().unwrap();
-        
+
         assert_eq!(result.params.recipient(), Some("用户@example.com"));
         assert_eq!(result.params.message(), Some("Hello 世界! 🌍"));
     }
@@ -280,10 +285,10 @@ mod tests {
   }
 }
 ```"#;
-        
+
         let response = create_test_response_message(content);
         let result = response.to_classification_result().unwrap();
-        
+
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("partial@test.com"));
         assert_eq!(result.params.message(), None);

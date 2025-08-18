@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use super::ollama_response_content::OllamaResponseContent;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct OllamaResponseMessage {
@@ -22,7 +22,9 @@ impl OllamaResponseMessage {
     /// Convenience method to get content, trying parsed first, fallback to raw
     pub fn content(&self) -> String {
         match self.parsed_content() {
-            Ok(parsed) => parsed.to_json_string().unwrap_or_else(|_| self.raw_content.clone()),
+            Ok(parsed) => parsed
+                .to_json_string()
+                .unwrap_or_else(|_| self.raw_content.clone()),
             Err(_) => self.raw_content.clone(),
         }
     }
@@ -44,7 +46,7 @@ mod tests {
     fn test_raw_content() {
         let raw_text = "This is raw content from Ollama";
         let message = create_test_message(raw_text);
-        
+
         assert_eq!(message.raw_content(), raw_text);
     }
 
@@ -60,7 +62,7 @@ mod tests {
 }
 ```"#;
         let message = create_test_message(markdown_content);
-        
+
         assert_eq!(message.raw_content(), markdown_content);
     }
 
@@ -76,7 +78,7 @@ mod tests {
 }
 ```"#;
         let message = create_test_message(markdown_content);
-        
+
         let parsed = message.parsed_content().unwrap();
         assert_eq!(parsed.intent, Intent::SendEmail);
         assert_eq!(parsed.params.recipient(), Some("eva@company.com"));
@@ -93,7 +95,7 @@ mod tests {
   }
 }"#;
         let message = create_test_message(plain_json);
-        
+
         let parsed = message.parsed_content().unwrap();
         assert_eq!(parsed.intent, Intent::ScheduleMeeting);
         assert_eq!(parsed.params.recipient(), Some("john@example.com"));
@@ -103,7 +105,7 @@ mod tests {
     fn test_parsed_content_failure() {
         let invalid_content = "This is not valid JSON content";
         let message = create_test_message(invalid_content);
-        
+
         let result = message.parsed_content();
         assert!(result.is_err());
     }
@@ -120,7 +122,7 @@ mod tests {
 }
 ```"#;
         let message = create_test_message(no_action_json);
-        
+
         let parsed = message.parsed_content().unwrap();
         assert_eq!(parsed.intent, Intent::NoAction);
         assert_eq!(parsed.params.recipient(), None);
@@ -139,7 +141,7 @@ mod tests {
 }
 ```"#;
         let message = create_test_message(markdown_content);
-        
+
         let content = message.content();
         // Should return the serialized JSON, not the original markdown
         assert!(content.contains("SendEmail"));
@@ -151,7 +153,7 @@ mod tests {
     fn test_content_method_with_invalid_content() {
         let invalid_content = "This is just plain text, not JSON";
         let message = create_test_message(invalid_content);
-        
+
         let content = message.content();
         // Should fallback to raw content
         assert_eq!(content, invalid_content);
@@ -163,7 +165,7 @@ mod tests {
   "role": "assistant",
   "content": "```json\n{\n  \"intent\": \"SendEmail\",\n  \"params\": {\n    \"recipient\": \"Eva\",\n    \"message\": \"Meeting canceled\"\n  }\n}\n```"
 }"#;
-        
+
         let message: OllamaResponseMessage = serde_json::from_str(json_str).unwrap();
         assert_eq!(message.role, "assistant");
         assert!(message.raw_content().contains("SendEmail"));
@@ -182,7 +184,7 @@ mod tests {
 }
 ```"#;
         let message = create_test_message(unicode_content);
-        
+
         let parsed = message.parsed_content().unwrap();
         assert_eq!(parsed.params.recipient(), Some("用户@example.com"));
         assert_eq!(parsed.params.message(), Some("Hello 世界! 🌍"));
@@ -191,7 +193,7 @@ mod tests {
     #[test]
     fn test_empty_content() {
         let message = create_test_message("");
-        
+
         assert_eq!(message.raw_content(), "");
         assert!(message.parsed_content().is_err());
         assert_eq!(message.content(), "");
@@ -207,7 +209,7 @@ mod tests {
     // Missing comma and closing brace
 ```"#;
         let message = create_test_message(malformed_content);
-        
+
         assert!(message.parsed_content().is_err());
         assert_eq!(message.content(), malformed_content); // Should fallback to raw
     }

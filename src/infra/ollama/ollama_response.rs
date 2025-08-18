@@ -16,5 +16,3 @@ pub struct OllamaResponse {
     pub eval_count: u32,
     pub eval_duration: u64,
 }
-
-

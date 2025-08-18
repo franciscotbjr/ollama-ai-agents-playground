@@ -9,6 +9,6 @@ pub use classifier_agent::ClassifierAgent;
 pub use classifier_promp::ClassifierPrompt;
 pub use params::Params;
 pub use response_mapper::{
-    Mapper, OllamaToClassificationMapper, MapperError, 
-    map_ollama_to_classification, ToClassificationResult
+    Mapper, MapperError, OllamaToClassificationMapper, ToClassificationResult,
+    map_ollama_to_classification,
 };

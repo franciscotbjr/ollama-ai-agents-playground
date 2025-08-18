@@ -705,7 +705,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ollama-email-agent-playground"
+name = "ollama-ai-agents-playground"
 version = "0.1.0"
 dependencies = [
  "reqwest",

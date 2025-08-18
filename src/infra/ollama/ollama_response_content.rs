@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-use crate::agent::classifier::Params;
 use crate::agent::Intent;
+use crate::agent::classifier::Params;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OllamaResponseContent {
@@ -26,12 +26,12 @@ impl OllamaResponseContent {
                 return Ok(json_content.to_string());
             }
         }
-        
+
         // Fallback: try to find JSON without markdown markers
         if content.trim().starts_with('{') && content.trim().ends_with('}') {
             return Ok(content.trim().to_string());
         }
-        
+
         Err(format!("Could not extract JSON from content: {}", content).into())
     }
 
@@ -76,7 +76,10 @@ mod tests {
         let result = OllamaResponseContent::from_markdown_json(markdown_content).unwrap();
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("Eva"));
-        assert_eq!(result.params.message(), Some("informing her that I won't be able to attend the meeting"));
+        assert_eq!(
+            result.params.message(),
+            Some("informing her that I won't be able to attend the meeting")
+        );
     }
 
     #[test]

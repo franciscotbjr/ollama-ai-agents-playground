@@ -1,2 +1,2 @@
-# ollama-email-agent-playground
-A playground for an email agent with gemma3
+# ollama-ai-agents-playground
+A playground for an ai agents with gemma3

@@ -1,4 +1,4 @@
-use crate::agent::{Agent, AgentError};
+use crate::agent::{Agent, AgentError, ClassificationResult};
 
 pub struct EmailAgent {}
 
@@ -9,7 +9,7 @@ impl EmailAgent {
 }
 
 impl Agent for EmailAgent {
-    async fn process(&self, input: &str) -> Result<String, AgentError> {
+    async fn process(&self, input: &str) -> Result<ClassificationResult, AgentError> {
         // TODO: Implement email sending logic
         // - Parse input parameters (recipient, message)
         // - Validate email address

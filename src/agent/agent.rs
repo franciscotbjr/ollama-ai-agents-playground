@@ -1,5 +1,7 @@
 use std::error::Error;
 
+use crate::agent::ClassificationResult;
+
 #[derive(Debug)]
 pub enum AgentError {
     ProcessingError(String),
@@ -20,5 +22,5 @@ impl std::fmt::Display for AgentError {
 impl Error for AgentError {}
 
 pub trait Agent {
-    async fn process(&self, input: &str) -> Result<String, AgentError>;
+    async fn process(&self, input: &str) -> Result<ClassificationResult, AgentError>;
 }

@@ -1,19 +1,17 @@
-use crate::agent::{classifier::ClassifierPrompt, Agent, AgentError};
+use crate::{agent::{classifier::{ClassifierPrompt, ToClassificationResult}, Agent, AgentError, ClassificationResult}, infra::ollama::{OllamaClient, OllamaResponse}};
 
 pub struct ClassifierAgent {}
 
 impl Agent for ClassifierAgent {
-    async fn process(&self, input: &str) -> Result<String, AgentError> {
+    async fn process(&self, input: &str) -> Result<ClassificationResult, AgentError> {
         // TODO: Implement classification logic with Ollama
-        let prompt = build_prompt(input);
         // - Build classification prompt
+        let prompt = build_prompt(input);
         // - Send to Ollama API
         // - Parse JSON response
+        let ollamaResponse: OllamaResponse = OllamaClient::send_message(&prompt.as_str()).await;
         // - Return serialized ClassificationResult
-
-        Err(AgentError::ProcessingError(
-            "Not implemented yet".to_string(),
-        ))
+        ollamaResponse.message.to_classification_result()
     }
 }
 

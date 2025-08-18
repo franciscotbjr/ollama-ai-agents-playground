@@ -4,14 +4,22 @@ pub struct ClassifierAgent {}
 
 impl Agent for ClassifierAgent {
     async fn process(&self, input: &str) -> Result<ClassificationResult, AgentError> {
-        // TODO: Implement classification logic with Ollama
-        // - Build classification prompt
+        // Build classification prompt
         let prompt = build_prompt(input);
-        // - Send to Ollama API
-        // - Parse JSON response
-        let ollamaResponse: OllamaResponse = OllamaClient::send_message(&prompt.as_str()).await;
-        // - Return serialized ClassificationResult
-        ollamaResponse.message.to_classification_result()
+        
+        // Send to Ollama API
+        let ollama_response: OllamaResponse = OllamaClient::send_message(&prompt.as_str()).await;
+        
+        // Parse JSON response and convert to ClassificationResult
+        match ollama_response.message.to_classification_result() {
+            Ok(classification_result) => Ok(classification_result),
+            Err(mapper_error) => {
+                Err(AgentError::ParseError(format!(
+                    "Failed to parse Ollama response: {}", 
+                    mapper_error
+                )))
+            }
+        }
     }
 }
 

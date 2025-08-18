@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::agent::{classifier::Params, Intent};
+use crate::agent::{Intent, classifier::Params};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ClassificationResult {
@@ -29,14 +29,15 @@ mod tests {
 
     #[test]
     fn test_new_classification_result() {
-        let params = Params::with_values(
-            "test@example.com".to_string(),
-            "Test message".to_string(),
-        );
+        let params =
+            Params::with_values("test@example.com".to_string(), "Test message".to_string());
         let result = ClassificationResult::new(Intent::SendEmail, params.clone());
-        
+
         assert_eq!(result.intent, Intent::SendEmail);
-        assert_eq!(result.params.to_json_string().unwrap(), params.to_json_string().unwrap());
+        assert_eq!(
+            result.params.to_json_string().unwrap(),
+            params.to_json_string().unwrap()
+        );
     }
 
     #[test]
@@ -46,7 +47,7 @@ mod tests {
             "informing her that I won't be able to attend the meeting".to_string(),
         );
         let result = ClassificationResult::new(Intent::SendEmail, params);
-        
+
         let json_string = result.to_json_string().unwrap();
         assert!(json_string.contains("SendEmail"));
         assert!(json_string.contains("eva@company.com"));
@@ -63,7 +64,7 @@ mod tests {
                 "message": "Hello world"
             }
         }"#;
-        
+
         let result = ClassificationResult::from_json_str(json_str).unwrap();
         assert_eq!(result.intent, Intent::SendEmail);
     }
@@ -75,10 +76,10 @@ mod tests {
             "Original message content".to_string(),
         );
         let original = ClassificationResult::new(Intent::ScheduleMeeting, original_params);
-        
+
         let json_string = original.to_json_string().unwrap();
         let deserialized = ClassificationResult::from_json_str(&json_string).unwrap();
-        
+
         assert_eq!(original.intent, deserialized.intent);
         assert_eq!(
             original.params.to_json_string().unwrap(),
@@ -89,13 +90,13 @@ mod tests {
     #[test]
     fn test_all_intent_types() {
         let params = Params::with_values("test@example.com".to_string(), "test".to_string());
-        
+
         let send_email = ClassificationResult::new(Intent::SendEmail, params.clone());
         assert_eq!(send_email.intent, Intent::SendEmail);
-        
+
         let schedule_meeting = ClassificationResult::new(Intent::ScheduleMeeting, params.clone());
         assert_eq!(schedule_meeting.intent, Intent::ScheduleMeeting);
-        
+
         let no_action = ClassificationResult::new(Intent::NoAction, params);
         assert_eq!(no_action.intent, Intent::NoAction);
     }
@@ -112,7 +113,7 @@ mod tests {
         let params = Params::with_values("clone@test.com".to_string(), "Clone test".to_string());
         let original = ClassificationResult::new(Intent::SendEmail, params);
         let cloned = original.clone();
-        
+
         assert_eq!(original.intent, cloned.intent);
         assert_eq!(
             original.params.to_json_string().unwrap(),

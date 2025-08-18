@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Params {
     recipient: Option<String>,
@@ -45,7 +44,7 @@ mod tests {
         let recipient = "test@example.com".to_string();
         let message = "Test message content".to_string();
         let params = Params::new(Some(recipient.clone()), Some(message.clone()));
-        
+
         assert_eq!(params.recipient(), Some(recipient.as_str()));
         assert_eq!(params.message(), Some(message.as_str()));
     }
@@ -53,7 +52,7 @@ mod tests {
     #[test]
     fn test_params_with_empty_strings() {
         let params = Params::new(Some(String::new()), Some(String::new()));
-        
+
         assert_eq!(params.recipient(), Some(""));
         assert_eq!(params.message(), Some(""));
     }
@@ -61,7 +60,7 @@ mod tests {
     #[test]
     fn test_params_with_none_values() {
         let params = Params::new(None, None);
-        
+
         assert_eq!(params.recipient(), None);
         assert_eq!(params.message(), None);
     }
@@ -69,7 +68,7 @@ mod tests {
     #[test]
     fn test_params_with_mixed_values() {
         let params = Params::new(Some("test@example.com".to_string()), None);
-        
+
         assert_eq!(params.recipient(), Some("test@example.com"));
         assert_eq!(params.message(), None);
     }
@@ -79,7 +78,7 @@ mod tests {
         let recipient = "用户@example.com".to_string();
         let message = "Hello 世界! 🌍".to_string();
         let params = Params::new(Some(recipient.clone()), Some(message.clone()));
-        
+
         assert_eq!(params.recipient(), Some(recipient.as_str()));
         assert_eq!(params.message(), Some(message.as_str()));
     }
@@ -89,7 +88,7 @@ mod tests {
         let recipient = "test@example.com".to_string();
         let message = "Test message".to_string();
         let params = Params::with_values(recipient.clone(), message.clone());
-        
+
         assert_eq!(params.recipient(), Some(recipient.as_str()));
         assert_eq!(params.message(), Some(message.as_str()));
     }
@@ -100,7 +99,7 @@ mod tests {
             "eva@company.com".to_string(),
             "I won't be able to attend the meeting".to_string(),
         );
-        
+
         let json_string = params.to_json_string().unwrap();
         assert!(json_string.contains("eva@company.com"));
         assert!(json_string.contains("I won't be able to attend"));
@@ -111,7 +110,7 @@ mod tests {
     #[test]
     fn test_serialization_with_none_values() {
         let params = Params::new(None, Some("message only".to_string()));
-        
+
         let json_string = params.to_json_string().unwrap();
         assert!(json_string.contains("null"));
         assert!(json_string.contains("message only"));
@@ -124,7 +123,7 @@ mod tests {
             "recipient": "john@example.com",
             "message": "Meeting postponed until tomorrow"
         }"#;
-        
+
         let params = Params::from_json_str(json_str).unwrap();
         assert_eq!(params.recipient(), Some("john@example.com"));
         assert_eq!(params.message(), Some("Meeting postponed until tomorrow"));
@@ -137,7 +136,7 @@ mod tests {
             "recipient": null,
             "message": "Message without recipient"
         }"#;
-        
+
         let params = Params::from_json_str(json_str).unwrap();
         assert_eq!(params.recipient(), None);
         assert_eq!(params.message(), Some("Message without recipient"));
@@ -149,10 +148,10 @@ mod tests {
             "roundtrip@test.com".to_string(),
             "This message should survive serialization roundtrip".to_string(),
         );
-        
+
         let json_string = original.to_json_string().unwrap();
         let deserialized = Params::from_json_str(&json_string).unwrap();
-        
+
         assert_eq!(original.recipient(), deserialized.recipient());
         assert_eq!(original.message(), deserialized.message());
     }
@@ -160,10 +159,10 @@ mod tests {
     #[test]
     fn test_roundtrip_with_none_values() {
         let original = Params::new(None, Some("only message".to_string()));
-        
+
         let json_string = original.to_json_string().unwrap();
         let deserialized = Params::from_json_str(&json_string).unwrap();
-        
+
         assert_eq!(original.recipient(), deserialized.recipient());
         assert_eq!(original.message(), deserialized.message());
     }
@@ -205,10 +204,10 @@ mod tests {
             "Clone this message".to_string(),
         );
         let cloned = original.clone();
-        
+
         assert_eq!(original.recipient(), cloned.recipient());
         assert_eq!(original.message(), cloned.message());
-        
+
         // Verify they are independent instances
         assert_eq!(
             original.to_json_string().unwrap(),
@@ -222,10 +221,10 @@ mod tests {
             "test+tag@example.com".to_string(),
             r#"Message with "quotes", newlines\n, and \t tabs"#.to_string(),
         );
-        
+
         let json_string = params.to_json_string().unwrap();
         let deserialized = Params::from_json_str(&json_string).unwrap();
-        
+
         assert_eq!(params.recipient(), deserialized.recipient());
         assert_eq!(params.message(), deserialized.message());
     }
@@ -233,13 +232,10 @@ mod tests {
     #[test]
     fn test_long_content() {
         let long_message = "a".repeat(10000);
-        let params = Params::with_values(
-            "long@example.com".to_string(),
-            long_message.clone(),
-        );
-        
+        let params = Params::with_values("long@example.com".to_string(), long_message.clone());
+
         assert_eq!(params.message(), Some(long_message.as_str()));
-        
+
         let json_string = params.to_json_string().unwrap();
         let deserialized = Params::from_json_str(&json_string).unwrap();
         assert_eq!(deserialized.message(), Some(long_message.as_str()));

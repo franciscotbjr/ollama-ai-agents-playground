@@ -16,6 +16,9 @@ User message classifier.
 ```text
 Send an email to Eva informing her that I won't be able to attend the meeting and that I apologize for giving such short notice.
 ```
+```text
+Envie um e-mail para Eva informando que não vou poder comparecer à reunião e que peço desculpas por avisar tão em cima da hora.
+```
 
 ### REQUEST REFERENCE SAMPLE
 ```json

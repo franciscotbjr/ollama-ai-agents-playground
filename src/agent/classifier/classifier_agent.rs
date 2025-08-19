@@ -3,14 +3,20 @@ use crate::{
         Agent, AgentError, ClassificationResult,
         classifier::{ClassifierPrompt, ToClassificationResult},
     },
-    infra::ollama::{OllamaClient, OllamaResponse},
+    infra::ollama::OllamaClient,
 };
 
 pub struct ClassifierAgent {}
 
+impl ClassifierAgent {
+    pub fn new() -> Self {
+        Self {  }
+    }
+}
+
 impl Agent for ClassifierAgent {
     fn process(
-        &self,
+        &self, 
         input: &str,
     ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send {
         async move {
@@ -18,15 +24,22 @@ impl Agent for ClassifierAgent {
             let prompt = build_prompt(input);
 
             // Send to Ollama API
-            let ollama_response: OllamaResponse =
-                OllamaClient::send_message(&prompt.as_str()).await;
+            let result = OllamaClient::new().send_message(&prompt.as_str()).await;
 
-            // Parse JSON response and convert to ClassificationResult
-            match ollama_response.message.to_classification_result() {
-                Ok(classification_result) => Ok(classification_result),
-                Err(mapper_error) => Err(AgentError::ParseError(format!(
-                    "Failed to parse Ollama response: {}",
-                    mapper_error
+            match result {
+                Ok(ollama_response) => {
+                    // Parse JSON response and convert to ClassificationResult
+                    match ollama_response.message.to_classification_result() {
+                        Ok(classification_result) => Ok(classification_result),
+                        Err(mapper_error) => Err(AgentError::ParseError(format!(
+                            "Classification failed: {}",
+                            mapper_error
+                        ))),
+                    }
+                }
+                Err(e) => Err(AgentError::ParseError(format!(
+                    "Classification failed: {}",
+                    e
                 ))),
             }
         }

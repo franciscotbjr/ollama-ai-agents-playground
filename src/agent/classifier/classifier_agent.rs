@@ -10,13 +10,13 @@ pub struct ClassifierAgent {}
 
 impl ClassifierAgent {
     pub fn new() -> Self {
-        Self {  }
+        Self {}
     }
 }
 
 impl Agent for ClassifierAgent {
     fn process(
-        &self, 
+        &self,
         input: &str,
     ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send {
         async move {

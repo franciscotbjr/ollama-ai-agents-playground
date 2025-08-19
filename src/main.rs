@@ -1,8 +1,8 @@
 mod config;
 use config::Config;
 use ollama_ai_agents_playground::agent::{
-    Agent, ClassificationResult,
-    classifier::{self, ClassifierAgent},
+    Agent,
+    classifier::{ClassifierAgent},
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::agent::{Intent, classifier::Params};
+use crate::agent::{AgentResult, Intent, classifier::Params};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ClassificationResult {
@@ -21,6 +21,8 @@ impl ClassificationResult {
         serde_json::to_string(self)
     }
 }
+
+impl AgentResult for ClassificationResult {}
 
 #[cfg(test)]
 mod tests {

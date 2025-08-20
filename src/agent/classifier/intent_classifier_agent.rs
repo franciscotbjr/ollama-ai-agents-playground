@@ -6,15 +6,15 @@ use crate::{
     infra::ollama::OllamaClient,
 };
 
-pub struct ClassifierAgent {}
+pub struct IntentClassifierAgent {}
 
-impl ClassifierAgent {
+impl IntentClassifierAgent {
     pub fn new() -> Self {
         Self {}
     }
 }
 
-impl Agent for ClassifierAgent {
+impl Agent<ClassificationResult> for IntentClassifierAgent {
     fn process(
         &self,
         input: &str,

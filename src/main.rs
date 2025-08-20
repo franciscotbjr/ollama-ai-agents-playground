@@ -1,5 +1,5 @@
 mod config;
-use ollama_ai_agents_playground::agent::{Agent, classifier::ClassifierAgent};
+use ollama_ai_agents_playground::agent::{Agent, classifier::IntentClassifierAgent};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -9,8 +9,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Starting classifier...");
     println!();
     let input = "Envie um e-mail para Eva informando que não vou poder comparecer à reunião e que peço desculpas por avisar tão em cima da hora.";
-    let classifier_agent = ClassifierAgent::new();
-    let result = classifier_agent.process(input).await;
+    let intent_classifier_agent = IntentClassifierAgent::new();
+    let result = intent_classifier_agent.process(input).await;
     match result {
         Ok(classification_result) => {
             println!();

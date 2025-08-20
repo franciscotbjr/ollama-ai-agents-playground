@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::agent::ClassificationResult;
+use crate::agent::{AgentResult};
 
 #[derive(Debug)]
 pub enum AgentError {
@@ -21,9 +21,9 @@ impl std::fmt::Display for AgentError {
 
 impl Error for AgentError {}
 
-pub trait Agent {
+pub trait Agent<T: AgentResult> {
     fn process(
         &self,
         input: &str,
-    ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send;
+    ) -> impl std::future::Future<Output = Result<T, AgentError>> + Send;
 }

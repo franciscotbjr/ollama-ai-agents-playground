@@ -1,4 +1,4 @@
-use crate::agent::{Agent, AgentError, ClassificationResult};
+use crate::agent::{Agent, AgentError, email::EmailResult};
 
 pub struct EmailAgent {}
 
@@ -8,11 +8,11 @@ impl EmailAgent {
     }
 }
 
-impl Agent for EmailAgent {
+impl Agent<EmailResult> for EmailAgent {
     fn process(
         &self,
         _input: &str,
-    ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send {
+    ) -> impl std::future::Future<Output = Result<EmailResult, AgentError>> + Send {
         async move {
             // TODO: Implement email sending logic
             // - Parse input parameters (recipient, message)

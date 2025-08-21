@@ -50,6 +50,8 @@ fn build_prompt(input: &str) -> String {
     ClassifierPrompt::builder()
         .add_instruction(CLASSIFY_INTENT_TO_JSON)
         .add_instruction(SPACE)
+        .add_instruction(OUTPUT_FORMART)
+        .add_instruction(SPACE)
         .add_instruction(EXAMPLE_1)
         .add_instruction(SPACE)
         .add_instruction(EXAMPLE_2)
@@ -66,6 +68,7 @@ fn build_prompt(input: &str) -> String {
 
 const SPACE: &str = "        ";
 const CLASSIFY_INTENT_TO_JSON: &str = "Classify intent and extract parameters (JSON format):";
+const OUTPUT_FORMART: &str = "Output-Format: {\"intent\":\"\",\"params\":{\"recipient\":\"\",\"message\":\"\"}}";
 const EXAMPLE_1: &str = "Example 1:        Input: \"Send an email to Carlos about the delay\"        Output: {\"intent\":\"send_email\", \"params\":{\"recipient\":\"Carlos\",\"message\":\"About the delay\"}}";
 const EXAMPLE_2: &str = "Example 2:        Input: \"Send message to Sofia: I'll arrive in 10 min\"        Output: {\"intent\":\"send_message\", \"params\":{\"recipient\":\"Sofia\",\"message\":\"I'll arrive in 10 min\"}}";
 const TASK: &str = "Task: Return JSON with: action (send_email, schedule_meeting, no_action)";

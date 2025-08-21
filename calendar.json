@@ -1,0 +1,516 @@
+{
+  "calendar": {
+    "name": "Personal Calendar",
+    "timeZone": "America/New_York",
+    "owner": "user@example.com",
+    "events": [
+      {
+        "id": "evt_001",
+        "title": "Cardiology Appointment - Annual Check-up",
+        "description": "Routine appointment with Dr. Dolphin Wise for annual cardiac check-up. Bring recent blood test results.",
+        "startDateTime": "2025-08-28T14:00:00-04:00",
+        "endDateTime": "2025-08-28T15:00:00-04:00",
+        "location": {
+          "name": "City Medical Center",
+          "address": "789 Health Plaza, Chicago, IL 60601",
+          "coordinates": {
+            "latitude": 41.8781,
+            "longitude": -87.6298
+          }
+        },
+        "attendees": [
+          {
+            "contactId": "c003",
+            "name": "Dr. Dolphin Wise",
+            "email": "d.wise@citymedical.com",
+            "status": "accepted",
+            "type": "required"
+          }
+        ],
+        "category": "medical",
+        "priority": "high",
+        "status": "confirmed",
+        "allDay": false,
+        "recurrence": {
+          "frequency": "yearly",
+          "interval": 1
+        },
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 1440
+          },
+          {
+            "method": "email",
+            "minutes": 120
+          }
+        ],
+        "color": "#FF6B6B",
+        "createdAt": "2025-07-15T10:30:00Z",
+        "updatedAt": "2025-08-10T14:20:00Z"
+      },
+      {
+        "id": "evt_002",
+        "title": "Project Meeting - AI Agents System",
+        "description": "Meeting to discuss the progress of AI agents development and next steps.",
+        "startDateTime": "2025-08-22T10:00:00-04:00",
+        "endDateTime": "2025-08-22T11:30:00-04:00",
+        "location": {
+          "name": "Tech Solutions Inc. - Meeting Room A",
+          "address": "123 Main Street, New York, NY 10001",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c001",
+            "name": "Tiger Brilliant",
+            "email": "t.brilliant@techsolutions.com",
+            "status": "accepted",
+            "type": "required"
+          }
+        ],
+        "category": "work",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 15
+          }
+        ],
+        "color": "#4ECDC4",
+        "createdAt": "2025-08-15T09:00:00Z",
+        "updatedAt": "2025-08-20T16:45:00Z"
+      },
+      {
+        "id": "evt_003",
+        "title": "UX Design Review - Mobile App",
+        "description": "Review session for mockups and prototypes of the new mobile application with the designer.",
+        "startDateTime": "2025-08-23T15:00:00-07:00",
+        "endDateTime": "2025-08-23T17:00:00-07:00",
+        "location": {
+          "name": "Design Studio",
+          "address": "456 Creative Ave, Los Angeles, CA 90210",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c002",
+            "name": "Elephant Graceful",
+            "email": "elephant.graceful@outlook.com",
+            "status": "tentative",
+            "type": "required"
+          }
+        ],
+        "category": "work",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "attachments": [
+          {
+            "name": "Design_Mockups_v2.figma",
+            "url": "https://figma.com/design/mockups-v2",
+            "type": "link"
+          }
+        ],
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 30
+          }
+        ],
+        "color": "#9B59B6",
+        "createdAt": "2025-08-18T11:15:00Z",
+        "updatedAt": "2025-08-21T13:20:00Z"
+      },
+      {
+        "id": "evt_004",
+        "title": "Property Visit - Downtown Apartment",
+        "description": "Guided tour of the 2-bedroom apartment in downtown. Potential new purchase.",
+        "startDateTime": "2025-08-24T16:00:00-04:00",
+        "endDateTime": "2025-08-24T17:00:00-04:00",
+        "location": {
+          "name": "Downtown Apartment Complex",
+          "address": "321 Business District, Miami, FL 33101",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c004",
+            "name": "Penguin Swift",
+            "email": "penguin@swiftrealestate.com",
+            "status": "accepted",
+            "type": "required"
+          }
+        ],
+        "category": "personal",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "notes": "Bring financial documents for analysis. Ask about HOA fees.",
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 60
+          }
+        ],
+        "color": "#F39C12",
+        "createdAt": "2025-08-19T14:30:00Z",
+        "updatedAt": "2025-08-22T10:15:00Z"
+      },
+      {
+        "id": "evt_005",
+        "title": "Video Call - College Friends",
+        "description": "Monthly virtual meeting with college friends to catch up.",
+        "startDateTime": "2025-08-25T20:00:00-04:00",
+        "endDateTime": "2025-08-25T21:30:00-04:00",
+        "location": {
+          "name": "Zoom Meeting",
+          "type": "virtual",
+          "url": "https://zoom.us/j/1234567890"
+        },
+        "attendees": [
+          {
+            "contactId": "c005",
+            "name": "Roo Cheerful",
+            "email": "kangaroo.cheerful@icloud.com",
+            "status": "accepted",
+            "type": "optional"
+          }
+        ],
+        "category": "personal",
+        "priority": "low",
+        "status": "confirmed",
+        "allDay": false,
+        "recurrence": {
+          "frequency": "monthly",
+          "interval": 1,
+          "daysOfWeek": ["Sunday"]
+        },
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 10
+          }
+        ],
+        "color": "#1ABC9C",
+        "createdAt": "2025-07-25T19:00:00Z",
+        "updatedAt": "2025-08-20T12:30:00Z"
+      },
+      {
+        "id": "evt_006",
+        "title": "Q3 Campaign Presentation",
+        "description": "Presentation of third quarter marketing campaign results and Q4 strategies.",
+        "startDateTime": "2025-08-26T14:00:00-07:00",
+        "endDateTime": "2025-08-26T16:00:00-07:00",
+        "location": {
+          "name": "Global Marketing Agency - Main Auditorium",
+          "address": "555 Marketing Tower, San Francisco, CA 94105",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c006",
+            "name": "Butterfly Creative",
+            "email": "b.creative@globalmarketing.com",
+            "status": "accepted",
+            "type": "organizer"
+          }
+        ],
+        "category": "work",
+        "priority": "high",
+        "status": "confirmed",
+        "allDay": false,
+        "attachments": [
+          {
+            "name": "Q3_Campaign_Results.pptx",
+            "type": "file",
+            "size": "2.5MB"
+          },
+          {
+            "name": "Q4_Strategy_Draft.pdf",
+            "type": "file",
+            "size": "1.8MB"
+          }
+        ],
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 45
+          },
+          {
+            "method": "email",
+            "minutes": 180
+          }
+        ],
+        "color": "#E74C3C",
+        "createdAt": "2025-08-12T16:20:00Z",
+        "updatedAt": "2025-08-23T09:45:00Z"
+      },
+      {
+        "id": "evt_007",
+        "title": "Car Maintenance - Oil Change",
+        "description": "Preventive maintenance: oil change, filters replacement and general vehicle inspection.",
+        "startDateTime": "2025-08-27T09:00:00-07:00",
+        "endDateTime": "2025-08-27T11:00:00-07:00",
+        "location": {
+          "name": "Auto Repair Plus",
+          "address": "999 Auto Street, Phoenix, AZ 85001",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c007",
+            "name": "Octo Handy",
+            "email": "octopus@autorepairplus.com",
+            "status": "accepted",
+            "type": "required"
+          }
+        ],
+        "category": "maintenance",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "notes": "Car with 85,000 km. Also check the brake system.",
+        "recurrence": {
+          "frequency": "monthly",
+          "interval": 3
+        },
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 720
+          }
+        ],
+        "color": "#95A5A6",
+        "createdAt": "2025-08-01T08:00:00Z",
+        "updatedAt": "2025-08-25T15:10:00Z"
+      },
+      {
+        "id": "evt_008",
+        "title": "Birthday - Dr. Dolphin Wise",
+        "description": "Dr. Dolphin Wise's birthday. Send congratulations card.",
+        "startDateTime": "2025-11-08T00:00:00-05:00",
+        "endDateTime": "2025-11-08T23:59:59-05:00",
+        "attendees": [
+          {
+            "contactId": "c003",
+            "name": "Dr. Dolphin Wise",
+            "status": "none",
+            "type": "birthday"
+          }
+        ],
+        "category": "birthday",
+        "priority": "low",
+        "status": "confirmed",
+        "allDay": true,
+        "recurrence": {
+          "frequency": "yearly",
+          "interval": 1
+        },
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 1440
+          }
+        ],
+        "color": "#FF69B4",
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+      },
+      {
+        "id": "evt_009",
+        "title": "Code Review - Agent System",
+        "description": "Detailed review of the implemented AI agent system code. Focus on performance and architecture.",
+        "startDateTime": "2025-08-29T10:00:00-04:00",
+        "endDateTime": "2025-08-29T12:00:00-04:00",
+        "location": {
+          "name": "Tech Solutions Inc. - Development Room",
+          "address": "123 Main Street, New York, NY 10001",
+          "type": "physical"
+        },
+        "attendees": [
+          {
+            "contactId": "c001",
+            "name": "Tiger Brilliant",
+            "email": "t.brilliant@techsolutions.com",
+            "status": "accepted",
+            "type": "required"
+          }
+        ],
+        "category": "work",
+        "priority": "high",
+        "status": "confirmed",
+        "allDay": false,
+        "attachments": [
+          {
+            "name": "Agent_System_Architecture.md",
+            "type": "file",
+            "size": "145KB"
+          }
+        ],
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 30
+          }
+        ],
+        "color": "#3498DB",
+        "createdAt": "2025-08-22T17:30:00Z",
+        "updatedAt": "2025-08-28T11:20:00Z"
+      },
+      {
+        "id": "evt_010",
+        "title": "Family Meeting - Trip Planning",
+        "description": "Meeting to plan December family vacation. Define destination and budget.",
+        "startDateTime": "2025-08-30T19:00:00-04:00",
+        "endDateTime": "2025-08-30T20:30:00-04:00",
+        "location": {
+          "name": "Home",
+          "type": "physical"
+        },
+        "category": "family",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "notes": "Research warm weather destinations. Maximum budget: $5000",
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 60
+          }
+        ],
+        "color": "#16A085",
+        "createdAt": "2025-08-25T20:15:00Z",
+        "updatedAt": "2025-08-28T14:30:00Z"
+      },
+      {
+        "id": "evt_011",
+        "title": "Workshop: Design Thinking for Digital Products",
+        "description": "Online workshop about design thinking methodologies applied to digital product development.",
+        "startDateTime": "2025-09-05T14:00:00-07:00",
+        "endDateTime": "2025-09-05T18:00:00-07:00",
+        "location": {
+          "name": "Zoom Webinar",
+          "type": "virtual",
+          "url": "https://zoom.us/webinar/register/WN_abc123def456"
+        },
+        "attendees": [
+          {
+            "contactId": "c002",
+            "name": "Elephant Graceful",
+            "email": "elephant.graceful@outlook.com",
+            "status": "maybe",
+            "type": "optional"
+          }
+        ],
+        "category": "education",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "cost": {
+          "amount": 89.99,
+          "currency": "USD"
+        },
+        "reminders": [
+          {
+            "method": "email",
+            "minutes": 2880
+          },
+          {
+            "method": "notification",
+            "minutes": 60
+          }
+        ],
+        "color": "#8E44AD",
+        "createdAt": "2025-08-20T13:45:00Z",
+        "updatedAt": "2025-08-26T16:10:00Z"
+      },
+      {
+        "id": "evt_012",
+        "title": "Dentist - Biannual Cleaning",
+        "description": "Appointment for routine dental cleaning and biannual check-up.",
+        "startDateTime": "2025-09-10T11:00:00-04:00",
+        "endDateTime": "2025-09-10T12:00:00-04:00",
+        "location": {
+          "name": "Central Dental Clinic",
+          "address": "234 Dental Ave, New York, NY 10002",
+          "type": "physical"
+        },
+        "category": "medical",
+        "priority": "medium",
+        "status": "confirmed",
+        "allDay": false,
+        "recurrence": {
+          "frequency": "monthly",
+          "interval": 6
+        },
+        "reminders": [
+          {
+            "method": "notification",
+            "minutes": 1440
+          },
+          {
+            "method": "sms",
+            "minutes": 120
+          }
+        ],
+        "color": "#2ECC71",
+        "createdAt": "2025-03-10T10:00:00Z",
+        "updatedAt": "2025-08-15T09:30:00Z"
+      }
+    ],
+    "settings": {
+      "defaultReminders": [
+        {
+          "method": "notification",
+          "minutes": 15
+        }
+      ],
+      "defaultDuration": 60,
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00",
+        "workingDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      },
+      "categories": {
+        "work": {
+          "color": "#3498DB",
+          "icon": "briefcase"
+        },
+        "personal": {
+          "color": "#1ABC9C",
+          "icon": "user"
+        },
+        "medical": {
+          "color": "#E74C3C",
+          "icon": "heart"
+        },
+        "family": {
+          "color": "#16A085",
+          "icon": "home"
+        },
+        "education": {
+          "color": "#8E44AD",
+          "icon": "book"
+        },
+        "maintenance": {
+          "color": "#95A5A6",
+          "icon": "wrench"
+        },
+        "birthday": {
+          "color": "#FF69B4",
+          "icon": "gift"
+        }
+      }
+    },
+    "metadata": {
+      "totalEvents": 12,
+      "lastSync": "2025-08-21T18:45:00Z",
+      "version": "2.1",
+      "platform": "multi-device",
+      "syncEnabled": true
+    }
+  }
+}

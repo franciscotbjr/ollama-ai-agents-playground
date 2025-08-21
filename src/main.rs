@@ -16,6 +16,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!();
             println!("🚀 Classification done!");
             println!("User intent: {}", classification_result.intent);
+            println!("User recipient: {}", classification_result.params.recipient().unwrap());
             println!();
         }
         Err(e) => {

@@ -1,0 +1,785 @@
+{
+  "contacts": [
+    {
+      "id": "c001",
+      "firstName": "Tiger",
+      "lastName": "Brilliant",
+      "displayName": "Tiger Brilliant",
+      "nickname": "Tiggy",
+      "company": "Tech Solutions Inc.",
+      "jobTitle": "Software Engineer",
+      "department": "Engineering",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-123-4567",
+          "primary": true
+        },
+        {
+          "type": "work",
+          "number": "+1-555-987-6543",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "tiger.brilliant@gmail.com",
+          "primary": true
+        },
+        {
+          "type": "work",
+          "address": "t.brilliant@techsolutions.com",
+          "primary": false
+        }
+      ],
+      "addresses": [
+        {
+          "type": "home",
+          "street": "123 Main Street",
+          "city": "New York",
+          "state": "NY",
+          "postalCode": "10001",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "linkedin",
+          "url": "https://linkedin.com/in/tigerbrilliant",
+          "username": "tigerbrilliant"
+        },
+        {
+          "platform": "twitter",
+          "url": "https://twitter.com/tigerbrilliant",
+          "username": "@tigerbrilliant"
+        }
+      ],
+      "birthday": "1985-06-15",
+      "notes": "Met at tech conference 2023. Interested in AI projects.",
+      "photo": "https://example.com/photos/tiger_brilliant.jpg",
+      "tags": ["colleague", "developer", "conference"],
+      "favorite": true,
+      "createdAt": "2023-01-15T10:30:00Z",
+      "updatedAt": "2024-02-20T14:45:00Z"
+    },
+    {
+      "id": "c002",
+      "firstName": "Elephant",
+      "lastName": "Graceful",
+      "displayName": "Elephant Graceful",
+      "company": "Design Studio",
+      "jobTitle": "UX Designer",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-789-0123",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "elephant.graceful@outlook.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "456 Creative Ave",
+          "city": "Los Angeles",
+          "state": "CA",
+          "postalCode": "90210",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "behance",
+          "url": "https://behance.net/elephantgraceful",
+          "username": "elephantgraceful"
+        }
+      ],
+      "birthday": "1990-03-22",
+      "notes": "Great designer for UI/UX projects. Available for freelance work.",
+      "tags": ["designer", "freelancer", "creative"],
+      "favorite": false,
+      "createdAt": "2023-03-10T09:15:00Z",
+      "updatedAt": "2024-01-05T16:20:00Z"
+    },
+    {
+      "id": "c003",
+      "firstName": "Dolphin",
+      "lastName": "Wise",
+      "displayName": "Dr. Dolphin Wise",
+      "company": "City Medical Center",
+      "jobTitle": "Cardiologist",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-444-7890",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-333-2211",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "d.wise@citymedical.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "789 Health Plaza",
+          "city": "Chicago",
+          "state": "IL",
+          "postalCode": "60601",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "birthday": "1978-11-08",
+      "notes": "Family doctor. Appointment reminders needed.",
+      "tags": ["doctor", "medical", "important"],
+      "favorite": true,
+      "createdAt": "2022-08-20T11:00:00Z",
+      "updatedAt": "2023-12-15T13:30:00Z"
+    },
+    {
+      "id": "c004",
+      "firstName": "Penguin",
+      "lastName": "Swift",
+      "displayName": "Penguin Swift",
+      "company": "Swift Real Estate",
+      "jobTitle": "Real Estate Agent",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-666-1234",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "penguin@swiftrealestate.com",
+          "primary": true
+        },
+        {
+          "type": "personal",
+          "address": "penguin.swift@yahoo.com",
+          "primary": false
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "321 Business District",
+          "city": "Miami",
+          "state": "FL",
+          "postalCode": "33101",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "facebook",
+          "url": "https://facebook.com/penguinswiftrealtor",
+          "username": "penguinswiftrealtor"
+        }
+      ],
+      "notes": "Helped with house purchase. Reliable and professional.",
+      "tags": ["realtor", "business", "trusted"],
+      "favorite": false,
+      "createdAt": "2023-05-12T14:20:00Z",
+      "updatedAt": "2024-01-18T10:15:00Z"
+    },
+    {
+      "id": "c005",
+      "firstName": "Kangaroo",
+      "lastName": "Cheerful",
+      "displayName": "Roo Cheerful",
+      "nickname": "Roo",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-111-9876",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "kangaroo.cheerful@icloud.com",
+          "primary": true
+        }
+      ],
+      "birthday": "1992-07-30",
+      "notes": "College friend. Lives in Seattle now.",
+      "tags": ["friend", "college", "personal"],
+      "favorite": true,
+      "createdAt": "2020-01-01T00:00:00Z",
+      "updatedAt": "2023-08-25T12:45:00Z"
+    },
+    {
+      "id": "c006",
+      "firstName": "Butterfly",
+      "lastName": "Creative",
+      "displayName": "Butterfly Creative",
+      "company": "Global Marketing Agency",
+      "jobTitle": "Marketing Director",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-222-3456",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-333-4567",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "b.creative@globalmarketing.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "555 Marketing Tower",
+          "city": "San Francisco",
+          "state": "CA",
+          "postalCode": "94105",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "linkedin",
+          "url": "https://linkedin.com/in/butterflycreative",
+          "username": "butterflycreative"
+        }
+      ],
+      "birthday": "1987-04-12",
+      "notes": "Great contact for marketing collaborations. Speaks English and Mandarin.",
+      "tags": ["marketing", "business", "multilingual"],
+      "favorite": false,
+      "createdAt": "2023-07-08T15:30:00Z",
+      "updatedAt": "2024-02-10T09:20:00Z"
+    },
+    {
+      "id": "c007",
+      "firstName": "Octopus",
+      "lastName": "Handy",
+      "displayName": "Octo Handy",
+      "nickname": "Octo",
+      "company": "Auto Repair Plus",
+      "jobTitle": "Mechanic",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-777-8888",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "octopus@autorepairplus.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "999 Auto Street",
+          "city": "Phoenix",
+          "state": "AZ",
+          "postalCode": "85001",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "notes": "Reliable mechanic. Fair prices and quality work.",
+      "tags": ["mechanic", "services", "trusted"],
+      "favorite": false,
+      "createdAt": "2022-11-30T16:45:00Z",
+      "updatedAt": "2023-10-22T11:10:00Z"
+    },
+    {
+      "id": "c008",
+      "firstName": "Wolf",
+      "lastName": "Brave",
+      "displayName": "Wolf Brave",
+      "nickname": "Wolfy",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-888-9999",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "wolf.brave@gmail.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "home",
+          "street": "567 Forest Lane",
+          "city": "Portland",
+          "state": "OR",
+          "postalCode": "97201",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "instagram",
+          "url": "https://instagram.com/wolfbrave",
+          "username": "wolfbrave"
+        }
+      ],
+      "birthday": "1995-09-14",
+      "notes": "Childhood friend from elementary school. Adventure enthusiast.",
+      "tags": ["friend", "childhood", "adventure"],
+      "favorite": true,
+      "createdAt": "2018-06-12T10:30:00Z",
+      "updatedAt": "2024-03-15T14:25:00Z"
+    },
+    {
+      "id": "c009",
+      "firstName": "Fox",
+      "lastName": "Clever",
+      "displayName": "Fox Clever",
+      "company": "Clever Consulting",
+      "jobTitle": "Business Consultant",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-456-7890",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-987-1234",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "fox@cleverconsulting.com",
+          "primary": true
+        },
+        {
+          "type": "personal",
+          "address": "fox.clever@hotmail.com",
+          "primary": false
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "234 Business Park",
+          "city": "Austin",
+          "state": "TX",
+          "postalCode": "78701",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "linkedin",
+          "url": "https://linkedin.com/in/foxclever",
+          "username": "foxclever"
+        }
+      ],
+      "birthday": "1983-12-03",
+      "notes": "Met through networking event. Excellent business strategist.",
+      "tags": ["business", "consultant", "networking"],
+      "favorite": false,
+      "createdAt": "2023-09-22T16:40:00Z",
+      "updatedAt": "2024-04-08T11:30:00Z"
+    },
+    {
+      "id": "c010",
+      "firstName": "Bear",
+      "lastName": "Strong",
+      "displayName": "Bear Strong",
+      "nickname": "Big Bear",
+      "company": "Iron Gym",
+      "jobTitle": "Personal Trainer",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-777-4321",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "bear@irongym.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "890 Fitness Ave",
+          "city": "Denver",
+          "state": "CO",
+          "postalCode": "80202",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "birthday": "1988-05-20",
+      "notes": "Personal trainer at the gym. Great motivator and fitness expert.",
+      "tags": ["fitness", "trainer", "health"],
+      "favorite": false,
+      "createdAt": "2023-11-05T13:15:00Z",
+      "updatedAt": "2024-01-20T09:45:00Z"
+    },
+    {
+      "id": "c011",
+      "firstName": "Rabbit",
+      "lastName": "Quick",
+      "displayName": "Rabbit Quick",
+      "company": "Quick Delivery Services",
+      "jobTitle": "Delivery Manager",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-123-9876",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-555-0000",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "r.quick@quickdelivery.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "123 Speed Street",
+          "city": "Las Vegas",
+          "state": "NV",
+          "postalCode": "89101",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "twitter",
+          "url": "https://twitter.com/rabbitquick",
+          "username": "@rabbitquick"
+        }
+      ],
+      "birthday": "1991-02-28",
+      "notes": "Always on time. Manages logistics for major deliveries.",
+      "tags": ["logistics", "delivery", "reliable"],
+      "favorite": false,
+      "createdAt": "2024-01-10T08:20:00Z",
+      "updatedAt": "2024-02-14T12:00:00Z"
+    },
+    {
+      "id": "c012",
+      "firstName": "Lion",
+      "lastName": "Noble",
+      "displayName": "Lion Noble",
+      "nickname": "Leo",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-321-6547",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "lion.noble@icloud.com",
+          "primary": true
+        }
+      ],
+      "birthday": "1965-08-15",
+      "notes": "Uncle Leo. Family patriarch. Always gives great advice.",
+      "tags": ["family", "uncle", "wise"],
+      "favorite": true,
+      "createdAt": "2015-12-25T18:00:00Z",
+      "updatedAt": "2024-05-10T20:30:00Z"
+    },
+    {
+      "id": "c013",
+      "firstName": "Swan",
+      "lastName": "Elegant",
+      "displayName": "Swan Elegant",
+      "company": "Elegant Events",
+      "jobTitle": "Event Planner",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-246-8135",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-369-7410",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "swan@elegantevents.com",
+          "primary": true
+        },
+        {
+          "type": "personal",
+          "address": "swan.elegant@yahoo.com",
+          "primary": false
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "456 Ceremony Plaza",
+          "city": "Charleston",
+          "state": "SC",
+          "postalCode": "29401",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "pinterest",
+          "url": "https://pinterest.com/swanelegant",
+          "username": "swanelegant"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://instagram.com/elegantevents",
+          "username": "elegantevents"
+        }
+      ],
+      "birthday": "1986-11-22",
+      "notes": "Planned my sister's wedding. Incredible attention to detail.",
+      "tags": ["events", "wedding", "creative"],
+      "favorite": false,
+      "createdAt": "2023-06-18T14:45:00Z",
+      "updatedAt": "2024-07-02T16:20:00Z"
+    },
+    {
+      "id": "c014",
+      "firstName": "Owl",
+      "lastName": "Wise",
+      "displayName": "Dr. Owl Wise",
+      "company": "Wisdom University",
+      "jobTitle": "Professor of Philosophy",
+      "department": "Philosophy Department",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-987-6543",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "o.wise@wisdomuni.edu",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "789 Academic Circle",
+          "city": "Boston",
+          "state": "MA",
+          "postalCode": "02101",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "birthday": "1972-03-10",
+      "notes": "College professor. Always provides thought-provoking insights.",
+      "tags": ["professor", "academic", "philosophy"],
+      "favorite": false,
+      "createdAt": "2022-09-15T11:30:00Z",
+      "updatedAt": "2024-01-25T13:15:00Z"
+    },
+    {
+      "id": "c015",
+      "firstName": "Deer",
+      "lastName": "Gentle",
+      "displayName": "Deer Gentle",
+      "nickname": "Dee",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-741-8520",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "deer.gentle@gmail.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "home",
+          "street": "234 Meadow Drive",
+          "city": "Burlington",
+          "state": "VT",
+          "postalCode": "05401",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "facebook",
+          "url": "https://facebook.com/deergentle",
+          "username": "deergentle"
+        }
+      ],
+      "birthday": "1993-06-08",
+      "notes": "Sister. Lives in Vermont with her husband and two kids.",
+      "tags": ["family", "sister", "mother"],
+      "favorite": true,
+      "createdAt": "2010-01-01T00:00:00Z",
+      "updatedAt": "2024-06-15T19:45:00Z"
+    },
+    {
+      "id": "c016",
+      "firstName": "Hawk",
+      "lastName": "Sharp",
+      "displayName": "Hawk Sharp",
+      "company": "Sharp Security Solutions",
+      "jobTitle": "Security Consultant",
+      "phoneNumbers": [
+        {
+          "type": "work",
+          "number": "+1-555-159-7534",
+          "primary": true
+        },
+        {
+          "type": "mobile",
+          "number": "+1-555-753-9514",
+          "primary": false
+        }
+      ],
+      "emails": [
+        {
+          "type": "work",
+          "address": "hawk@sharpsecurity.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "work",
+          "street": "567 Security Blvd",
+          "city": "Washington",
+          "state": "DC",
+          "postalCode": "20001",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "socialProfiles": [
+        {
+          "platform": "linkedin",
+          "url": "https://linkedin.com/in/hawksharp",
+          "username": "hawksharp"
+        }
+      ],
+      "birthday": "1980-01-17",
+      "notes": "Former military. Expert in cybersecurity and physical security.",
+      "tags": ["security", "military", "cybersecurity"],
+      "favorite": false,
+      "createdAt": "2023-04-12T10:20:00Z",
+      "updatedAt": "2024-03-28T15:40:00Z"
+    },
+    {
+      "id": "c017",
+      "firstName": "Turtle",
+      "lastName": "Patient",
+      "displayName": "Turtle Patient",
+      "nickname": "Turty",
+      "phoneNumbers": [
+        {
+          "type": "mobile",
+          "number": "+1-555-852-9630",
+          "primary": true
+        }
+      ],
+      "emails": [
+        {
+          "type": "personal",
+          "address": "turtle.patient@outlook.com",
+          "primary": true
+        }
+      ],
+      "addresses": [
+        {
+          "type": "home",
+          "street": "890 Quiet Street",
+          "city": "Savannah",
+          "state": "GA",
+          "postalCode": "31401",
+          "country": "USA",
+          "primary": true
+        }
+      ],
+      "birthday": "1958-12-05",
+      "notes": "Grandfather. Retired teacher. Great storyteller and very patient.",
+      "tags": ["family", "grandfather", "retired"],
+      "favorite": true,
+      "createdAt": "2012-05-20T14:00:00Z",
+      "updatedAt": "2024-04-18T17:30:00Z"
+    }
+  ],
+  "metadata": {
+    "totalContacts": 17,
+    "lastSync": "2024-08-21T18:30:00Z",
+    "version": "1.1",
+    "source": "multi-platform-sync"
+  }
+}

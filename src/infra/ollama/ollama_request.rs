@@ -7,6 +7,8 @@ pub struct OllamaRequest {
     pub model: String,
     pub messages: Vec<OllamaMessage>,
     pub stream: bool,
+    #[serde(default)]
+    pub think: bool,
 }
 
 impl OllamaRequest {
@@ -18,6 +20,7 @@ impl OllamaRequest {
                 content,
             }],
             stream: false,
+            think: false,
         }
     }
 
@@ -26,6 +29,7 @@ impl OllamaRequest {
             model,
             messages,
             stream: false,
+            think: false,
         }
     }
 }
@@ -44,6 +48,7 @@ mod tests {
         assert_eq!(request.messages[0].role, "user");
         assert_eq!(request.messages[0].content, "Hello world");
         assert_eq!(request.stream, false);
+        assert_eq!(request.think, false);
     }
 
     #[test]
@@ -57,6 +62,7 @@ mod tests {
         assert_eq!(request.model, "llama2");
         assert_eq!(request.messages, messages);
         assert_eq!(request.stream, false);
+        assert_eq!(request.think, false);
     }
 
     #[test]
@@ -64,7 +70,7 @@ mod tests {
         let request = OllamaRequest::new("llama2".to_string(), "Test message".to_string());
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
 
-        let expected_json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test message"}],"stream":false}"#;
+        let expected_json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test message"}],"stream":false,"think":false}"#;
         assert_eq!(json, expected_json);
     }
 
@@ -78,7 +84,7 @@ mod tests {
         let request = OllamaRequest::with_messages("gpt-3.5".to_string(), messages);
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
 
-        let expected_json = r#"{"model":"gpt-3.5","messages":[{"role":"user","content":"Question 1"},{"role":"assistant","content":"Answer 1"},{"role":"user","content":"Question 2"}],"stream":false}"#;
+        let expected_json = r#"{"model":"gpt-3.5","messages":[{"role":"user","content":"Question 1"},{"role":"assistant","content":"Answer 1"},{"role":"user","content":"Question 2"}],"stream":false,"think":false}"#;
         assert_eq!(json, expected_json);
     }
 
@@ -93,6 +99,7 @@ mod tests {
         assert_eq!(request.messages[0].role, "user");
         assert_eq!(request.messages[0].content, "Test message");
         assert_eq!(request.stream, false);
+        assert_eq!(request.think, false); // Default value when not present
     }
 
     #[test]
@@ -110,6 +117,7 @@ mod tests {
         assert_eq!(request.messages[2].role, "user");
         assert_eq!(request.messages[2].content, "How are you?");
         assert_eq!(request.stream, true);
+        assert_eq!(request.think, false); // Default value when not present
     }
 
     #[test]
@@ -185,5 +193,34 @@ JSON special: {"key": "value"}"#;
 
         assert_eq!(request, deserialized);
         assert_eq!(deserialized.messages.len(), 0);
+        assert_eq!(deserialized.think, false);
+    }
+
+    #[test]
+    fn test_ollama_request_with_think_true() {
+        let mut request = OllamaRequest::new("llama2".to_string(), "Test with thinking".to_string());
+        request.think = true;
+        
+        let json = serde_json::to_string(&request).expect("Serialization should succeed");
+        let expected_json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test with thinking"}],"stream":false,"think":true}"#;
+        assert_eq!(json, expected_json);
+        
+        let deserialized: OllamaRequest =
+            serde_json::from_str(&json).expect("Deserialization should succeed");
+        assert_eq!(deserialized.think, true);
+    }
+
+    #[test]
+    fn test_ollama_request_deserialization_with_think_field() {
+        let json = r#"{"model":"claude","messages":[{"role":"user","content":"Hello"}],"stream":false,"think":true}"#;
+        let request: OllamaRequest =
+            serde_json::from_str(json).expect("Deserialization should succeed");
+
+        assert_eq!(request.model, "claude");
+        assert_eq!(request.messages.len(), 1);
+        assert_eq!(request.messages[0].role, "user");
+        assert_eq!(request.messages[0].content, "Hello");
+        assert_eq!(request.stream, false);
+        assert_eq!(request.think, true);
     }
 }

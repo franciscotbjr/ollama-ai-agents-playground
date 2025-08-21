@@ -30,7 +30,8 @@ Envie um e-mail para Eva informando que não vou poder comparecer à reunião e 
       "content": "Classify intent and extract parameters (JSON format):        Example 1:        Input: \"Send an email to Carlos about the delay\"        Output: {\"intent\":\"send_email\", \"params\":{\"recipient\":\"Carlos\",\"message\":\"About the delay\"}}                Example 2:        Input: \"Send message to Sofia: I'll arrive in 10 min\"        Output: {\"intent\":\"send_message\", \"params\":{\"recipient\":\"Sofia\",\"message\":\"I'll arrive in 10 min\"}}                Task: Return JSON with: action (send_email, schedule_meeting, no_action)       Input: \"Send an email to Eva informing her that I won't be able to attend the meeting and that I apologize for giving such short notice.\"        Output: " 
     }
   ],
-  "stream": false 
+  "stream": false,
+  "think": false 
 }
 ```
 

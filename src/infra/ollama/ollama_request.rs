@@ -9,6 +9,7 @@ pub struct OllamaRequest {
     pub stream: bool,
     #[serde(default)]
     pub think: bool,
+    pub from: Option<String>
 }
 
 impl OllamaRequest {
@@ -21,6 +22,7 @@ impl OllamaRequest {
             }],
             stream: false,
             think: false,
+            from: None
         }
     }
 
@@ -30,6 +32,18 @@ impl OllamaRequest {
             messages,
             stream: false,
             think: false,
+            from: None
+        }
+    }
+
+
+    pub fn with_create(model: String, messages: Vec<OllamaMessage>, from: Option<String>) -> Self {
+        Self {
+            model,
+            messages,
+            stream: false,
+            think: false,
+            from
         }
     }
 }

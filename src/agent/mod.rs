@@ -4,6 +4,7 @@ pub mod classifier;
 pub mod contact;
 pub mod email;
 pub mod intent;
+pub mod assistant;
 
 pub use agent::{Agent, AgentError};
 pub use agent_result::AgentResult;

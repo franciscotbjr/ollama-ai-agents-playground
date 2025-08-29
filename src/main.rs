@@ -3,6 +3,9 @@ use ollama_ai_agents_playground::agent::{Agent, classifier::IntentClassifierAgen
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    // Create an assistante model customized for the user
+    
     // Create a tokio runtime for the async example
     println!();
     println!("🚀 Starting asynchronous processing...");

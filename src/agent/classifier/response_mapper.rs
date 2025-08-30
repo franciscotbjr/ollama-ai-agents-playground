@@ -84,7 +84,7 @@ mod tests {
     fn test_map_valid_send_email_response() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "john@example.com",
     "message": "Meeting has been rescheduled"
@@ -107,7 +107,7 @@ mod tests {
     fn test_map_valid_schedule_meeting_response() {
         let content = r#"```json
 {
-  "intent": "ScheduleMeeting",
+  "intent": "schedule_meeting",
   "params": {
     "recipient": "alice@company.com",
     "message": "Let's schedule our quarterly review"
@@ -130,7 +130,7 @@ mod tests {
     fn test_map_no_action_response() {
         let content = r#"```json
 {
-  "intent": "NoAction",
+  "intent": "no_action",
   "params": {
     "recipient": null,
     "message": null
@@ -149,7 +149,7 @@ mod tests {
     #[test]
     fn test_map_plain_json_response() {
         let content = r#"{
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "plain@example.com",
     "message": "Plain JSON without markdown"
@@ -182,7 +182,7 @@ mod tests {
     fn test_map_malformed_json() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "test@example.com"
     // Missing closing braces
@@ -198,7 +198,7 @@ mod tests {
     fn test_convenience_function() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "convenience@test.com",
     "message": "Testing convenience function"
@@ -217,7 +217,7 @@ mod tests {
     fn test_extension_trait() {
         let content = r#"```json
 {
-  "intent": "ScheduleMeeting",
+  "intent": "schedule_meeting",
   "params": {
     "recipient": "trait@test.com",
     "message": "Testing extension trait"
@@ -236,7 +236,7 @@ mod tests {
     fn test_roundtrip_serialization() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "roundtrip@test.com",
     "message": "Testing roundtrip"
@@ -251,7 +251,7 @@ mod tests {
         let json_string = result.to_json_string().unwrap();
 
         // Should contain the expected data
-        assert!(json_string.contains("SendEmail"));
+        assert!(json_string.contains("send_email"));
         assert!(json_string.contains("roundtrip@test.com"));
     }
 
@@ -259,7 +259,7 @@ mod tests {
     fn test_unicode_content_mapping() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "用户@example.com",
     "message": "Hello 世界! 🌍"
@@ -278,7 +278,7 @@ mod tests {
     fn test_partial_params() {
         let content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "partial@test.com",
     "message": null

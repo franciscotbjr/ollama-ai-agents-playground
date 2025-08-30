@@ -1,4 +1,4 @@
-use crate::agent::{Agent, AgentError, email::EmailResult};
+use crate::agent::{agent::AgentParam, email::EmailResult, Agent, AgentError};
 
 pub struct EmailAgent {}
 
@@ -8,10 +8,24 @@ impl EmailAgent {
     }
 }
 
-impl Agent<EmailResult> for EmailAgent {
+pub struct EmailParam {
+    input: String
+}
+
+impl EmailParam {
+    pub fn new(input: &String) -> Self {
+        Self { 
+            input: input.clone()
+        }
+    }
+}
+
+impl AgentParam for  EmailParam {}
+
+impl Agent<EmailParam, EmailResult> for EmailAgent {
     fn process(
         &self,
-        _input: &str,
+        _input: EmailParam,
     ) -> impl std::future::Future<Output = Result<EmailResult, AgentError>> + Send {
         async move {
             // TODO: Implement email sending logic

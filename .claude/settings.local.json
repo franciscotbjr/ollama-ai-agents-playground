@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(cat:*)",
-      "Bash(cargo:*)"
+      "Bash(cargo:*)",
+      "Bash(powershell:*)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []

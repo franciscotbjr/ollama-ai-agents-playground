@@ -1,5 +1,6 @@
 pub mod agent;
 pub mod agent_result;
+pub mod assistant;
 pub mod classifier;
 pub mod contact;
 pub mod email;

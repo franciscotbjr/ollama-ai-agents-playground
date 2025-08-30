@@ -1,13 +1,17 @@
+pub mod ollama_chat;
+pub mod ollama_chat_request;
 pub mod ollama_client;
-pub mod ollama_message;
-pub mod ollama_request;
+pub mod ollama_create_reponse;
+pub mod ollama_create_request;
+pub mod ollama_intent_response_content;
 pub mod ollama_response;
-pub mod ollama_response_content;
 pub mod ollama_response_message;
 
+pub use ollama_chat::OllamaChat;
+pub use ollama_chat_request::OllamaChatRequest;
 pub use ollama_client::OllamaClient;
-pub use ollama_message::OllamaMessage;
-pub use ollama_request::OllamaRequest;
+pub use ollama_create_reponse::OllamaCreateResponse;
+pub use ollama_create_request::OllamaCreateRequest;
+pub use ollama_intent_response_content::OllamaIntentResponseContent;
 pub use ollama_response::OllamaResponse;
-pub use ollama_response_content::OllamaResponseContent;
 pub use ollama_response_message::OllamaResponseMessage;

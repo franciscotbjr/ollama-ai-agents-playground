@@ -1,4 +1,4 @@
-use super::ollama_response_content::OllamaResponseContent;
+use super::ollama_intent_response_content::OllamaIntentResponseContent;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -15,8 +15,10 @@ impl OllamaResponseMessage {
     }
 
     /// Parses the content to extract structured JSON data
-    pub fn parsed_content(&self) -> Result<OllamaResponseContent, Box<dyn std::error::Error>> {
-        OllamaResponseContent::from_markdown_json(&self.raw_content)
+    pub fn parsed_content(
+        &self,
+    ) -> Result<OllamaIntentResponseContent, Box<dyn std::error::Error>> {
+        OllamaIntentResponseContent::from_markdown_json(&self.raw_content)
     }
 
     /// Convenience method to get content, trying parsed first, fallback to raw

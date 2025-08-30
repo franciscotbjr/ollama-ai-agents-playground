@@ -3,7 +3,8 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(cargo:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []

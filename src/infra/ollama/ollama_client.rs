@@ -1,6 +1,8 @@
 use crate::config::Config;
 use crate::infra::http::HttpClient;
-use crate::infra::ollama::{OllamaRequest, OllamaResponse};
+use crate::infra::ollama::{
+    OllamaChatRequest, OllamaCreateRequest, OllamaCreateResponse, OllamaResponse,
+};
 
 pub struct OllamaClient {
     http_client: HttpClient,
@@ -13,12 +15,12 @@ impl OllamaClient {
         }
     }
 
-    pub async fn send_request(
+    pub async fn send_chat_request(
         &self,
         body: &str,
     ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
         let ollama_request =
-            OllamaRequest::new(Config::get().ollama.api.model.clone(), body.to_string());
+            OllamaChatRequest::new(Config::get().ollama.api.model.clone(), body.to_string());
 
         let json_request = serde_json::to_string(&ollama_request);
 
@@ -49,11 +51,19 @@ impl OllamaClient {
         &self,
         prompt: &str,
     ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
-        let request_body = format!(
-            r#"{{"model": "llama2", "prompt": "{}", "stream": false}}"#,
-            prompt.replace('"', "\\\"")
-        );
+        let request_body = format!(r#"{}"#, prompt.replace('"', "\\\""));
+        self.send_chat_request(&request_body).await
+    }
 
-        self.send_request(&request_body).await
+    pub async fn create_assistant(
+        &self,
+        system: &String, 
+        name: &String,
+    ) -> Result<OllamaCreateResponse, Box<dyn std::error::Error>> {
+        // TODO: Implement create assistant functionality
+        Ok(OllamaCreateResponse::new(vec![
+            format!("Assistant '{}' created successfully", name),
+            format!("Assistant '{}' created successfully", system),
+        ]))
     }
 }

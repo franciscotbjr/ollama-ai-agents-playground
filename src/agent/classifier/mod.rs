@@ -6,7 +6,7 @@ pub mod response_mapper;
 
 pub use classification_result::ClassificationResult;
 pub use classifier_promp::ClassifierPrompt;
-pub use intent_classifier_agent::IntentClassifierAgent;
+pub use intent_classifier_agent::{IntentClassifierAgent, IntentParam};
 pub use params::Params;
 pub use response_mapper::{
     Mapper, MapperError, OllamaToClassificationMapper, ToClassificationResult,

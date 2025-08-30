@@ -3,16 +3,16 @@ use crate::agent::classifier::Params;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct OllamaResponseContent {
+pub struct OllamaIntentResponseContent {
     pub intent: Intent,
     pub params: Params,
 }
 
-impl OllamaResponseContent {
+impl OllamaIntentResponseContent {
     /// Extracts JSON from ```json ... ``` markdown format and parses it
     pub fn from_markdown_json(content: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let json_content = Self::extract_json_from_markdown(content)?;
-        let parsed: OllamaResponseContent = serde_json::from_str(&json_content)?;
+        let parsed: OllamaIntentResponseContent = serde_json::from_str(&json_content)?;
         Ok(parsed)
     }
 
@@ -56,7 +56,8 @@ mod tests {
 }
 ```"#;
 
-        let result = OllamaResponseContent::extract_json_from_markdown(markdown_content).unwrap();
+        let result =
+            OllamaIntentResponseContent::extract_json_from_markdown(markdown_content).unwrap();
         assert!(result.contains("SendEmail"));
         assert!(result.contains("Eva"));
     }
@@ -73,7 +74,7 @@ mod tests {
 }
 ```"#;
 
-        let result = OllamaResponseContent::from_markdown_json(markdown_content).unwrap();
+        let result = OllamaIntentResponseContent::from_markdown_json(markdown_content).unwrap();
         assert_eq!(result.intent, Intent::SendEmail);
         assert_eq!(result.params.recipient(), Some("Eva"));
         assert_eq!(
@@ -92,14 +93,14 @@ mod tests {
   }
 }"#;
 
-        let result = OllamaResponseContent::from_markdown_json(plain_json).unwrap();
+        let result = OllamaIntentResponseContent::from_markdown_json(plain_json).unwrap();
         assert_eq!(result.intent, Intent::ScheduleMeeting);
     }
 
     #[test]
     fn test_invalid_content() {
         let invalid_content = "This is not JSON content";
-        let result = OllamaResponseContent::from_markdown_json(invalid_content);
+        let result = OllamaIntentResponseContent::from_markdown_json(invalid_content);
         assert!(result.is_err());
     }
 }

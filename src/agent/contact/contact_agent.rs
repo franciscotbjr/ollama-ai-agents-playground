@@ -1,6 +1,4 @@
-use crate::agent::{
-    Agent, AgentError, contact::contact_result::ContactResult,
-};
+use crate::agent::{agent::AgentParam, contact::contact_result::ContactResult, Agent, AgentError};
 
 pub struct ContactAgent {}
 
@@ -9,11 +7,24 @@ impl ContactAgent {
         Self {}
     }
 }
+pub struct ContactParam {
+    input: String
+}
 
-impl Agent<ContactResult> for ContactAgent {
+impl ContactParam {
+    pub fn new(input: &String) -> Self {
+        Self { 
+            input: input.clone()
+        }
+    }
+}
+
+impl AgentParam for  ContactParam {}
+
+impl Agent<ContactParam, ContactResult> for ContactAgent {
     fn process(
         &self,
-        _input: &str,
+        _input: ContactParam,
     ) -> impl std::future::Future<Output = Result<ContactResult, AgentError>> + Send {
         async move {
             // TODO: Implement contact data discovery logic

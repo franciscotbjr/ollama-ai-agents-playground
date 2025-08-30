@@ -1,7 +1,6 @@
 use crate::{
     agent::{
-        Agent, AgentError, ClassificationResult,
-        classifier::{ClassifierPrompt, ToClassificationResult},
+        agent::AgentParam, classifier::{ClassifierPrompt, ToClassificationResult}, Agent, AgentError, ClassificationResult
     },
     infra::ollama::OllamaClient,
 };
@@ -14,14 +13,28 @@ impl IntentClassifierAgent {
     }
 }
 
-impl Agent<ClassificationResult> for IntentClassifierAgent {
+pub struct IntentParam {
+    input: String
+}
+
+impl IntentParam {
+    pub fn new(input: String) -> Self {
+        Self { 
+            input
+        }
+    }
+}
+
+impl AgentParam for  IntentParam {}
+
+impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
     fn process(
         &self,
-        input: &str,
+        input: IntentParam,
     ) -> impl std::future::Future<Output = Result<ClassificationResult, AgentError>> + Send {
         async move {
             // Build classification prompt
-            let prompt = build_prompt(input);
+            let prompt = build_prompt(&input.input);
 
             // Send to Ollama API
             let result = OllamaClient::new().send_message(&prompt.as_str()).await;
@@ -68,7 +81,8 @@ fn build_prompt(input: &str) -> String {
 
 const SPACE: &str = "        ";
 const CLASSIFY_INTENT_TO_JSON: &str = "Classify intent and extract parameters (JSON format):";
-const OUTPUT_FORMART: &str = "Output-Format: {\"intent\":\"\",\"params\":{\"recipient\":\"\",\"message\":\"\"}}";
+const OUTPUT_FORMART: &str =
+    "Output-Format: {\"intent\":\"\",\"params\":{\"recipient\":\"\",\"message\":\"\"}}";
 const EXAMPLE_1: &str = "Example 1:        Input: \"Send an email to Carlos about the delay\"        Output: {\"intent\":\"send_email\", \"params\":{\"recipient\":\"Carlos\",\"message\":\"About the delay\"}}";
 const EXAMPLE_2: &str = "Example 2:        Input: \"Send message to Sofia: I'll arrive in 10 min\"        Output: {\"intent\":\"send_message\", \"params\":{\"recipient\":\"Sofia\",\"message\":\"I'll arrive in 10 min\"}}";
 const TASK: &str = "Task: Return JSON with: action (send_email, schedule_meeting, no_action)";

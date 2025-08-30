@@ -1,49 +1,35 @@
 use serde::{Deserialize, Serialize};
 
-use crate::infra::ollama::OllamaMessage;
+use crate::infra::ollama::OllamaChat;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-pub struct OllamaRequest {
+pub struct OllamaChatRequest {
     pub model: String,
-    pub messages: Vec<OllamaMessage>,
+    pub messages: Vec<OllamaChat>,
     pub stream: bool,
     #[serde(default)]
     pub think: bool,
-    pub from: Option<String>
 }
 
-impl OllamaRequest {
+impl OllamaChatRequest {
     pub fn new(model: String, content: String) -> Self {
         Self {
             model,
-            messages: vec![OllamaMessage {
+            messages: vec![OllamaChat {
                 role: "user".to_string(),
                 content,
             }],
             stream: false,
             think: false,
-            from: None
         }
     }
 
-    pub fn with_messages(model: String, messages: Vec<OllamaMessage>) -> Self {
+    pub fn with_messages(model: String, messages: Vec<OllamaChat>) -> Self {
         Self {
             model,
             messages,
             stream: false,
             think: false,
-            from: None
-        }
-    }
-
-
-    pub fn with_create(model: String, messages: Vec<OllamaMessage>, from: Option<String>) -> Self {
-        Self {
-            model,
-            messages,
-            stream: false,
-            think: false,
-            from
         }
     }
 }
@@ -55,7 +41,7 @@ mod tests {
 
     #[test]
     fn test_ollama_request_new() {
-        let request = OllamaRequest::new("llama2".to_string(), "Hello world".to_string());
+        let request = OllamaChatRequest::new("llama2".to_string(), "Hello world".to_string());
 
         assert_eq!(request.model, "llama2");
         assert_eq!(request.messages.len(), 1);
@@ -68,10 +54,10 @@ mod tests {
     #[test]
     fn test_ollama_request_with_messages() {
         let messages = vec![
-            OllamaMessage::user("What is AI?".to_string()),
-            OllamaMessage::assistant("AI is artificial intelligence.".to_string()),
+            OllamaChat::user("What is AI?".to_string()),
+            OllamaChat::assistant("AI is artificial intelligence.".to_string()),
         ];
-        let request = OllamaRequest::with_messages("llama2".to_string(), messages.clone());
+        let request = OllamaChatRequest::with_messages("llama2".to_string(), messages.clone());
 
         assert_eq!(request.model, "llama2");
         assert_eq!(request.messages, messages);
@@ -81,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_ollama_request_serialization() {
-        let request = OllamaRequest::new("llama2".to_string(), "Test message".to_string());
+        let request = OllamaChatRequest::new("llama2".to_string(), "Test message".to_string());
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
 
         let expected_json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test message"}],"stream":false,"think":false}"#;
@@ -91,11 +77,11 @@ mod tests {
     #[test]
     fn test_ollama_request_serialization_with_multiple_messages() {
         let messages = vec![
-            OllamaMessage::user("Question 1".to_string()),
-            OllamaMessage::assistant("Answer 1".to_string()),
-            OllamaMessage::user("Question 2".to_string()),
+            OllamaChat::user("Question 1".to_string()),
+            OllamaChat::assistant("Answer 1".to_string()),
+            OllamaChat::user("Question 2".to_string()),
         ];
-        let request = OllamaRequest::with_messages("gpt-3.5".to_string(), messages);
+        let request = OllamaChatRequest::with_messages("gpt-3.5".to_string(), messages);
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
 
         let expected_json = r#"{"model":"gpt-3.5","messages":[{"role":"user","content":"Question 1"},{"role":"assistant","content":"Answer 1"},{"role":"user","content":"Question 2"}],"stream":false,"think":false}"#;
@@ -105,7 +91,7 @@ mod tests {
     #[test]
     fn test_ollama_request_deserialization() {
         let json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test message"}],"stream":false}"#;
-        let request: OllamaRequest =
+        let request: OllamaChatRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
         assert_eq!(request.model, "llama2");
@@ -119,7 +105,7 @@ mod tests {
     #[test]
     fn test_ollama_request_deserialization_with_multiple_messages() {
         let json = r#"{"model":"claude","messages":[{"role":"user","content":"Hello"},{"role":"assistant","content":"Hi there!"},{"role":"user","content":"How are you?"}],"stream":true}"#;
-        let request: OllamaRequest =
+        let request: OllamaChatRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
         assert_eq!(request.model, "claude");
@@ -136,9 +122,9 @@ mod tests {
 
     #[test]
     fn test_ollama_request_roundtrip_serialization() {
-        let original = OllamaRequest::new("test-model".to_string(), "Test content".to_string());
+        let original = OllamaChatRequest::new("test-model".to_string(), "Test content".to_string());
         let json = serde_json::to_string(&original).expect("Serialization should succeed");
-        let deserialized: OllamaRequest =
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(original, deserialized);
@@ -146,9 +132,9 @@ mod tests {
 
     #[test]
     fn test_ollama_request_with_empty_content() {
-        let request = OllamaRequest::new("model".to_string(), "".to_string());
+        let request = OllamaChatRequest::new("model".to_string(), "".to_string());
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
-        let deserialized: OllamaRequest =
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(request, deserialized);
@@ -158,9 +144,9 @@ mod tests {
     #[test]
     fn test_ollama_request_with_unicode_content() {
         let unicode_content = "Hello 世界! 🌍 Café naïve résumé";
-        let request = OllamaRequest::new("model".to_string(), unicode_content.to_string());
+        let request = OllamaChatRequest::new("model".to_string(), unicode_content.to_string());
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
-        let deserialized: OllamaRequest =
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(request, deserialized);
@@ -174,9 +160,9 @@ Line 2 with "quotes" and 'apostrophes'
 Tab:	End
 Backslash: \ Forward slash: /
 JSON special: {"key": "value"}"#;
-        let request = OllamaRequest::new("model".to_string(), special_content.to_string());
+        let request = OllamaChatRequest::new("model".to_string(), special_content.to_string());
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
-        let deserialized: OllamaRequest =
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(request, deserialized);
@@ -186,7 +172,7 @@ JSON special: {"key": "value"}"#;
     #[test]
     fn test_ollama_request_deserialization_invalid_json() {
         let invalid_json = r#"{"model":"test","messages":[{"role":"user"],"stream":false}"#; // Missing content field
-        let result: Result<OllamaRequest, _> = serde_json::from_str(invalid_json);
+        let result: Result<OllamaChatRequest, _> = serde_json::from_str(invalid_json);
         assert!(result.is_err());
     }
 
@@ -194,15 +180,15 @@ JSON special: {"key": "value"}"#;
     fn test_ollama_request_deserialization_missing_field() {
         let json_missing_model =
             r#"{"messages":[{"role":"user","content":"test"}],"stream":false}"#;
-        let result: Result<OllamaRequest, _> = serde_json::from_str(json_missing_model);
+        let result: Result<OllamaChatRequest, _> = serde_json::from_str(json_missing_model);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_ollama_request_with_empty_messages() {
-        let request = OllamaRequest::with_messages("model".to_string(), vec![]);
+        let request = OllamaChatRequest::with_messages("model".to_string(), vec![]);
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
-        let deserialized: OllamaRequest =
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(request, deserialized);
@@ -212,14 +198,15 @@ JSON special: {"key": "value"}"#;
 
     #[test]
     fn test_ollama_request_with_think_true() {
-        let mut request = OllamaRequest::new("llama2".to_string(), "Test with thinking".to_string());
+        let mut request =
+            OllamaChatRequest::new("llama2".to_string(), "Test with thinking".to_string());
         request.think = true;
-        
+
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
         let expected_json = r#"{"model":"llama2","messages":[{"role":"user","content":"Test with thinking"}],"stream":false,"think":true}"#;
         assert_eq!(json, expected_json);
-        
-        let deserialized: OllamaRequest =
+
+        let deserialized: OllamaChatRequest =
             serde_json::from_str(&json).expect("Deserialization should succeed");
         assert_eq!(deserialized.think, true);
     }
@@ -227,7 +214,7 @@ JSON special: {"key": "value"}"#;
     #[test]
     fn test_ollama_request_deserialization_with_think_field() {
         let json = r#"{"model":"claude","messages":[{"role":"user","content":"Hello"}],"stream":false,"think":true}"#;
-        let request: OllamaRequest =
+        let request: OllamaChatRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
         assert_eq!(request.model, "claude");

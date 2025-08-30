@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-pub struct OllamaMessage {
+pub struct OllamaChat {
     pub role: String,
     pub content: String,
 }
 
-impl OllamaMessage {
+impl OllamaChat {
     pub fn new(role: String, content: String) -> Self {
         Self { role, content }
     }
@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn test_ollama_message_new() {
-        let message = OllamaMessage::new(
+        let message = OllamaChat::new(
             "system".to_string(),
             "You are a helpful assistant".to_string(),
         );
@@ -38,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_ollama_message_user() {
-        let message = OllamaMessage::user("What is the weather today?".to_string());
+        let message = OllamaChat::user("What is the weather today?".to_string());
 
         assert_eq!(message.role, "user");
         assert_eq!(message.content, "What is the weather today?");
@@ -46,7 +46,7 @@ mod tests {
 
     #[test]
     fn test_ollama_message_assistant() {
-        let message = OllamaMessage::assistant("I can help you with that!".to_string());
+        let message = OllamaChat::assistant("I can help you with that!".to_string());
 
         assert_eq!(message.role, "assistant");
         assert_eq!(message.content, "I can help you with that!");
@@ -54,7 +54,7 @@ mod tests {
 
     #[test]
     fn test_ollama_message_serialization() {
-        let message = OllamaMessage::user("Hello world".to_string());
+        let message = OllamaChat::user("Hello world".to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
 
         let expected_json = r#"{"role":"user","content":"Hello world"}"#;
@@ -63,7 +63,7 @@ mod tests {
 
     #[test]
     fn test_ollama_message_assistant_serialization() {
-        let message = OllamaMessage::assistant("Hello! How can I help you?".to_string());
+        let message = OllamaChat::assistant("Hello! How can I help you?".to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
 
         let expected_json = r#"{"role":"assistant","content":"Hello! How can I help you?"}"#;
@@ -73,7 +73,7 @@ mod tests {
     #[test]
     fn test_ollama_message_deserialization() {
         let json = r#"{"role":"user","content":"Test message"}"#;
-        let message: OllamaMessage =
+        let message: OllamaChat =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
         assert_eq!(message.role, "user");
@@ -83,7 +83,7 @@ mod tests {
     #[test]
     fn test_ollama_message_deserialization_assistant() {
         let json = r#"{"role":"assistant","content":"I'm here to help!"}"#;
-        let message: OllamaMessage =
+        let message: OllamaChat =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
         assert_eq!(message.role, "assistant");
@@ -92,9 +92,9 @@ mod tests {
 
     #[test]
     fn test_ollama_message_roundtrip_serialization() {
-        let original = OllamaMessage::new("custom".to_string(), "Custom role message".to_string());
+        let original = OllamaChat::new("custom".to_string(), "Custom role message".to_string());
         let json = serde_json::to_string(&original).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(original, deserialized);
@@ -102,9 +102,9 @@ mod tests {
 
     #[test]
     fn test_ollama_message_with_empty_content() {
-        let message = OllamaMessage::user("".to_string());
+        let message = OllamaChat::user("".to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(message, deserialized);
@@ -114,9 +114,9 @@ mod tests {
 
     #[test]
     fn test_ollama_message_with_empty_role() {
-        let message = OllamaMessage::new("".to_string(), "Message with empty role".to_string());
+        let message = OllamaChat::new("".to_string(), "Message with empty role".to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(message, deserialized);
@@ -127,9 +127,9 @@ mod tests {
     #[test]
     fn test_ollama_message_with_unicode_content() {
         let unicode_content = "Hello 世界! 🌍 Café naïve résumé";
-        let message = OllamaMessage::user(unicode_content.to_string());
+        let message = OllamaChat::user(unicode_content.to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(message, deserialized);
@@ -143,9 +143,9 @@ Line 2 with "quotes" and 'apostrophes'
 Tab:	End
 Backslash: \ Forward slash: /
 JSON special: {"key": "value"}"#;
-        let message = OllamaMessage::assistant(special_content.to_string());
+        let message = OllamaChat::assistant(special_content.to_string());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(message, deserialized);
@@ -155,9 +155,9 @@ JSON special: {"key": "value"}"#;
     #[test]
     fn test_ollama_message_long_content() {
         let long_content = "This is a very long message that contains many words and should test the serialization and deserialization of longer content. ".repeat(100);
-        let message = OllamaMessage::user(long_content.clone());
+        let message = OllamaChat::user(long_content.clone());
         let json = serde_json::to_string(&message).expect("Serialization should succeed");
-        let deserialized: OllamaMessage =
+        let deserialized: OllamaChat =
             serde_json::from_str(&json).expect("Deserialization should succeed");
 
         assert_eq!(message, deserialized);
@@ -169,9 +169,9 @@ JSON special: {"key": "value"}"#;
         let roles = vec!["system", "function", "tool", "custom_role"];
 
         for role in roles {
-            let message = OllamaMessage::new(role.to_string(), format!("Message for {}", role));
+            let message = OllamaChat::new(role.to_string(), format!("Message for {}", role));
             let json = serde_json::to_string(&message).expect("Serialization should succeed");
-            let deserialized: OllamaMessage =
+            let deserialized: OllamaChat =
                 serde_json::from_str(&json).expect("Deserialization should succeed");
 
             assert_eq!(message, deserialized);
@@ -181,7 +181,7 @@ JSON special: {"key": "value"}"#;
 
     #[test]
     fn test_ollama_message_clone() {
-        let original = OllamaMessage::user("Original message".to_string());
+        let original = OllamaChat::user("Original message".to_string());
         let cloned = original.clone();
 
         assert_eq!(original, cloned);
@@ -189,18 +189,15 @@ JSON special: {"key": "value"}"#;
         assert_eq!(original.content, cloned.content);
 
         // Verify they are separate instances
-        assert_ne!(
-            &original as *const OllamaMessage,
-            &cloned as *const OllamaMessage
-        );
+        assert_ne!(&original as *const OllamaChat, &cloned as *const OllamaChat);
     }
 
     #[test]
     fn test_ollama_message_partial_eq() {
-        let message1 = OllamaMessage::user("Same content".to_string());
-        let message2 = OllamaMessage::user("Same content".to_string());
-        let message3 = OllamaMessage::user("Different content".to_string());
-        let message4 = OllamaMessage::assistant("Same content".to_string());
+        let message1 = OllamaChat::user("Same content".to_string());
+        let message2 = OllamaChat::user("Same content".to_string());
+        let message3 = OllamaChat::user("Different content".to_string());
+        let message4 = OllamaChat::assistant("Same content".to_string());
 
         assert_eq!(message1, message2);
         assert_ne!(message1, message3);
@@ -209,10 +206,10 @@ JSON special: {"key": "value"}"#;
 
     #[test]
     fn test_ollama_message_debug_format() {
-        let message = OllamaMessage::user("Debug test message".to_string());
+        let message = OllamaChat::user("Debug test message".to_string());
         let debug_string = format!("{:?}", message);
 
-        assert!(debug_string.contains("OllamaMessage"));
+        assert!(debug_string.contains("OllamaChat"));
         assert!(debug_string.contains("user"));
         assert!(debug_string.contains("Debug test message"));
     }
@@ -220,14 +217,14 @@ JSON special: {"key": "value"}"#;
     #[test]
     fn test_ollama_message_deserialization_invalid_json() {
         let invalid_json = r#"{"role":"user","invalid_field":"value"}"#; // Missing content field
-        let result: Result<OllamaMessage, _> = serde_json::from_str(invalid_json);
+        let result: Result<OllamaChat, _> = serde_json::from_str(invalid_json);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_ollama_message_deserialization_missing_role() {
         let json_missing_role = r#"{"content":"Message without role"}"#;
-        let result: Result<OllamaMessage, _> = serde_json::from_str(json_missing_role);
+        let result: Result<OllamaChat, _> = serde_json::from_str(json_missing_role);
         assert!(result.is_err());
     }
 
@@ -235,7 +232,7 @@ JSON special: {"key": "value"}"#;
     fn test_ollama_message_deserialization_extra_fields() {
         let json_extra_fields =
             r#"{"role":"user","content":"Message with extra fields","extra":"ignored"}"#;
-        let result: Result<OllamaMessage, _> = serde_json::from_str(json_extra_fields);
+        let result: Result<OllamaChat, _> = serde_json::from_str(json_extra_fields);
         assert!(result.is_ok());
 
         let message = result.unwrap();
@@ -248,12 +245,12 @@ JSON special: {"key": "value"}"#;
         let user_content = "Test content";
         let assistant_content = "Assistant response";
 
-        let user_msg1 = OllamaMessage::user(user_content.to_string());
-        let user_msg2 = OllamaMessage::new("user".to_string(), user_content.to_string());
+        let user_msg1 = OllamaChat::user(user_content.to_string());
+        let user_msg2 = OllamaChat::new("user".to_string(), user_content.to_string());
 
-        let assistant_msg1 = OllamaMessage::assistant(assistant_content.to_string());
+        let assistant_msg1 = OllamaChat::assistant(assistant_content.to_string());
         let assistant_msg2 =
-            OllamaMessage::new("assistant".to_string(), assistant_content.to_string());
+            OllamaChat::new("assistant".to_string(), assistant_content.to_string());
 
         assert_eq!(user_msg1, user_msg2);
         assert_eq!(assistant_msg1, assistant_msg2);

@@ -48,7 +48,7 @@ mod tests {
     fn test_extract_json_from_markdown() {
         let markdown_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "Eva",
     "message": "informing her that I won't be able to attend the meeting"
@@ -58,7 +58,7 @@ mod tests {
 
         let result =
             OllamaIntentResponseContent::extract_json_from_markdown(markdown_content).unwrap();
-        assert!(result.contains("SendEmail"));
+        assert!(result.contains("send_email"));
         assert!(result.contains("Eva"));
     }
 
@@ -66,7 +66,7 @@ mod tests {
     fn test_from_markdown_json() {
         let markdown_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "Eva",
     "message": "informing her that I won't be able to attend the meeting"
@@ -86,7 +86,7 @@ mod tests {
     #[test]
     fn test_fallback_plain_json() {
         let plain_json = r#"{
-  "intent": "ScheduleMeeting",
+  "intent": "schedule_meeting",
   "params": {
     "recipient": "John",
     "message": "Let's schedule a meeting"

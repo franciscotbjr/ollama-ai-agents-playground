@@ -56,7 +56,7 @@ mod tests {
     fn test_raw_content_with_markdown_json() {
         let markdown_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "test@example.com",
     "message": "Hello world"
@@ -72,7 +72,7 @@ mod tests {
     fn test_parsed_content_success() {
         let markdown_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "eva@company.com",
     "message": "Meeting update"
@@ -90,7 +90,7 @@ mod tests {
     #[test]
     fn test_parsed_content_with_plain_json() {
         let plain_json = r#"{
-  "intent": "ScheduleMeeting",
+  "intent": "schedule_meeting",
   "params": {
     "recipient": "john@example.com",
     "message": "Let's schedule a meeting"
@@ -116,7 +116,7 @@ mod tests {
     fn test_parsed_content_with_no_action() {
         let no_action_json = r#"```json
 {
-  "intent": "NoAction",
+  "intent": "no_action",
   "params": {
     "recipient": null,
     "message": null
@@ -135,7 +135,7 @@ mod tests {
     fn test_content_method_with_valid_json() {
         let markdown_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "test@example.com",
     "message": "Test message"
@@ -146,7 +146,7 @@ mod tests {
 
         let content = message.content();
         // Should return the serialized JSON, not the original markdown
-        assert!(content.contains("SendEmail"));
+        assert!(content.contains("send_email"));
         assert!(content.contains("test@example.com"));
         assert!(!content.contains("```json")); // Should not contain markdown markers
     }
@@ -165,12 +165,12 @@ mod tests {
     fn test_deserialization_from_json() {
         let json_str = r#"{
   "role": "assistant",
-  "content": "```json\n{\n  \"intent\": \"SendEmail\",\n  \"params\": {\n    \"recipient\": \"Eva\",\n    \"message\": \"Meeting canceled\"\n  }\n}\n```"
+  "content": "```json\n{\n  \"intent\": \"send_email\",\n  \"params\": {\n    \"recipient\": \"Eva\",\n    \"message\": \"Meeting canceled\"\n  }\n}\n```"
 }"#;
 
         let message: OllamaResponseMessage = serde_json::from_str(json_str).unwrap();
         assert_eq!(message.role, "assistant");
-        assert!(message.raw_content().contains("SendEmail"));
+        assert!(message.raw_content().contains("send_email"));
         assert!(message.raw_content().contains("Eva"));
     }
 
@@ -178,7 +178,7 @@ mod tests {
     fn test_content_with_unicode_characters() {
         let unicode_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "用户@example.com",
     "message": "Hello 世界! 🌍"
@@ -205,7 +205,7 @@ mod tests {
     fn test_malformed_json_in_markdown() {
         let malformed_content = r#"```json
 {
-  "intent": "SendEmail",
+  "intent": "send_email",
   "params": {
     "recipient": "test@example.com"
     // Missing comma and closing brace

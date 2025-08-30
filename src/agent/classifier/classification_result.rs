@@ -51,7 +51,7 @@ mod tests {
         let result = ClassificationResult::new(Intent::SendEmail, params);
 
         let json_string = result.to_json_string().unwrap();
-        assert!(json_string.contains("SendEmail"));
+        assert!(json_string.contains("send_email"));
         assert!(json_string.contains("eva@company.com"));
         assert!(json_string.contains("informing her"));
     }
@@ -60,7 +60,7 @@ mod tests {
     fn test_deserialization_from_json() {
         let json_str = r#"
         {
-            "intent": "SendEmail",
+            "intent": "send_email",
             "params": {
                 "recipient": "test@example.com",
                 "message": "Hello world"

@@ -22,10 +22,7 @@ impl std::fmt::Display for AgentError {
 impl Error for AgentError {}
 
 pub trait Agent<P: AgentParam, T: AgentResult> {
-    fn process(
-        &self,
-        input: P,
-    ) -> impl std::future::Future<Output = Result<T, AgentError>> + Send;
+    fn process(&self, input: P) -> impl std::future::Future<Output = Result<T, AgentError>> + Send;
 }
 
 pub trait AgentParam {}

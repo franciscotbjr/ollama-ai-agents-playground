@@ -45,7 +45,8 @@ if (Test-Path $DEV_NOTES_FILE) {
     try {
         $devNotes = Get-Content $DEV_NOTES_FILE -Raw
         Write-Host "✅ Development history loaded successfully"
-        Write-Host "   File size: $(($devNotes -split "`n").Count) lines"
+        $lineCount = ($devNotes -split [Environment]::NewLine).Count
+        Write-Host "   File size: $lineCount lines"
     } catch {
         Write-Host "❌ Error reading DEV_NOTES.md: $($_.Exception.Message)"
     }
@@ -70,7 +71,8 @@ foreach ($specFile in $SPEC_FILES) {
     if (Test-Path $specFile) {
         try {
             $content = Get-Content $specFile -Raw
-            Write-Host "   ✅ READ: $specFile ($(($content -split "`n").Count) lines)"
+            $lineCount = ($content -split [Environment]::NewLine).Count
+            Write-Host "   ✅ READ: $specFile ($lineCount lines)"
         } catch {
             Write-Host "   ❌ ERROR reading $specFile : $($_.Exception.Message)"
         }
@@ -97,7 +99,8 @@ if (Test-Path "spec\Ollama REST API.postman_collection.json") {
 Write-Host "   📝 Reading development progress:"
 if (Test-Path "DEV_NOTES.md") {
     $devNotes = Get-Content "DEV_NOTES.md" -Raw
-    Write-Host "   ✅ READ: DEV_NOTES.md ($(($devNotes -split "`n").Count) lines of progress)"
+    $lineCount = ($devNotes -split [Environment]::NewLine).Count
+    Write-Host "   ✅ READ: DEV_NOTES.md ($lineCount lines of progress)"
 } else {
     Write-Host "   📝 Will create DEV_NOTES.md to track progress"
 }

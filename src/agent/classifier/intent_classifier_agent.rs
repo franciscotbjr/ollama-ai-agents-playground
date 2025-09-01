@@ -1,6 +1,8 @@
 use crate::{
     agent::{
-        agent::AgentParam, classifier::{ClassifierPrompt, ToClassificationResult}, Agent, AgentError, ClassificationResult
+        Agent, AgentError, ClassificationResult,
+        agent::AgentParam,
+        classifier::{ToClassificationResult}, agent_prompt::AgentPrompt,
     },
     infra::ollama::OllamaClient,
 };
@@ -14,18 +16,16 @@ impl IntentClassifierAgent {
 }
 
 pub struct IntentParam {
-    input: String
+    input: String,
 }
 
 impl IntentParam {
     pub fn new(input: String) -> Self {
-        Self { 
-            input
-        }
+        Self { input }
     }
 }
 
-impl AgentParam for  IntentParam {}
+impl AgentParam for IntentParam {}
 
 impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
     fn process(
@@ -60,7 +60,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
 }
 
 fn build_prompt(input: &str) -> String {
-    ClassifierPrompt::builder()
+    AgentPrompt::builder()
         .add_instruction(CLASSIFY_INTENT_TO_JSON)
         .add_instruction(SPACE)
         .add_instruction(OUTPUT_FORMART)

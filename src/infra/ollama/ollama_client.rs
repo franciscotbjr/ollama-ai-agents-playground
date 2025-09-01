@@ -57,13 +57,36 @@ impl OllamaClient {
 
     pub async fn create_assistant(
         &self,
-        system: &String, 
-        name: &String,
+        system: String,
+        name: String,
     ) -> Result<OllamaCreateResponse, Box<dyn std::error::Error>> {
-        // TODO: Implement create assistant functionality
-        Ok(OllamaCreateResponse::new(vec![
-            format!("Assistant '{}' created successfully", name),
-            format!("Assistant '{}' created successfully", system),
-        ]))
+        let create_request = OllamaCreateRequest::new(
+            Config::get().ollama.api.model.clone(), 
+            system.clone(), 
+            name.clone());
+
+        let json_request = serde_json::to_string(&create_request);
+
+        match json_request {
+            Ok(request_body) => {
+                let response = self
+                    .http_client
+                    .send_request::<OllamaCreateResponse>(request_body.as_str())
+                    .await?;
+                if response.success {
+                    response
+                        .data
+                        .ok_or_else(|| "No data received from Ollama API".into())
+                } else {
+                    let error_msg = response
+                        .error
+                        .map(|e| format!("{}: {}", e.error, e.message))
+                        .unwrap_or_else(|| "Unknown error occurred".to_string());
+                    Err(error_msg.into())
+                }
+            }
+            Err(e) => Err(e.to_string().into()),
+        }
+
     }
 }

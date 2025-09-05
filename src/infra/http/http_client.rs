@@ -3,13 +3,15 @@ use crate::infra::http::{HttpError, HttpResponse};
 pub struct HttpClient {
     client: reqwest::Client,
     base_url: String,
+    end_point: String,
 }
 
 impl HttpClient {
-    pub fn new(base_url: String) -> Self {
+    pub fn new(base_url: String, end_point: String) -> Self {
         Self {
             client: reqwest::Client::new(),
             base_url,
+            end_point,
         }
     }
 
@@ -21,10 +23,11 @@ impl HttpClient {
         T: serde::de::DeserializeOwned,
     {
         let url = &self.base_url;
+        let end_point = &self.end_point;
 
         let response = self
             .client
-            .post(url)
+            .post(format!("{}{}", url, end_point))
             .header("Content-Type", "application/json")
             .body(body.to_string())
             .send()

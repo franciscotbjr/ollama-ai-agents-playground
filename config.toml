@@ -2,5 +2,10 @@
 path = "D:\\development\\assistant.db"
 
 [ollama.api]
-url = "http://localhost:11434/api/chat"
+url = "http://localhost:11434/api"
+chat = "/chat"
+create = "/create"
 model = "gemma3"
+
+[assistant.root]
+name = "assistant"

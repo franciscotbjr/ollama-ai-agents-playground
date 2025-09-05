@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(command -v:*)"
+      "Bash(command -v:*)",
+      "Bash(ls:*)",
+      "Bash(cargo test:*)",
+      "Bash(powershell:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

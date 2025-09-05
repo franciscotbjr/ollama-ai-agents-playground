@@ -1,10 +1,14 @@
 use crate::{
     agent::{
-        agent::AgentParam, assistant::{create_result, CreateResult}, Agent, AgentError, AgentPrompt
+        Agent, AgentError, AgentPrompt,
+        agent::AgentParam,
+        assistant::{CreateResult, create_result},
     },
+    config::Config,
     infra::ollama::OllamaClient,
 };
 
+#[derive(Default)]
 pub struct CreateAssistantAgent {}
 
 impl CreateAssistantAgent {
@@ -13,6 +17,7 @@ impl CreateAssistantAgent {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct CreateParam {
     assistant_to: String,
     name: String,
@@ -34,8 +39,9 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
         async move {
             let result = OllamaClient::new()
                 .create_assistant(
-                    build_system_prompt(&input), 
-                    build_assistante_name(&input.name.clone()))
+                    build_system_prompt(&input),
+                    build_assistant_name(&input.name),
+                )
                 .await;
 
             match result {
@@ -43,7 +49,7 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
                     let success_messages: Vec<bool> = create_result
                         .messages
                         .iter()
-                        .map(|m| m.status.eq_ignore_ascii_case("success"))
+                        .map(|m| m.status.eq_ignore_ascii_case(SUCCESS))
                         .collect();
                     let has_success = success_messages.iter().any(|&success| success);
                     Ok(CreateResult::new(has_success))
@@ -57,30 +63,33 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
     }
 }
 
-fn build_assistante_name(name: &str) -> String {
-    format!("personal-assistant-{}", name)
+fn build_assistant_name(name: &str) -> String {
+    let config = Config::get();
+    config.assistant.root.to_name(name)
 }
 
 fn build_system_prompt(input: &CreateParam) -> String {
     AgentPrompt::builder()
-    .add_instruction(PERSONAL_IDENTITY)
-    .add_instruction(LINE)
-    .add_instruction(YOUR_NAME.replace("{}", &input.name).as_str())
-    .add_instruction(LINE)
-    .add_instruction(ASSISTANT_TO.replace("{}", &input.assistant_to).as_str())
-    .add_instruction(LINE)
-    .add_instruction(PERSONAL_ASSISTANT)
-    .build()
-    .content()
-    .to_string()
+        .add_instruction(PERSONAL_IDENTITY)
+        .add_instruction(LINE)
+        .add_instruction(YOUR_NAME.replace("{}", &input.name).as_str())
+        .add_instruction(LINE)
+        .add_instruction(ASSISTANT_TO.replace("{}", &input.assistant_to).as_str())
+        .add_instruction(LINE)
+        .add_instruction(PERSONAL_ASSISTANT)
+        .build()
+        .content()
+        .to_string()
 }
 
-const PERSONAL_IDENTITY : &str =  "        PERSONAL IDENTITY:";
-const YOUR_NAME : &str =  "Your name is {} ";
-const ASSISTANT_TO : &str =  "You are assistant to {}";
-const LINE : &str =  "\n";
+const SUCCESS: &str = "success";
 
-const PERSONAL_ASSISTANT : &str = r#"
+const PERSONAL_IDENTITY: &str = "        PERSONAL IDENTITY:";
+const YOUR_NAME: &str = "Your name is {} ";
+const ASSISTANT_TO: &str = "You are assistant to {}";
+const LINE: &str = "\n";
+
+const PERSONAL_ASSISTANT: &str = r#"
         PROFESSIONAL IDENTITY:
         You are an Intelligent Personal Assistant with extensive experience in executive support, project management, and personal organization.
 
@@ -89,7 +98,10 @@ const PERSONAL_ASSISTANT : &str = r#"
         - Task Prioritization & Project Organization
         - Communication Management & Email Drafting
         - Travel Planning & Logistics Coordination
-        - Research & Information Synthesis
+        - Quick Research & General Queries  
+        - Language Assistance & Word Support
+        - Unit Conversion & Measurement Tools
+        - Mathematical Calculations & Problem Solving
         - Personal Finance Organization & Budget Tracking
 
         ASSISTANT METHODOLOGY:
@@ -139,6 +151,24 @@ const PERSONAL_ASSISTANT : &str = r#"
            
            - no_action: General conversation or unclear intent
              Parameters: context, clarification_needed
+             
+           # ENHANCED USER SUPPORT INTENTS
+           
+           - quick_research: Quick research and general information queries
+             Parameters: query, urgency, context
+             Examples: "Research the benefits of vitamin D", "What's the capital of Canada?"
+           
+           - word_assistance: Word assistance, spelling, and language support
+             Parameters: word, action (spell/define/synonym), language
+             Examples: "How do you spell 'definitely'?", "What does 'serendipity' mean?"
+           
+           - unit_conversion: Unit and measurement conversions
+             Parameters: value, from_unit, to_unit, measurement_type
+             Examples: "Convert 100 km to miles", "How many Celsius degrees is 350°F?"
+           
+           - math_calculation: Simple and complex mathematical calculations
+             Parameters: expression, operation_type, precision, context
+             Examples: "What is 15% of 250?", "Calculate the area of a circle with radius 5cm"
 
            INTENT CLASSIFICATION PROCESS:
            a) Natural language understanding and parsing
@@ -155,21 +185,21 @@ const PERSONAL_ASSISTANT : &str = r#"
            - Dependency mapping and sequencing
            - Impact analysis for decision support
 
-        2. COMMUNICATION MANAGEMENT
+        3. COMMUNICATION MANAGEMENT
            - Professional email composition and review
            - Meeting agenda preparation and follow-up
            - Stakeholder coordination and updates
            - Message summarization and action items
            - Tone adaptation for different audiences
 
-        3. ORGANIZATIONAL SYSTEMS
+        4. ORGANIZATIONAL SYSTEMS
            - Digital workspace optimization
            - File naming conventions and structure
            - Document version control
            - Information categorization and tagging
            - Backup and sync strategy recommendations
 
-        4. PERSONAL PRODUCTIVITY
+        5. PERSONAL PRODUCTIVITY
            - Daily routine optimization
            - Goal setting and progress tracking
            - Habit formation and maintenance
@@ -238,6 +268,14 @@ const PERSONAL_ASSISTANT : &str = r#"
         - Gift selection with personal consideration
         - Service provider evaluation and vetting
         - Industry trend monitoring and summaries
+
+        ENHANCED SUPPORT CAPABILITIES:
+        - Quick research and instant information retrieval
+        - Word assistance, spelling, and language support
+        - Unit conversion and measurement calculations
+        - Mathematical problem solving and calculations
+        - Educational support for learning and understanding
+        - Multilingual word definitions and translations
 
         PERSONAL FINANCE SUPPORT:
         - Budget tracking and expense categorization

@@ -9,11 +9,7 @@ pub struct OllamaCreateRequest {
 
 impl OllamaCreateRequest {
     pub fn new(from: String, system: String, name: String) -> Self {
-        Self {
-            from,
-            system,
-            name,
-        }
+        Self { from, system, name }
     }
 }
 
@@ -43,13 +39,15 @@ mod tests {
         );
         let json = serde_json::to_string(&request).expect("Serialization should succeed");
 
-        let expected_json = r#"{"from":"llama2","system":"Test system message","name":"test_assistant"}"#;
+        let expected_json =
+            r#"{"from":"llama2","system":"Test system message","name":"test_assistant"}"#;
         assert_eq!(json, expected_json);
     }
 
     #[test]
     fn test_ollama_create_request_deserialization() {
-        let json = r#"{"from":"foundation","system":"You are an AI assistant","name":"claude_assistant"}"#;
+        let json =
+            r#"{"from":"foundation","system":"You are an AI assistant","name":"claude_assistant"}"#;
         let request: OllamaCreateRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
         assert_eq!(request.from, "foundation");

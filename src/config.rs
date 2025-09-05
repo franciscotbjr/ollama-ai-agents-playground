@@ -38,6 +38,12 @@ pub struct ApiConfig {
     pub create: String,
     pub show: String,
     pub model: String,
+    pub options: ApiOptions,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct ApiOptions {
+    pub temperature: f32,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -134,6 +140,8 @@ chat = "/chat"
 create = "/create"
 show = "/show"
 model = "test-model"
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = "test-assistant-"
@@ -153,6 +161,7 @@ name = "test-assistant-"
         assert_eq!(config.ollama.api.create, "/create");
         assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "test-model");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.assistant.root.name, "test-assistant-");
 
         cleanup_test_file(test_path);
@@ -216,6 +225,7 @@ path = "/test/database.db"
                     create: "/create".to_string(),
                     show: "/show".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 }
                 },
             },
             assistant: AssistantConfig {
@@ -249,6 +259,8 @@ chat = ""
 create = ""
 show = ""
 model = ""
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = ""
@@ -268,6 +280,7 @@ name = ""
         assert_eq!(config.ollama.api.create, "");
         assert_eq!(config.ollama.api.show, "");
         assert_eq!(config.ollama.api.model, "");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.assistant.root.name, "");
 
         cleanup_test_file(test_path);
@@ -290,6 +303,8 @@ chat = "/chat?param=value&other=123"
 create = "/create-endpoint"
 show = "/show"
 model = "model-with-dashes_and_underscores"
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = "assistant-prefix_with-special-chars"
@@ -311,6 +326,7 @@ name = "assistant-prefix_with-special-chars"
         assert_eq!(config.ollama.api.chat, "/chat?param=value&other=123");
         assert_eq!(config.ollama.api.create, "/create-endpoint");
         assert_eq!(config.ollama.api.show, "/show");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.ollama.api.model, "model-with-dashes_and_underscores");
         assert_eq!(
             config.assistant.root.name,
@@ -337,6 +353,8 @@ chat = "/café-chat"
 create = "/创建-endpoint"
 show = "/show"
 model = "模型-test-ñoño"
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = "助理-prefix-café"
@@ -356,6 +374,7 @@ name = "助理-prefix-café"
         assert_eq!(config.ollama.api.create, "/创建-endpoint");
         assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "模型-test-ñoño");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.assistant.root.name, "助理-prefix-café");
 
         cleanup_test_file(test_path);
@@ -378,6 +397,7 @@ name = "助理-prefix-café"
         assert_eq!(config1.ollama.api.create, config2.ollama.api.create);
         assert_eq!(config1.ollama.api.show, config2.ollama.api.show);
         assert_eq!(config1.ollama.api.model, config2.ollama.api.model);
+        assert_eq!(config1.ollama.api.options.temperature, config2.ollama.api.options.temperature);
         assert_eq!(config1.assistant.root.name, config2.assistant.root.name);
     }
 
@@ -398,6 +418,7 @@ name = "助理-prefix-café"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "test-model".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.url, "http://test.com/api");
@@ -405,6 +426,7 @@ name = "助理-prefix-café"
         assert_eq!(api_config.create, "/create");
         assert_eq!(api_config.show, "/show");
         assert_eq!(api_config.model, "test-model");
+        assert_eq!(api_config.options.temperature, 0.0);
     }
 
     #[test]
@@ -416,6 +438,7 @@ name = "助理-prefix-café"
                 create: "/create".to_string(),
                 show: "/show".to_string(),
                 model: "test-model".to_string(),
+                options: ApiOptions { temperature: 0.0 }
             },
         };
 
@@ -424,6 +447,7 @@ name = "助理-prefix-café"
         assert_eq!(ollama_config.api.create, "/create");
         assert_eq!(ollama_config.api.show, "/show");
         assert_eq!(ollama_config.api.model, "test-model");
+        assert_eq!(ollama_config.api.options.temperature, 0.0);
     }
 
     #[test]
@@ -445,6 +469,7 @@ name = "助理-prefix-café"
                     create: "/create".to_string(),
                     show: "/show".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 }
                 },
             },
             assistant: AssistantConfig {
@@ -462,6 +487,7 @@ name = "助理-prefix-café"
         assert_eq!(config.ollama.api.create, "/create");
         assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "test-model");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.assistant.root.name, "test-assistant-");
     }
 
@@ -484,6 +510,7 @@ name = "助理-prefix-café"
                     create: "/create".to_string(),
                     show: "/show".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 }
                 },
             },
             assistant: AssistantConfig {
@@ -502,6 +529,7 @@ name = "助理-prefix-café"
         assert!(debug_string.contains("/chat"));
         assert!(debug_string.contains("/create"));
         assert!(debug_string.contains("/show"));
+        assert!(debug_string.contains("0.0"));
         assert!(debug_string.contains("test-model"));
         assert!(debug_string.contains("debug-assistant-"));
     }
@@ -643,6 +671,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api/chat");
@@ -656,6 +685,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.create_url(), "http://localhost:11434/api/create");
@@ -669,6 +699,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.show_url(), "http://localhost:11434/api/show");
@@ -682,6 +713,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.base_url(), "http://localhost:11434/api");
@@ -695,6 +727,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(
@@ -715,6 +748,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api//chat");
@@ -736,6 +770,7 @@ model = "test-model"
             create: "/create?format=json".to_string(),
             show: "/show?details=true".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(
@@ -760,6 +795,7 @@ model = "test-model"
             create: "/创建".to_string(),
             show: "/显示".to_string(),
             model: "测试模型".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api/聊天");
@@ -775,6 +811,7 @@ model = "test-model"
             create: "".to_string(),
             show: "".to_string(),
             model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 }
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api");
@@ -914,6 +951,8 @@ url = "http://localhost:8080/api"
 chat = "/chat"
 create = "/create"
 model = "test-model"
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = "test-assistant-"

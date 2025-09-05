@@ -10,7 +10,9 @@ url = "http://localhost:11434/api"
 chat = "/chat"
 create = "/create"
 show = "/show"
-model = "gemma3"
+model = "qwen3:0.6b"
+[ollama.api.options]
+temperature = 0
 
 [assistant.root]
 name = "assistant"

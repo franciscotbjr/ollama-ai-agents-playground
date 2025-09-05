@@ -5,7 +5,8 @@
       "Bash(ls:*)",
       "Bash(cargo test:*)",
       "Bash(powershell:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(cargo:*)"
     ],
     "deny": [],
     "ask": []

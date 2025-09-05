@@ -75,7 +75,7 @@ impl OllamaClient {
         match json_request {
             Ok(request_body) => {
                 let response = http_client
-                    .send_request::<OllamaCreateResponse>(request_body.as_str())
+                    .send_ndjson_request(request_body.as_str())
                     .await?;
                 if response.success {
                     response

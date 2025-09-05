@@ -6,6 +6,8 @@ pub mod ollama_create_request;
 pub mod ollama_intent_response_content;
 pub mod ollama_response;
 pub mod ollama_response_message;
+pub mod ollama_check_result;
+pub mod ollama_check_request;
 
 pub use ollama_chat::OllamaChat;
 pub use ollama_chat_request::OllamaChatRequest;
@@ -15,3 +17,5 @@ pub use ollama_create_request::OllamaCreateRequest;
 pub use ollama_intent_response_content::OllamaIntentResponseContent;
 pub use ollama_response::OllamaResponse;
 pub use ollama_response_message::OllamaResponseMessage;
+pub use ollama_check_result::OllamaCheckResult;
+pub use ollama_check_request::OllamaCheckRequest;

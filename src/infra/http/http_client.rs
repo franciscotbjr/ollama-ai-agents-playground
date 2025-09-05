@@ -34,12 +34,14 @@ impl HttpClient {
             .send()
             .await?;
 
+        let status = response.status().as_u16();
         if response.status().is_success() {
             let data: T = response.json().await?;
             Ok(HttpResponse {
                 success: true,
                 data: Some(data),
                 error: None,
+                status,
             })
         } else {
             let error_text = response.text().await?;
@@ -50,6 +52,7 @@ impl HttpClient {
                     error: "HTTP Error".to_string(),
                     message: error_text,
                 }),
+                status,
             })
         }
     }
@@ -71,6 +74,7 @@ impl HttpClient {
             .send()
             .await?;
 
+        let status = response.status().as_u16();
         if response.status().is_success() {
             let text = response.text().await?;
             let mut messages = Vec::new();
@@ -93,6 +97,7 @@ impl HttpClient {
                 success: true,
                 data: Some(data),
                 error: None,
+                status,
             })
         } else {
             let error_text = response.text().await?;
@@ -103,6 +108,7 @@ impl HttpClient {
                     error: "HTTP Error".to_string(),
                     message: error_text,
                 }),
+                status,
             })
         }
     }

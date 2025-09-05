@@ -36,6 +36,7 @@ pub struct ApiConfig {
     pub url: String,
     pub chat: String,
     pub create: String,
+    pub show: String,
     pub model: String,
 }
 
@@ -64,6 +65,11 @@ impl ApiConfig {
     /// Returns the full URL for the create endpoint
     pub fn create_url(&self) -> String {
         format!("{}{}", self.url, self.create)
+    }
+
+    /// Returns the full URL for the show endpoint
+    pub fn show_url(&self) -> String {
+        format!("{}{}", self.url, self.show)
     }
 
     /// Returns the base URL for the API
@@ -126,6 +132,7 @@ assistant = "Test Assistant"
 url = "http://localhost:8080/api"
 chat = "/chat"
 create = "/create"
+show = "/show"
 model = "test-model"
 
 [assistant.root]
@@ -144,6 +151,7 @@ name = "test-assistant-"
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/chat");
         assert_eq!(config.ollama.api.create, "/create");
+        assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "test-model");
         assert_eq!(config.assistant.root.name, "test-assistant-");
 
@@ -206,6 +214,7 @@ path = "/test/database.db"
                     url: "http://test.com/api".to_string(),
                     chat: "/chat".to_string(),
                     create: "/create".to_string(),
+                    show: "/show".to_string(),
                     model: "test-model".to_string(),
                 },
             },
@@ -238,6 +247,7 @@ assistant = ""
 url = ""
 chat = ""
 create = ""
+show = ""
 model = ""
 
 [assistant.root]
@@ -256,6 +266,7 @@ name = ""
         assert_eq!(config.ollama.api.url, "");
         assert_eq!(config.ollama.api.chat, "");
         assert_eq!(config.ollama.api.create, "");
+        assert_eq!(config.ollama.api.show, "");
         assert_eq!(config.ollama.api.model, "");
         assert_eq!(config.assistant.root.name, "");
 
@@ -277,6 +288,7 @@ assistant = "Special Assistant-ABC"
 url = "http://localhost:8080/api"
 chat = "/chat?param=value&other=123"
 create = "/create-endpoint"
+show = "/show"
 model = "model-with-dashes_and_underscores"
 
 [assistant.root]
@@ -298,6 +310,7 @@ name = "assistant-prefix_with-special-chars"
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/chat?param=value&other=123");
         assert_eq!(config.ollama.api.create, "/create-endpoint");
+        assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "model-with-dashes_and_underscores");
         assert_eq!(
             config.assistant.root.name,
@@ -322,6 +335,7 @@ assistant = "助理-José"
 url = "http://localhost:8080/api"
 chat = "/café-chat"
 create = "/创建-endpoint"
+show = "/show"
 model = "模型-test-ñoño"
 
 [assistant.root]
@@ -340,6 +354,7 @@ name = "助理-prefix-café"
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/café-chat");
         assert_eq!(config.ollama.api.create, "/创建-endpoint");
+        assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "模型-test-ñoño");
         assert_eq!(config.assistant.root.name, "助理-prefix-café");
 
@@ -361,6 +376,7 @@ name = "助理-prefix-café"
         assert_eq!(config1.ollama.api.url, config2.ollama.api.url);
         assert_eq!(config1.ollama.api.chat, config2.ollama.api.chat);
         assert_eq!(config1.ollama.api.create, config2.ollama.api.create);
+        assert_eq!(config1.ollama.api.show, config2.ollama.api.show);
         assert_eq!(config1.ollama.api.model, config2.ollama.api.model);
         assert_eq!(config1.assistant.root.name, config2.assistant.root.name);
     }
@@ -380,12 +396,14 @@ name = "助理-prefix-café"
             url: "http://test.com/api".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "test-model".to_string(),
         };
 
         assert_eq!(api_config.url, "http://test.com/api");
         assert_eq!(api_config.chat, "/chat");
         assert_eq!(api_config.create, "/create");
+        assert_eq!(api_config.show, "/show");
         assert_eq!(api_config.model, "test-model");
     }
 
@@ -396,6 +414,7 @@ name = "助理-prefix-café"
                 url: "http://test.com/api".to_string(),
                 chat: "/chat".to_string(),
                 create: "/create".to_string(),
+                show: "/show".to_string(),
                 model: "test-model".to_string(),
             },
         };
@@ -403,6 +422,7 @@ name = "助理-prefix-café"
         assert_eq!(ollama_config.api.url, "http://test.com/api");
         assert_eq!(ollama_config.api.chat, "/chat");
         assert_eq!(ollama_config.api.create, "/create");
+        assert_eq!(ollama_config.api.show, "/show");
         assert_eq!(ollama_config.api.model, "test-model");
     }
 
@@ -423,6 +443,7 @@ name = "助理-prefix-café"
                     url: "http://test.com/api".to_string(),
                     chat: "/chat".to_string(),
                     create: "/create".to_string(),
+                    show: "/show".to_string(),
                     model: "test-model".to_string(),
                 },
             },
@@ -439,6 +460,7 @@ name = "助理-prefix-café"
         assert_eq!(config.ollama.api.url, "http://test.com/api");
         assert_eq!(config.ollama.api.chat, "/chat");
         assert_eq!(config.ollama.api.create, "/create");
+        assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "test-model");
         assert_eq!(config.assistant.root.name, "test-assistant-");
     }
@@ -460,6 +482,7 @@ name = "助理-prefix-café"
                     url: "http://test.com/api".to_string(),
                     chat: "/chat".to_string(),
                     create: "/create".to_string(),
+                    show: "/show".to_string(),
                     model: "test-model".to_string(),
                 },
             },
@@ -478,6 +501,7 @@ name = "助理-prefix-café"
         assert!(debug_string.contains("http://test.com/api"));
         assert!(debug_string.contains("/chat"));
         assert!(debug_string.contains("/create"));
+        assert!(debug_string.contains("/show"));
         assert!(debug_string.contains("test-model"));
         assert!(debug_string.contains("debug-assistant-"));
     }
@@ -617,6 +641,7 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "gemma3".to_string(),
         };
 
@@ -629,10 +654,24 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "gemma3".to_string(),
         };
 
         assert_eq!(api_config.create_url(), "http://localhost:11434/api/create");
+    }
+
+    #[test]
+    fn test_api_config_show_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            model: "gemma3".to_string(),
+        };
+
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api/show");
     }
 
     #[test]
@@ -641,6 +680,7 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "gemma3".to_string(),
         };
 
@@ -653,6 +693,7 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "gemma3".to_string(),
         };
 
@@ -672,6 +713,7 @@ model = "test-model"
             url: "http://localhost:11434/api/".to_string(),
             chat: "/chat".to_string(),
             create: "/create".to_string(),
+            show: "/show".to_string(),
             model: "gemma3".to_string(),
         };
 
@@ -679,6 +721,10 @@ model = "test-model"
         assert_eq!(
             api_config.create_url(),
             "http://localhost:11434/api//create"
+        );
+        assert_eq!(
+            api_config.show_url(),
+            "http://localhost:11434/api//show"
         );
     }
 
@@ -688,6 +734,7 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/chat?stream=false".to_string(),
             create: "/create?format=json".to_string(),
+            show: "/show?details=true".to_string(),
             model: "gemma3".to_string(),
         };
 
@@ -699,6 +746,10 @@ model = "test-model"
             api_config.create_url(),
             "http://localhost:11434/api/create?format=json"
         );
+        assert_eq!(
+            api_config.show_url(),
+            "http://localhost:11434/api/show?details=true"
+        );
     }
 
     #[test]
@@ -707,11 +758,13 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "/聊天".to_string(),
             create: "/创建".to_string(),
+            show: "/显示".to_string(),
             model: "测试模型".to_string(),
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api/聊天");
         assert_eq!(api_config.create_url(), "http://localhost:11434/api/创建");
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api/显示");
     }
 
     #[test]
@@ -720,11 +773,13 @@ model = "test-model"
             url: "http://localhost:11434/api".to_string(),
             chat: "".to_string(),
             create: "".to_string(),
+            show: "".to_string(),
             model: "gemma3".to_string(),
         };
 
         assert_eq!(api_config.chat_url(), "http://localhost:11434/api");
         assert_eq!(api_config.create_url(), "http://localhost:11434/api");
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api");
     }
 
     #[test]
@@ -760,11 +815,14 @@ name = "test-assistant-"
         // Verify the endpoints are accessible and properly formatted
         let chat_url = config.ollama.api.chat_url();
         let create_url = config.ollama.api.create_url();
+        let show_url = config.ollama.api.show_url();
 
         assert!(chat_url.starts_with("http"));
         assert!(create_url.starts_with("http"));
+        assert!(show_url.starts_with("http"));
         assert!(chat_url.contains("/chat") || chat_url.ends_with("/api"));
         assert!(create_url.contains("/create") || create_url.ends_with("/api"));
+        assert!(show_url.contains("/show") || show_url.ends_with("/api"));
     }
 
     #[test]

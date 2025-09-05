@@ -2,7 +2,7 @@ use crate::config::Config;
 use crate::infra::http::HttpClient;
 use crate::infra::ollama::ollama_check_result::OllamaCheckResult;
 use crate::infra::ollama::{
-    OllamaChatRequest, OllamaCheckRequest, OllamaCreateRequest, OllamaCreateResponse, OllamaResponse
+    OllamaChatRequest, OllamaCheckRequest, OllamaCreateRequest, OllamaCreateResponse, OllamaOptions, OllamaResponse
 };
 
 pub struct OllamaClient {}
@@ -45,6 +45,7 @@ impl OllamaClient {
         let ollama_request = OllamaChatRequest::new(
             Config::get().assistant.root.to_name(named_to),
             body.to_string(),
+            Some(OllamaOptions { temperature: Config::get().ollama.api.options.temperature })
         );
 
         let config_api = &Config::get().ollama.api;

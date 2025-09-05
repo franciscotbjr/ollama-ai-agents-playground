@@ -8,6 +8,7 @@ pub mod ollama_response;
 pub mod ollama_response_message;
 pub mod ollama_check_result;
 pub mod ollama_check_request;
+pub mod ollama_options;
 
 pub use ollama_chat::OllamaChat;
 pub use ollama_chat_request::OllamaChatRequest;
@@ -19,3 +20,4 @@ pub use ollama_response::OllamaResponse;
 pub use ollama_response_message::OllamaResponseMessage;
 pub use ollama_check_result::OllamaCheckResult;
 pub use ollama_check_request::OllamaCheckRequest;
+pub use ollama_options::OllamaOptions;

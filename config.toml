@@ -1,6 +1,10 @@
 [database]
 path = "D:\\development\\assistant.db"
 
+[user.settings]
+name = "Ana"
+assistant = "Tereza"
+
 [ollama.api]
 url = "http://localhost:11434/api"
 chat = "/chat"

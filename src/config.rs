@@ -2,24 +2,36 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct Config {
     pub database: DatabaseConfig,
+    pub user: UserConfig,
     pub ollama: OllamaConfig,
     pub assistant: AssistantConfig,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct DatabaseConfig {
     pub path: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct UserConfig {
+    pub settings: UserSettings,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct UserSettings {
+    pub name: String,
+    pub assistant: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct OllamaConfig {
     pub api: ApiConfig,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct ApiConfig {
     pub url: String,
     pub chat: String,
@@ -27,12 +39,12 @@ pub struct ApiConfig {
     pub model: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct AssistantConfig {
     pub root: AssistantRootConfig,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct AssistantRootConfig {
     pub name: String,
 }
@@ -106,6 +118,10 @@ mod tests {
 [database]
 path = "/test/database.db"
 
+[user.settings]
+name = "Test User"
+assistant = "Test Assistant"
+
 [ollama.api]
 url = "http://localhost:8080/api"
 chat = "/chat"
@@ -123,6 +139,8 @@ name = "test-assistant-"
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "/test/database.db");
+        assert_eq!(config.user.settings.name, "Test User");
+        assert_eq!(config.user.settings.assistant, "Test Assistant");
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/chat");
         assert_eq!(config.ollama.api.create, "/create");
@@ -177,6 +195,12 @@ path = "/test/database.db"
             database: DatabaseConfig {
                 path: "/test/path.db".to_string(),
             },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Test User".to_string(),
+                    assistant: "Test Assistant".to_string(),
+                },
+            },
             ollama: OllamaConfig {
                 api: ApiConfig {
                     url: "http://test.com/api".to_string(),
@@ -206,6 +230,10 @@ path = "/test/database.db"
 [database]
 path = ""
 
+[user.settings]
+name = ""
+assistant = ""
+
 [ollama.api]
 url = ""
 chat = ""
@@ -223,6 +251,8 @@ name = ""
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "");
+        assert_eq!(config.user.settings.name, "");
+        assert_eq!(config.user.settings.assistant, "");
         assert_eq!(config.ollama.api.url, "");
         assert_eq!(config.ollama.api.chat, "");
         assert_eq!(config.ollama.api.create, "");
@@ -238,6 +268,10 @@ name = ""
         let test_content = r#"
 [database]
 path = "C:\\Users\\Test User\\database with spaces.db"
+
+[user.settings]
+name = "Special User_123"
+assistant = "Special Assistant-ABC"
 
 [ollama.api]
 url = "http://localhost:8080/api"
@@ -259,6 +293,8 @@ name = "assistant-prefix_with-special-chars"
             config.database.path,
             "C:\\Users\\Test User\\database with spaces.db"
         );
+        assert_eq!(config.user.settings.name, "Special User_123");
+        assert_eq!(config.user.settings.assistant, "Special Assistant-ABC");
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/chat?param=value&other=123");
         assert_eq!(config.ollama.api.create, "/create-endpoint");
@@ -278,6 +314,10 @@ name = "assistant-prefix_with-special-chars"
 [database]
 path = "/测试/数据库.db"
 
+[user.settings]
+name = "用户-María"
+assistant = "助理-José"
+
 [ollama.api]
 url = "http://localhost:8080/api"
 chat = "/café-chat"
@@ -295,6 +335,8 @@ name = "助理-prefix-café"
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "/测试/数据库.db");
+        assert_eq!(config.user.settings.name, "用户-María");
+        assert_eq!(config.user.settings.assistant, "助理-José");
         assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
         assert_eq!(config.ollama.api.chat, "/café-chat");
         assert_eq!(config.ollama.api.create, "/创建-endpoint");
@@ -314,6 +356,8 @@ name = "助理-prefix-café"
 
         // Content should be the same
         assert_eq!(config1.database.path, config2.database.path);
+        assert_eq!(config1.user.settings.name, config2.user.settings.name);
+        assert_eq!(config1.user.settings.assistant, config2.user.settings.assistant);
         assert_eq!(config1.ollama.api.url, config2.ollama.api.url);
         assert_eq!(config1.ollama.api.chat, config2.ollama.api.chat);
         assert_eq!(config1.ollama.api.create, config2.ollama.api.create);
@@ -368,6 +412,12 @@ name = "助理-prefix-café"
             database: DatabaseConfig {
                 path: "/test/db.db".to_string(),
             },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Test User".to_string(),
+                    assistant: "Test Assistant".to_string(),
+                },
+            },
             ollama: OllamaConfig {
                 api: ApiConfig {
                     url: "http://test.com/api".to_string(),
@@ -384,6 +434,8 @@ name = "助理-prefix-café"
         };
 
         assert_eq!(config.database.path, "/test/db.db");
+        assert_eq!(config.user.settings.name, "Test User");
+        assert_eq!(config.user.settings.assistant, "Test Assistant");
         assert_eq!(config.ollama.api.url, "http://test.com/api");
         assert_eq!(config.ollama.api.chat, "/chat");
         assert_eq!(config.ollama.api.create, "/create");
@@ -396,6 +448,12 @@ name = "助理-prefix-café"
         let config = Config {
             database: DatabaseConfig {
                 path: "/test/db.db".to_string(),
+            },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Debug User".to_string(),
+                    assistant: "Debug Assistant".to_string(),
+                },
             },
             ollama: OllamaConfig {
                 api: ApiConfig {
@@ -415,6 +473,8 @@ name = "助理-prefix-café"
         let debug_string = format!("{:?}", config);
         assert!(debug_string.contains("Config"));
         assert!(debug_string.contains("/test/db.db"));
+        assert!(debug_string.contains("Debug User"));
+        assert!(debug_string.contains("Debug Assistant"));
         assert!(debug_string.contains("http://test.com/api"));
         assert!(debug_string.contains("/chat"));
         assert!(debug_string.contains("/create"));
@@ -719,5 +779,93 @@ name = "test-assistant-"
             "assistant-professional"
         );
         assert_eq!(root_config.to_name(""), "assistant-");
+    }
+
+    // Tests for UserSettings and UserConfig
+    #[test]
+    fn test_user_settings_creation() {
+        let user_settings = UserSettings {
+            name: "Ana".to_string(),
+            assistant: "Tereza".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "Ana");
+        assert_eq!(user_settings.assistant, "Tereza");
+    }
+
+    #[test]
+    fn test_user_config_creation() {
+        let user_config = UserConfig {
+            settings: UserSettings {
+                name: "Test User".to_string(),
+                assistant: "Test Assistant".to_string(),
+            },
+        };
+
+        assert_eq!(user_config.settings.name, "Test User");
+        assert_eq!(user_config.settings.assistant, "Test Assistant");
+    }
+
+    #[test]
+    fn test_user_settings_with_empty_values() {
+        let user_settings = UserSettings {
+            name: "".to_string(),
+            assistant: "".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "");
+        assert_eq!(user_settings.assistant, "");
+    }
+
+    #[test]
+    fn test_user_settings_with_unicode() {
+        let user_settings = UserSettings {
+            name: "用户-María".to_string(),
+            assistant: "助理-José".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "用户-María");
+        assert_eq!(user_settings.assistant, "助理-José");
+    }
+
+    #[test]
+    fn test_user_settings_serialization() {
+        let user_settings = UserSettings {
+            name: "Serialization Test".to_string(),
+            assistant: "Test Assistant".to_string(),
+        };
+
+        let serialized = toml::to_string(&user_settings).expect("Serialization should succeed");
+        let deserialized: UserSettings =
+            toml::from_str(&serialized).expect("Deserialization should succeed");
+
+        assert_eq!(user_settings, deserialized);
+        assert_eq!(deserialized.name, "Serialization Test");
+        assert_eq!(deserialized.assistant, "Test Assistant");
+    }
+
+    #[test]
+    fn test_config_load_missing_user_section() {
+        let test_path = "test_config_no_user.toml";
+        let test_content = r#"
+[database]
+path = "/test/database.db"
+
+[ollama.api]
+url = "http://localhost:8080/api"
+chat = "/chat"
+create = "/create"
+model = "test-model"
+
+[assistant.root]
+name = "test-assistant-"
+"#;
+
+        create_test_config_file(test_path, test_content).expect("Failed to create test file");
+
+        let result = Config::load_from_file(test_path);
+        assert!(result.is_err(), "Config should fail to load without user section");
+
+        cleanup_test_file(test_path);
     }
 }

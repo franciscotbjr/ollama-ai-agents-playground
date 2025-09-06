@@ -1,5 +1,4 @@
 mod config;
-use std::f32::consts::E;
 
 use ollama_ai_agents_playground::{
     agents::{

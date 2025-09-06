@@ -44,11 +44,10 @@ impl OllamaClient {
         model: &str,
     ) -> Result<OllamaLoadResult, Box<dyn std::error::Error>> {
         let config_api = &Config::get().ollama.api;
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.load.clone());
-
+        
         let ollama_request = OllamaCheckRequest::new(model.to_string());
         let json_request = serde_json::to_string(&ollama_request);
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.chat.clone());
+        let http_client = HttpClient::new(config_api.url.clone(), config_api.load.clone());
 
         match json_request {
             Ok(request_body) => {

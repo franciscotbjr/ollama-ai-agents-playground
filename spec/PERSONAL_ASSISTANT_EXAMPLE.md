@@ -16,10 +16,13 @@ let personal_assistant = OllamaCreateRequest::new(
         - Communication Management & Email Drafting
         - Travel Planning & Logistics Coordination
         - Research & Information Synthesis
+<<<<<<< HEAD
         - Quick Research & General Queries  
         - Language Assistance & Word Support
         - Unit Conversion & Measurement Tools
         - Mathematical Calculations & Problem Solving
+=======
+>>>>>>> main
         - Personal Finance Organization & Budget Tracking
 
         ASSISTANT METHODOLOGY:
@@ -69,6 +72,7 @@ let personal_assistant = OllamaCreateRequest::new(
            
            - no_action: General conversation or unclear intent
              Parameters: context, clarification_needed
+<<<<<<< HEAD
              
            # ENHANCED USER SUPPORT INTENTS
            
@@ -87,6 +91,8 @@ let personal_assistant = OllamaCreateRequest::new(
            - math_calculation: Simple and complex mathematical calculations
              Parameters: expression, operation_type, precision, context
              Examples: "What is 15% of 250?", "Calculate the area of a circle with radius 5cm"
+=======
+>>>>>>> main
 
            INTENT CLASSIFICATION PROCESS:
            a) Natural language understanding and parsing
@@ -186,6 +192,7 @@ let personal_assistant = OllamaCreateRequest::new(
         - Gift selection with personal consideration
         - Service provider evaluation and vetting
         - Industry trend monitoring and summaries
+<<<<<<< HEAD
         
         ENHANCED SUPPORT CAPABILITIES:
         - Quick research and instant information retrieval
@@ -194,6 +201,8 @@ let personal_assistant = OllamaCreateRequest::new(
         - Mathematical problem solving and calculations
         - Educational support for learning and understanding
         - Multilingual word definitions and translations
+=======
+>>>>>>> main
 
         PERSONAL FINANCE SUPPORT:
         - Budget tracking and expense categorization
@@ -358,7 +367,10 @@ impl PersonalAssistantDemo {
         Self::test_travel_planning(&client).await?;
         Self::test_task_prioritization(&client).await?;
         Self::test_research_assistance(&client).await?;
+<<<<<<< HEAD
         Self::test_enhanced_support_features(&client).await?;
+=======
+>>>>>>> main
         
         Ok(())
     }
@@ -373,11 +385,15 @@ impl PersonalAssistantDemo {
             "Update my calendar preferences for better work-life balance",
             "Track my expenses for the marketing budget this quarter",
             "How's the progress on the Q4 report?",
+<<<<<<< HEAD
             "What's the weather like today?",
             "How do you spell 'definitely'?",
             "Convert 50 miles to kilometers",
             "What is 15% of 850?",
             "Research the benefits of meditation"
+=======
+            "What's the weather like today?"
+>>>>>>> main
         ];
         
         for input in test_inputs {
@@ -388,8 +404,12 @@ impl PersonalAssistantDemo {
                 
                 Available intents: send_email, schedule_meeting, manage_calendar, plan_travel, 
                 research_topic, task_management, financial_tracking, document_management, 
+<<<<<<< HEAD
                 contact_management, reminder_setting, preference_update, status_inquiry, no_action,
                 quick_research, word_assistance, unit_conversion, math_calculation
+=======
+                contact_management, reminder_setting, preference_update, status_inquiry, no_action
+>>>>>>> main
                 
                 Output format: {{"intent": "", "params": {{}}, "confidence": 0.95}}"#,
                 input
@@ -498,6 +518,7 @@ impl PersonalAssistantDemo {
         println!("Research Summary: {:?}", response);
         Ok(())
     }
+<<<<<<< HEAD
     
     async fn test_enhanced_support_features(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         // Test quick research
@@ -552,6 +573,8 @@ impl PersonalAssistantDemo {
         
         Ok(())
     }
+=======
+>>>>>>> main
 }
 
 #[tokio::main]
@@ -601,7 +624,11 @@ This personal assistant prompt creates a sophisticated AI model capable of handl
 
 ### Supported Intents for Personal Assistant
 
+<<<<<<< HEAD
 The personal assistant now supports **17 specialized intents** including enhanced user support features:
+=======
+The personal assistant now supports **13 specialized intents** beyond the basic `send_email`, `schedule_meeting`, and `no_action`:
+>>>>>>> main
 
 1. **send_email** - Email composition and sending
    - Example: "Send an email to Carlos about the project delay"
@@ -655,6 +682,7 @@ The personal assistant now supports **17 specialized intents** including enhance
     - Example: "What's the weather like today?"
     - Parameters: context, clarification_needed
 
+<<<<<<< HEAD
 14. **quick_research** - Quick research on any topic
     - Example: "Research the benefits of vitamin D"
     - Parameters: query, urgency, context
@@ -671,6 +699,8 @@ The personal assistant now supports **17 specialized intents** including enhance
     - Example: "What is 15% of 250?"
     - Parameters: expression, operation_type, precision, context
 
+=======
+>>>>>>> main
 ### Classification Features
 
 - **Multi-parameter extraction**: Each intent captures relevant context and parameters
@@ -679,6 +709,7 @@ The personal assistant now supports **17 specialized intents** including enhance
 - **Ambiguity resolution**: Asks clarifying questions when intent is unclear
 - **Specialized routing**: Directs each intent to appropriate handling systems
 
+<<<<<<< HEAD
 This comprehensive intent classification system enables the personal assistant to understand and respond to a wide variety of personal and professional requests with high accuracy and appropriate action routing.
 
 ## Guidelines for the Create Method
@@ -786,3 +817,6 @@ mod tests {
 3. **Language Support**: Support Portuguese and English for word assistance
 4. **Usage Context**: Adapt responses to user request context
 5. **Performance**: Optimize for quick responses in simple queries
+=======
+This comprehensive intent classification system enables the personal assistant to understand and respond to a wide variety of personal and professional requests with high accuracy and appropriate action routing.
+>>>>>>> main

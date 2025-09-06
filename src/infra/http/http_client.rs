@@ -30,7 +30,7 @@ impl HttpClient {
 
         let response = self
             .client
-            .post(format!("{}{}", url, end_point))
+            .post(format!("{url}{end_point}"))
             .header("Content-Type", "application/json")
             .body(body.to_string())
             .send()
@@ -70,7 +70,7 @@ impl HttpClient {
 
         let response = self
             .client
-            .post(format!("{}{}", url, end_point))
+            .post(format!("{url}{end_point}"))
             .header("Content-Type", "application/json")
             .body(body.to_string())
             .send()
@@ -88,11 +88,9 @@ impl HttpClient {
                     match serde_json::from_str::<OllamaCreateStatusMessage>(trimmed) {
                         Ok(status_msg) => messages.push(status_msg),
                         Err(e) => {
-                            return Err(format!(
-                                "Failed to parse NDJSON line '{}': {}",
-                                trimmed, e
-                            )
-                            .into());
+                            return Err(
+                                format!("Failed to parse NDJSON line '{trimmed}': {e}").into()
+                            );
                         }
                     }
                 }

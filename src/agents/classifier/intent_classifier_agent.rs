@@ -1,11 +1,12 @@
 use crate::{
-    agent::{
+    agents::{
         Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
         classifier::ToClassificationResult,
     },
     infra::ollama::OllamaClient,
 };
 
+#[derive(Debug, Default)]
 pub struct IntentClassifierAgent {}
 
 impl IntentClassifierAgent {
@@ -53,8 +54,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
                     }
                 }
                 Err(e) => Err(AgentError::ParseError(format!(
-                    "Classification failed: {}",
-                    e
+                    "Classification failed: {e}"
                 ))),
             }
         }

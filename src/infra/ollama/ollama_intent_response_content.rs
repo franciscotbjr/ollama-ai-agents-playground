@@ -1,5 +1,5 @@
-use crate::agent::Intent;
-use crate::agent::classifier::Params;
+use crate::agents::Intent;
+use crate::agents::classifier::Params;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -32,7 +32,7 @@ impl OllamaIntentResponseContent {
             return Ok(content.trim().to_string());
         }
 
-        Err(format!("Could not extract JSON from content: {}", content).into())
+        Err(format!("Could not extract JSON from content: {content}").into())
     }
 
     pub fn to_json_string(&self) -> Result<String, serde_json::Error> {

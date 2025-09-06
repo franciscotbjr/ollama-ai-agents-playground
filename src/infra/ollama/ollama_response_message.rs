@@ -35,7 +35,7 @@ impl OllamaResponseMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::agent::Intent;
+    use crate::agents::Intent;
 
     fn create_test_message(content: &str) -> OllamaResponseMessage {
         OllamaResponseMessage {

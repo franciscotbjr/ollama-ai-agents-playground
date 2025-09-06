@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::agent::AgentResult;
+use crate::agents::AgentResult;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ContactResult {}

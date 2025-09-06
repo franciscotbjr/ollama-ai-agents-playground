@@ -1,9 +1,5 @@
 use crate::{
-    agent::{
-        Agent, AgentError, AgentPrompt,
-        agent::AgentParam,
-        assistant::{CreateResult, create_result},
-    },
+    agents::{Agent, AgentError, AgentPrompt, agent::AgentParam, assistant::CreateResult},
     config::Config,
     infra::ollama::OllamaClient,
 };

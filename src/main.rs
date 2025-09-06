@@ -1,11 +1,8 @@
 mod config;
 use ollama_ai_agents_playground::{
-    agent::{
+    agents::{
         Agent,
-        assistant::{
-            self, CreateAssistantAgent,
-            create_assistant_agent::{self, CreateParam},
-        },
+        assistant::{CreateAssistantAgent, create_assistant_agent::CreateParam},
         classifier::{IntentClassifierAgent, IntentParam},
     },
     config::Config,
@@ -28,7 +25,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!();
         }
         Err(e) => {
-            println!("Creation Failed: {}", e);
+            println!("Creation Failed: {e}");
         }
     }
 
@@ -38,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Starting classifier...");
     println!();
     let input = "Envie um e-mail para Eva informando que não vou poder comparecer à reunião e que peço desculpas por avisar tão em cima da hora.";
-    let intent_classifier_agent = IntentClassifierAgent::new();
+    let intent_classifier_agent = IntentClassifierAgent::default();
     let result = intent_classifier_agent
         .process(IntentParam::new(input.to_string(), user_settings.assistant))
         .await;
@@ -54,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!();
         }
         Err(e) => {
-            println!("Classification Failed: {}", e);
+            println!("Classification Failed: {e}");
         }
     }
 

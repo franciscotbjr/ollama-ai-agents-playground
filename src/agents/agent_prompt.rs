@@ -16,7 +16,7 @@ impl AgentPrompt {
     }
 
     pub fn builder() -> AgentPromptBuilder {
-        AgentPromptBuilder::new()
+        AgentPromptBuilder::default()
     }
 }
 
@@ -26,15 +26,12 @@ impl fmt::Display for AgentPrompt {
     }
 }
 
+#[derive(Default, Debug)]
 pub struct AgentPromptBuilder {
     content: Option<String>,
 }
 
 impl AgentPromptBuilder {
-    pub fn new() -> Self {
-        Self { content: None }
-    }
-
     pub fn add_instruction(mut self, instruction: &str) -> Self {
         if self.content.is_none() {
             self.content = Some(instruction.to_string());

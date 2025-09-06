@@ -1,5 +1,7 @@
 use crate::infra::http::{HttpError, HttpResponse};
-use crate::infra::ollama::ollama_create_reponse::{OllamaCreateResponse, OllamaCreateStatusMessage};
+use crate::infra::ollama::ollama_create_reponse::{
+    OllamaCreateResponse, OllamaCreateStatusMessage,
+};
 
 pub struct HttpClient {
     client: reqwest::Client,
@@ -78,7 +80,7 @@ impl HttpClient {
         if response.status().is_success() {
             let text = response.text().await?;
             let mut messages = Vec::new();
-            
+
             // Parse each line as a separate JSON object
             for line in text.lines() {
                 let trimmed = line.trim();
@@ -86,12 +88,16 @@ impl HttpClient {
                     match serde_json::from_str::<OllamaCreateStatusMessage>(trimmed) {
                         Ok(status_msg) => messages.push(status_msg),
                         Err(e) => {
-                            return Err(format!("Failed to parse NDJSON line '{}': {}", trimmed, e).into());
+                            return Err(format!(
+                                "Failed to parse NDJSON line '{}': {}",
+                                trimmed, e
+                            )
+                            .into());
                         }
                     }
                 }
             }
-            
+
             let data = OllamaCreateResponse::new_with_status_messages(messages);
             Ok(HttpResponse {
                 success: true,
@@ -128,24 +134,24 @@ mod tests {
 {"status": "success"}"#;
 
         let mut messages = Vec::new();
-        
+
         // Parse each line as a separate JSON object (same logic as send_ndjson_request)
         for line in ndjson_text.lines() {
             let trimmed = line.trim();
             if !trimmed.is_empty() {
-                let status_msg: OllamaCreateStatusMessage = serde_json::from_str(trimmed)
-                    .expect("Should parse NDJSON line successfully");
+                let status_msg: OllamaCreateStatusMessage =
+                    serde_json::from_str(trimmed).expect("Should parse NDJSON line successfully");
                 messages.push(status_msg);
             }
         }
-        
+
         assert_eq!(messages.len(), 5);
         assert!(messages[0].status.contains("using existing layer"));
         assert!(messages[1].status.contains("using existing layer"));
         assert!(messages[2].status.contains("creating new layer"));
         assert_eq!(messages[3].status, "writing manifest");
         assert_eq!(messages[4].status, "success");
-        
+
         let response = OllamaCreateResponse::new_with_status_messages(messages);
         assert_eq!(response.messages.len(), 5);
     }
@@ -162,16 +168,16 @@ mod tests {
 "#;
 
         let mut messages = Vec::new();
-        
+
         for line in ndjson_text.lines() {
             let trimmed = line.trim();
             if !trimmed.is_empty() {
-                let status_msg: OllamaCreateStatusMessage = serde_json::from_str(trimmed)
-                    .expect("Should parse NDJSON line successfully");
+                let status_msg: OllamaCreateStatusMessage =
+                    serde_json::from_str(trimmed).expect("Should parse NDJSON line successfully");
                 messages.push(status_msg);
             }
         }
-        
+
         assert_eq!(messages.len(), 3);
         assert_eq!(messages[0].status, "first message");
         assert_eq!(messages[1].status, "second message");
@@ -186,7 +192,7 @@ invalid json line
 
         let mut messages = Vec::new();
         let mut parse_errors = Vec::new();
-        
+
         for line in invalid_ndjson.lines() {
             let trimmed = line.trim();
             if !trimmed.is_empty() {
@@ -196,7 +202,7 @@ invalid json line
                 }
             }
         }
-        
+
         assert_eq!(messages.len(), 2);
         assert_eq!(parse_errors.len(), 1);
         assert_eq!(messages[0].status, "valid message");
@@ -215,7 +221,7 @@ invalid json line
 {"status": "success"}"#;
 
         let mut messages = Vec::new();
-        
+
         for line in real_ollama_response.lines() {
             let trimmed = line.trim();
             if !trimmed.is_empty() {
@@ -224,7 +230,7 @@ invalid json line
                 messages.push(status_msg);
             }
         }
-        
+
         assert_eq!(messages.len(), 7);
         assert!(messages[0].status.contains("sha256:3d0b790534fe"));
         assert!(messages[1].status.contains("sha256:ae370d884f10"));
@@ -233,11 +239,11 @@ invalid json line
         assert!(messages[4].status.contains("sha256:cff3f395ef37"));
         assert_eq!(messages[5].status, "writing manifest");
         assert_eq!(messages[6].status, "success");
-        
+
         // Verify the response can be created successfully
         let response = OllamaCreateResponse::new_with_status_messages(messages);
         assert_eq!(response.messages.len(), 7);
-        
+
         // Test that the last message has "success" status for create_assistant_agent logic
         assert_eq!(response.messages.last().unwrap().status, "success");
     }

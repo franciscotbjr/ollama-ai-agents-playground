@@ -10,6 +10,7 @@ url = "http://localhost:11434/api"
 chat = "/chat"
 create = "/create"
 show = "/show"
+load = "/generate"
 model = "qwen3:0.6b"
 [ollama.api.options]
 temperature = 0

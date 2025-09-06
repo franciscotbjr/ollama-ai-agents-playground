@@ -1,9 +1,15 @@
 mod config;
-use ollama_ai_agents_playground::{agent::{
-    assistant::{
-        self, create_assistant_agent::{self, CreateParam}, CreateAssistantAgent
-    }, classifier::{IntentClassifierAgent, IntentParam}, Agent
-}, config::Config};
+use ollama_ai_agents_playground::{
+    agent::{
+        Agent,
+        assistant::{
+            self, CreateAssistantAgent,
+            create_assistant_agent::{self, CreateParam},
+        },
+        classifier::{IntentClassifierAgent, IntentParam},
+    },
+    config::Config,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

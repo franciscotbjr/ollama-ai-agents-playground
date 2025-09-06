@@ -2,12 +2,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OllamaCheckRequest {
-    pub name: String,
+    pub model: String,
 }
 
 impl OllamaCheckRequest {
-    pub fn new(name: String) -> Self {
-        Self { name }
+    pub fn new(model: String) -> Self {
+        Self { model }
     }
 }
 
@@ -19,7 +19,7 @@ mod tests {
     #[test]
     fn test_ollama_check_request_new() {
         let request = OllamaCheckRequest::new("gemma3".to_string());
-        assert_eq!(request.name, "gemma3");
+        assert_eq!(request.model, "gemma3");
     }
 
     #[test]
@@ -37,7 +37,7 @@ mod tests {
         let request: OllamaCheckRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
-        assert_eq!(request.name, "deserialized-model");
+        assert_eq!(request.model, "deserialized-model");
     }
 
     #[test]
@@ -56,7 +56,7 @@ mod tests {
         let cloned = original.clone();
 
         assert_eq!(original, cloned);
-        assert_eq!(cloned.name, "clone-test");
+        assert_eq!(cloned.model, "clone-test");
     }
 
     #[test]
@@ -81,20 +81,20 @@ mod tests {
     #[test]
     fn test_ollama_check_request_with_empty_name() {
         let request = OllamaCheckRequest::new("".to_string());
-        assert_eq!(request.name, "");
+        assert_eq!(request.model, "");
     }
 
     #[test]
     fn test_ollama_check_request_with_special_characters() {
         let model_name = "model-with_special.chars@123".to_string();
         let request = OllamaCheckRequest::new(model_name.clone());
-        assert_eq!(request.name, model_name);
+        assert_eq!(request.model, model_name);
     }
 
     #[test]
     fn test_ollama_check_request_with_unicode() {
         let model_name = "模型-test-café".to_string();
         let request = OllamaCheckRequest::new(model_name.clone());
-        assert_eq!(request.name, model_name);
+        assert_eq!(request.model, model_name);
     }
 }

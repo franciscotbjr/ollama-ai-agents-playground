@@ -11,4 +11,5 @@ pub struct HttpResponse<T> {
     pub success: bool,
     pub data: Option<T>,
     pub error: Option<HttpError>,
+    pub status: u16,
 }

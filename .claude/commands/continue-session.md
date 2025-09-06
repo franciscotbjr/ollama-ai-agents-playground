@@ -1,5 +1,42 @@
 # Continue Previous Conversation
 
+<<<<<<< HEAD
+I'll help you seamlessly continue your previous conversation by restoring all relevant context and progress for this Rust AI agents project.
+
+<function_calls>
+<invoke name="Bash">
+<parameter name="command">powershell.exe -Command '
+$CACHE_DIR = "$env:USERPROFILE\.claude\.ollama-ai-agents-playground_cache"
+$currentPath = (Get-Location).Path
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($currentPath)
+$hash = [System.Security.Cryptography.MD5]::Create().ComputeHash($bytes)
+$PROJECT_HASH = ($hash | ForEach-Object { $_.ToString("x2") }) -join ""
+$PROJECT_HASH = $PROJECT_HASH.Substring(0,8)
+$CACHE_FILE = "$CACHE_DIR\project_$PROJECT_HASH.cache"
+
+Write-Host "Loading previous conversation context..."
+if (Test-Path $CACHE_FILE) {
+    try {
+        $context = Get-Content $CACHE_FILE -Raw | ConvertFrom-Json
+        Write-Host "Context loaded successfully:"
+        Write-Host "  Project: $($context.language)"
+        Write-Host "  Session: #$($context.sessionCount) (Total: $($context.totalSessions))"
+        Write-Host "  Created: $($context.createdAt)"
+        Write-Host "  Last session: $($context.lastSession)"
+        Write-Host "  Build system: $($context.buildSystem)"
+        Write-Host "  Tests: $($context.totalTests)" 
+        Write-Host "  Intents: $($context.intentCount)"
+        Write-Host "  Status: $($context.buildStatus)"
+        Write-Host "Ready to continue where we left off!"
+    } catch {
+        Write-Host "Error loading context: $($_.Exception.Message)"
+    }
+} else {
+    Write-Host "No previous conversation found - starting fresh"
+}
+'
+
+=======
 I'll help you seamlessly continue your previous conversation by restoring all relevant context and progress for this Rust AI agents project. Here's exactly what I'll do to resume where we left off:
 
 ## My Continuation Process
@@ -214,6 +251,7 @@ Write-Host "🧪 Test framework: $(if ($context -and $context.testFramework) { $
 Write-Host "`n💡 I'm ready to continue exactly where we left off!"
 Write-Host "   Just tell me what you'd like to work on next."
 ```
+>>>>>>> main
 
 ## What I Remember
 

@@ -1,11 +1,11 @@
 use std::fmt;
 
 #[derive(Clone)]
-pub struct ClassifierPrompt {
+pub struct AgentPrompt {
     content: String,
 }
 
-impl ClassifierPrompt {
+impl AgentPrompt {
     #[allow(dead_code)]
     fn new(content: String) -> Self {
         Self { content }
@@ -15,26 +15,23 @@ impl ClassifierPrompt {
         &self.content
     }
 
-    pub fn builder() -> ClassifierPromptBuilder {
-        ClassifierPromptBuilder::new()
+    pub fn builder() -> AgentPromptBuilder {
+        AgentPromptBuilder::default()
     }
 }
 
-impl fmt::Display for ClassifierPrompt {
+impl fmt::Display for AgentPrompt {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.content)
     }
 }
 
-pub struct ClassifierPromptBuilder {
+#[derive(Default, Debug)]
+pub struct AgentPromptBuilder {
     content: Option<String>,
 }
 
-impl ClassifierPromptBuilder {
-    pub fn new() -> Self {
-        Self { content: None }
-    }
-
+impl AgentPromptBuilder {
     pub fn add_instruction(mut self, instruction: &str) -> Self {
         if self.content.is_none() {
             self.content = Some(instruction.to_string());
@@ -46,8 +43,8 @@ impl ClassifierPromptBuilder {
         self
     }
 
-    pub fn build(self) -> ClassifierPrompt {
-        ClassifierPrompt {
+    pub fn build(self) -> AgentPrompt {
+        AgentPrompt {
             content: self.content.unwrap(),
         }
     }

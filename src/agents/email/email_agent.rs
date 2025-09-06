@@ -1,5 +1,6 @@
-use crate::agent::{agent::AgentParam, email::EmailResult, Agent, AgentError};
+use crate::agents::{Agent, AgentError, agent::AgentParam, email::EmailResult};
 
+#[derive(Debug, Default)]
 pub struct EmailAgent {}
 
 impl EmailAgent {
@@ -8,19 +9,20 @@ impl EmailAgent {
     }
 }
 
+#[derive(Debug, Default)]
 pub struct EmailParam {
-    input: String
+    input: String,
 }
 
 impl EmailParam {
     pub fn new(input: &String) -> Self {
-        Self { 
-            input: input.clone()
+        Self {
+            input: input.to_owned(),
         }
     }
 }
 
-impl AgentParam for  EmailParam {}
+impl AgentParam for EmailParam {}
 
 impl Agent<EmailParam, EmailResult> for EmailAgent {
     fn process(

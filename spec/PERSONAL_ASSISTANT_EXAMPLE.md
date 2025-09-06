@@ -16,6 +16,13 @@ let personal_assistant = OllamaCreateRequest::new(
         - Communication Management & Email Drafting
         - Travel Planning & Logistics Coordination
         - Research & Information Synthesis
+<<<<<<< HEAD
+        - Quick Research & General Queries  
+        - Language Assistance & Word Support
+        - Unit Conversion & Measurement Tools
+        - Mathematical Calculations & Problem Solving
+=======
+>>>>>>> main
         - Personal Finance Organization & Budget Tracking
 
         ASSISTANT METHODOLOGY:
@@ -65,6 +72,27 @@ let personal_assistant = OllamaCreateRequest::new(
            
            - no_action: General conversation or unclear intent
              Parameters: context, clarification_needed
+<<<<<<< HEAD
+             
+           # ENHANCED USER SUPPORT INTENTS
+           
+           - quick_research: Quick research and general information queries
+             Parameters: query, urgency, context
+             Examples: "Research the benefits of vitamin D", "What's the capital of Canada?"
+           
+           - word_assistance: Word assistance, spelling, and language support
+             Parameters: word, action (spell/define/synonym), language
+             Examples: "How do you spell 'definitely'?", "What does 'serendipity' mean?"
+           
+           - unit_conversion: Unit and measurement conversions
+             Parameters: value, from_unit, to_unit, measurement_type
+             Examples: "Convert 100 km to miles", "How many Celsius degrees is 350°F?"
+           
+           - math_calculation: Simple and complex mathematical calculations
+             Parameters: expression, operation_type, precision, context
+             Examples: "What is 15% of 250?", "Calculate the area of a circle with radius 5cm"
+=======
+>>>>>>> main
 
            INTENT CLASSIFICATION PROCESS:
            a) Natural language understanding and parsing
@@ -164,6 +192,17 @@ let personal_assistant = OllamaCreateRequest::new(
         - Gift selection with personal consideration
         - Service provider evaluation and vetting
         - Industry trend monitoring and summaries
+<<<<<<< HEAD
+        
+        ENHANCED SUPPORT CAPABILITIES:
+        - Quick research and instant information retrieval
+        - Word assistance, spelling, and language support
+        - Unit conversion and measurement calculations
+        - Mathematical problem solving and calculations
+        - Educational support for learning and understanding
+        - Multilingual word definitions and translations
+=======
+>>>>>>> main
 
         PERSONAL FINANCE SUPPORT:
         - Budget tracking and expense categorization
@@ -328,6 +367,10 @@ impl PersonalAssistantDemo {
         Self::test_travel_planning(&client).await?;
         Self::test_task_prioritization(&client).await?;
         Self::test_research_assistance(&client).await?;
+<<<<<<< HEAD
+        Self::test_enhanced_support_features(&client).await?;
+=======
+>>>>>>> main
         
         Ok(())
     }
@@ -342,7 +385,15 @@ impl PersonalAssistantDemo {
             "Update my calendar preferences for better work-life balance",
             "Track my expenses for the marketing budget this quarter",
             "How's the progress on the Q4 report?",
+<<<<<<< HEAD
+            "What's the weather like today?",
+            "How do you spell 'definitely'?",
+            "Convert 50 miles to kilometers",
+            "What is 15% of 850?",
+            "Research the benefits of meditation"
+=======
             "What's the weather like today?"
+>>>>>>> main
         ];
         
         for input in test_inputs {
@@ -353,7 +404,12 @@ impl PersonalAssistantDemo {
                 
                 Available intents: send_email, schedule_meeting, manage_calendar, plan_travel, 
                 research_topic, task_management, financial_tracking, document_management, 
+<<<<<<< HEAD
+                contact_management, reminder_setting, preference_update, status_inquiry, no_action,
+                quick_research, word_assistance, unit_conversion, math_calculation
+=======
                 contact_management, reminder_setting, preference_update, status_inquiry, no_action
+>>>>>>> main
                 
                 Output format: {{"intent": "", "params": {{}}, "confidence": 0.95}}"#,
                 input
@@ -462,6 +518,63 @@ impl PersonalAssistantDemo {
         println!("Research Summary: {:?}", response);
         Ok(())
     }
+<<<<<<< HEAD
+    
+    async fn test_enhanced_support_features(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+        // Test quick research
+        let research_prompt = r#"
+            Quick research: "What are the main benefits of regular physical exercise?"
+        "#;
+        
+        let response = client.send_chat_request(&format!(
+            r#"{{"model":"personal-assistant-pro","messages":[{{"role":"user","content":"{}"}}],"stream":false}}"#,
+            research_prompt.replace('"', r#"\""#)
+        )).await?;
+        println!("Quick Research: {:?}", response);
+        
+        // Test word assistance
+        let word_prompt = r#"
+            How do you spell "definitely" correctly and what does it mean?
+        "#;
+        
+        let response = client.send_chat_request(&format!(
+            r#"{{"model":"personal-assistant-pro","messages":[{{"role":"user","content":"{}"}}],"stream":false}}"#,
+            word_prompt.replace('"', r#"\""#)
+        )).await?;
+        println!("Word Assistance: {:?}", response);
+        
+        // Test unit conversion
+        let conversion_prompt = r#"
+            Convert the following measurements:
+            - 100 kilometers to miles
+            - 25°C to Fahrenheit
+            - 2 liters to US gallons
+        "#;
+        
+        let response = client.send_chat_request(&format!(
+            r#"{{"model":"personal-assistant-pro","messages":[{{"role":"user","content":"{}"}}],"stream":false}}"#,
+            conversion_prompt.replace('"', r#"\""#)
+        )).await?;
+        println!("Unit Conversion: {:?}", response);
+        
+        // Test math calculations
+        let math_prompt = r#"
+            Solve the following mathematical calculations:
+            - What is 15% of 850?
+            - What's the area of a circle with radius 7.5 meters?
+            - If I save $300 per month, how much will I have in 2 years?
+        "#;
+        
+        let response = client.send_chat_request(&format!(
+            r#"{{"model":"personal-assistant-pro","messages":[{{"role":"user","content":"{}"}}],"stream":false}}"#,
+            math_prompt.replace('"', r#"\""#)
+        )).await?;
+        println!("Math Calculations: {:?}", response);
+        
+        Ok(())
+    }
+=======
+>>>>>>> main
 }
 
 #[tokio::main]
@@ -511,7 +624,11 @@ This personal assistant prompt creates a sophisticated AI model capable of handl
 
 ### Supported Intents for Personal Assistant
 
+<<<<<<< HEAD
+The personal assistant now supports **17 specialized intents** including enhanced user support features:
+=======
 The personal assistant now supports **13 specialized intents** beyond the basic `send_email`, `schedule_meeting`, and `no_action`:
+>>>>>>> main
 
 1. **send_email** - Email composition and sending
    - Example: "Send an email to Carlos about the project delay"
@@ -565,6 +682,25 @@ The personal assistant now supports **13 specialized intents** beyond the basic 
     - Example: "What's the weather like today?"
     - Parameters: context, clarification_needed
 
+<<<<<<< HEAD
+14. **quick_research** - Quick research on any topic
+    - Example: "Research the benefits of vitamin D"
+    - Parameters: query, urgency, context
+
+15. **word_assistance** - Word assistance, spelling, and definitions
+    - Example: "How do you spell 'definitely'?"
+    - Parameters: word, action (spell/define/synonym), language
+
+16. **unit_conversion** - Unit and measurement conversions
+    - Example: "Convert 100 km to miles"
+    - Parameters: value, from_unit, to_unit, measurement_type
+
+17. **math_calculation** - Simple and complex mathematical calculations
+    - Example: "What is 15% of 250?"
+    - Parameters: expression, operation_type, precision, context
+
+=======
+>>>>>>> main
 ### Classification Features
 
 - **Multi-parameter extraction**: Each intent captures relevant context and parameters
@@ -573,4 +709,114 @@ The personal assistant now supports **13 specialized intents** beyond the basic 
 - **Ambiguity resolution**: Asks clarifying questions when intent is unclear
 - **Specialized routing**: Directs each intent to appropriate handling systems
 
+<<<<<<< HEAD
 This comprehensive intent classification system enables the personal assistant to understand and respond to a wide variety of personal and professional requests with high accuracy and appropriate action routing.
+
+## Guidelines for the Create Method
+
+### Recommended Implementation Structure
+
+The `Create` method should be structured to support the new user requirements:
+
+```rust
+// Implementação sugerida para o CreateAssistantAgent
+impl CreateAssistantAgent {
+    pub async fn create_enhanced_personal_assistant() -> Result<OllamaCreateResponse, Box<dyn std::error::Error>> {
+        let enhanced_system_prompt = r#"
+            ENHANCED PERSONAL ASSISTANT CAPABILITIES:
+            
+            You are an intelligent personal assistant with expanded capabilities for:
+            
+            1. QUICK RESEARCH (quick_research):
+               - Provide accurate and concise information on any topic
+               - Prioritize reliable sources and updated information
+               - Adapt response depth to request urgency
+               
+            2. WORD ASSISTANCE (word_assistance):
+               - Correct spelling of words in Portuguese and English
+               - Clear and contextualized definitions
+               - Synonyms and antonyms when appropriate
+               - Etymology when requested
+               
+            3. UNIT CONVERSION (unit_conversion):
+               - Precise conversions between metric and imperial systems
+               - Temperature (Celsius, Fahrenheit, Kelvin)
+               - Length, weight, volume measurements
+               - Basic currency conversions
+               
+            4. MATHEMATICAL CALCULATIONS (math_calculation):
+               - Basic and complex arithmetic operations
+               - Percentage and proportional calculations
+               - Basic geometry (area, perimeter, volume)
+               - Practical daily problems
+               
+            RESPONSE GUIDELINES:
+            - Be precise and reliable in all calculations
+            - Provide context when necessary
+            - Use clear and educational language
+            - Confirm measurement units in conversions
+            - Show calculation steps when appropriate
+        "#;
+        
+        let client = OllamaClient::new();
+        let response = client.create_assistant(
+            enhanced_system_prompt,
+            "enhanced-personal-assistant"
+        ).await?;
+        
+        Ok(response)
+    }
+}
+```
+
+### Recommended Tests
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[tokio::test]
+    async fn test_enhanced_features_integration() {
+        let agent = CreateAssistantAgent::new();
+        
+        // Test quick research
+        let research_result = agent.process_quick_research(
+            "What are the benefits of vitamin D?"
+        ).await;
+        assert!(research_result.is_ok());
+        
+        // Test word assistance
+        let word_result = agent.process_word_assistance(
+            "definitivamente", 
+            WordAction::Spell
+        ).await;
+        assert!(word_result.is_ok());
+        
+        // Test unit conversion  
+        let conversion_result = agent.process_unit_conversion(
+            100.0, 
+            "km", 
+            "miles"
+        ).await;
+        assert!(conversion_result.is_ok());
+        
+        // Test math calculation
+        let math_result = agent.process_math_calculation(
+            "15% of 850"
+        ).await;
+        assert!(math_result.is_ok());
+    }
+}
+```
+
+### Implementation Considerations
+
+1. **Data Accuracy**: Ensure conversions and calculations are precise
+2. **Input Validation**: Verify input formats to prevent errors
+3. **Language Support**: Support Portuguese and English for word assistance
+4. **Usage Context**: Adapt responses to user request context
+5. **Performance**: Optimize for quick responses in simple queries
+=======
+This comprehensive intent classification system enables the personal assistant to understand and respond to a wide variety of personal and professional requests with high accuracy and appropriate action routing.
+>>>>>>> main

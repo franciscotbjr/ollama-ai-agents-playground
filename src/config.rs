@@ -2,26 +2,97 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct Config {
     pub database: DatabaseConfig,
+    pub user: UserConfig,
     pub ollama: OllamaConfig,
+    pub assistant: AssistantConfig,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct DatabaseConfig {
     pub path: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct UserConfig {
+    pub settings: UserSettings,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct UserSettings {
+    pub name: String,
+    pub assistant: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct OllamaConfig {
     pub api: ApiConfig,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct ApiConfig {
     pub url: String,
+    pub chat: String,
+    pub create: String,
+    pub show: String,
+    pub load: String,
     pub model: String,
+    pub options: ApiOptions,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct ApiOptions {
+    pub temperature: f32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct AssistantConfig {
+    pub root: AssistantRootConfig,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct AssistantRootConfig {
+    pub name: String,
+}
+
+impl AssistantRootConfig {
+    pub fn to_name(&self, named_to: &str) -> String {
+        format!("{}-{}", self.name, named_to)
+    }
+}
+
+impl ApiConfig {
+    /// Returns the full URL for the chat endpoint
+    pub fn chat_url(&self) -> String {
+        format!("{}{}", self.url, self.chat)
+    }
+
+    /// Returns the full URL for the create endpoint
+    pub fn create_url(&self) -> String {
+        format!("{}{}", self.url, self.create)
+    }
+
+    /// Returns the full URL for the show endpoint
+    pub fn show_url(&self) -> String {
+        format!("{}{}", self.url, self.show)
+    }
+
+    /// Returns the full URL for the show endpoint
+    pub fn load_url(&self) -> String {
+        format!("{}{}", self.url, self.load)
+    }
+
+    /// Returns the base URL for the API
+    pub fn base_url(&self) -> &str {
+        &self.url
+    }
+
+    /// Returns a specific endpoint URL by combining base URL with given path
+    pub fn endpoint_url(&self, endpoint: &str) -> String {
+        format!("{}{}", self.url, endpoint)
+    }
 }
 
 static CONFIG: Lazy<Config> =
@@ -65,9 +136,22 @@ mod tests {
 [database]
 path = "/test/database.db"
 
+[user.settings]
+name = "Test User"
+assistant = "Test Assistant"
+
 [ollama.api]
-url = "http://localhost:8080/api/chat"
+url = "http://localhost:8080/api"
+chat = "/chat"
+create = "/create"
+show = "/show"
+load = "/generate"
 model = "test-model"
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = "test-assistant-"
 "#;
 
         create_test_config_file(test_path, test_content).expect("Failed to create test file");
@@ -77,8 +161,15 @@ model = "test-model"
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "/test/database.db");
-        assert_eq!(config.ollama.api.url, "http://localhost:8080/api/chat");
+        assert_eq!(config.user.settings.name, "Test User");
+        assert_eq!(config.user.settings.assistant, "Test Assistant");
+        assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
+        assert_eq!(config.ollama.api.chat, "/chat");
+        assert_eq!(config.ollama.api.create, "/create");
+        assert_eq!(config.ollama.api.show, "/show");
         assert_eq!(config.ollama.api.model, "test-model");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
+        assert_eq!(config.assistant.root.name, "test-assistant-");
 
         cleanup_test_file(test_path);
     }
@@ -128,10 +219,26 @@ path = "/test/database.db"
             database: DatabaseConfig {
                 path: "/test/path.db".to_string(),
             },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Test User".to_string(),
+                    assistant: "Test Assistant".to_string(),
+                },
+            },
             ollama: OllamaConfig {
                 api: ApiConfig {
                     url: "http://test.com/api".to_string(),
+                    chat: "/chat".to_string(),
+                    create: "/create".to_string(),
+                    show: "/show".to_string(),
+                    load: "/generate".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 },
+                },
+            },
+            assistant: AssistantConfig {
+                root: AssistantRootConfig {
+                    name: "test-prefix-".to_string(),
                 },
             },
         };
@@ -150,9 +257,22 @@ path = "/test/database.db"
 [database]
 path = ""
 
+[user.settings]
+name = ""
+assistant = ""
+
 [ollama.api]
 url = ""
+chat = ""
+create = ""
+show = ""
+load = ""
 model = ""
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = ""
 "#;
 
         create_test_config_file(test_path, test_content).expect("Failed to create test file");
@@ -162,8 +282,15 @@ model = ""
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "");
+        assert_eq!(config.user.settings.name, "");
+        assert_eq!(config.user.settings.assistant, "");
         assert_eq!(config.ollama.api.url, "");
+        assert_eq!(config.ollama.api.chat, "");
+        assert_eq!(config.ollama.api.create, "");
+        assert_eq!(config.ollama.api.show, "");
         assert_eq!(config.ollama.api.model, "");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
+        assert_eq!(config.assistant.root.name, "");
 
         cleanup_test_file(test_path);
     }
@@ -175,9 +302,22 @@ model = ""
 [database]
 path = "C:\\Users\\Test User\\database with spaces.db"
 
+[user.settings]
+name = "Special User_123"
+assistant = "Special Assistant-ABC"
+
 [ollama.api]
-url = "http://localhost:8080/api/chat?param=value&other=123"
+url = "http://localhost:8080/api"
+chat = "/chat?param=value&other=123"
+create = "/create-endpoint"
+show = "/show"
+load = "/generate"
 model = "model-with-dashes_and_underscores"
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = "assistant-prefix_with-special-chars"
 "#;
 
         create_test_config_file(test_path, test_content).expect("Failed to create test file");
@@ -190,11 +330,19 @@ model = "model-with-dashes_and_underscores"
             config.database.path,
             "C:\\Users\\Test User\\database with spaces.db"
         );
-        assert_eq!(
-            config.ollama.api.url,
-            "http://localhost:8080/api/chat?param=value&other=123"
-        );
+        assert_eq!(config.user.settings.name, "Special User_123");
+        assert_eq!(config.user.settings.assistant, "Special Assistant-ABC");
+        assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
+        assert_eq!(config.ollama.api.chat, "/chat?param=value&other=123");
+        assert_eq!(config.ollama.api.create, "/create-endpoint");
+        assert_eq!(config.ollama.api.show, "/show");
+        assert_eq!(config.ollama.api.load, "/generate");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
         assert_eq!(config.ollama.api.model, "model-with-dashes_and_underscores");
+        assert_eq!(
+            config.assistant.root.name,
+            "assistant-prefix_with-special-chars"
+        );
 
         cleanup_test_file(test_path);
     }
@@ -206,9 +354,22 @@ model = "model-with-dashes_and_underscores"
 [database]
 path = "/测试/数据库.db"
 
+[user.settings]
+name = "用户-María"
+assistant = "助理-José"
+
 [ollama.api]
-url = "http://localhost:8080/api/café"
+url = "http://localhost:8080/api"
+chat = "/café-chat"
+create = "/创建-endpoint"
+show = "/show"
+load = "/generate"
 model = "模型-test-ñoño"
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = "助理-prefix-café"
 "#;
 
         create_test_config_file(test_path, test_content).expect("Failed to create test file");
@@ -218,8 +379,16 @@ model = "模型-test-ñoño"
 
         let config = result.unwrap();
         assert_eq!(config.database.path, "/测试/数据库.db");
-        assert_eq!(config.ollama.api.url, "http://localhost:8080/api/café");
+        assert_eq!(config.user.settings.name, "用户-María");
+        assert_eq!(config.user.settings.assistant, "助理-José");
+        assert_eq!(config.ollama.api.url, "http://localhost:8080/api");
+        assert_eq!(config.ollama.api.chat, "/café-chat");
+        assert_eq!(config.ollama.api.create, "/创建-endpoint");
+        assert_eq!(config.ollama.api.show, "/show");
+        assert_eq!(config.ollama.api.load, "/generate");
         assert_eq!(config.ollama.api.model, "模型-test-ñoño");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
+        assert_eq!(config.assistant.root.name, "助理-prefix-café");
 
         cleanup_test_file(test_path);
     }
@@ -234,8 +403,22 @@ model = "模型-test-ñoño"
 
         // Content should be the same
         assert_eq!(config1.database.path, config2.database.path);
+        assert_eq!(config1.user.settings.name, config2.user.settings.name);
+        assert_eq!(
+            config1.user.settings.assistant,
+            config2.user.settings.assistant
+        );
         assert_eq!(config1.ollama.api.url, config2.ollama.api.url);
+        assert_eq!(config1.ollama.api.chat, config2.ollama.api.chat);
+        assert_eq!(config1.ollama.api.create, config2.ollama.api.create);
+        assert_eq!(config1.ollama.api.show, config2.ollama.api.show);
+        assert_eq!(config1.ollama.api.load, config2.ollama.api.load);
         assert_eq!(config1.ollama.api.model, config2.ollama.api.model);
+        assert_eq!(
+            config1.ollama.api.options.temperature,
+            config2.ollama.api.options.temperature
+        );
+        assert_eq!(config1.assistant.root.name, config2.assistant.root.name);
     }
 
     #[test]
@@ -250,25 +433,45 @@ model = "模型-test-ñoño"
     #[test]
     fn test_api_config_creation() {
         let api_config = ApiConfig {
-            url: "http://test.com".to_string(),
+            url: "http://test.com/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
             model: "test-model".to_string(),
+            options: ApiOptions { temperature: 0.0 },
         };
 
-        assert_eq!(api_config.url, "http://test.com");
+        assert_eq!(api_config.url, "http://test.com/api");
+        assert_eq!(api_config.chat, "/chat");
+        assert_eq!(api_config.create, "/create");
+        assert_eq!(api_config.show, "/show");
+        assert_eq!(api_config.load, "/generate");
         assert_eq!(api_config.model, "test-model");
+        assert_eq!(api_config.options.temperature, 0.0);
     }
 
     #[test]
     fn test_ollama_config_creation() {
         let ollama_config = OllamaConfig {
             api: ApiConfig {
-                url: "http://test.com".to_string(),
+                url: "http://test.com/api".to_string(),
+                chat: "/chat".to_string(),
+                create: "/create".to_string(),
+                show: "/show".to_string(),
+                load: "/generate".to_string(),
                 model: "test-model".to_string(),
+                options: ApiOptions { temperature: 0.0 },
             },
         };
 
-        assert_eq!(ollama_config.api.url, "http://test.com");
+        assert_eq!(ollama_config.api.url, "http://test.com/api");
+        assert_eq!(ollama_config.api.chat, "/chat");
+        assert_eq!(ollama_config.api.create, "/create");
+        assert_eq!(ollama_config.api.show, "/show");
+        assert_eq!(ollama_config.api.load, "/generate");
         assert_eq!(ollama_config.api.model, "test-model");
+        assert_eq!(ollama_config.api.options.temperature, 0.0);
     }
 
     #[test]
@@ -277,17 +480,41 @@ model = "模型-test-ñoño"
             database: DatabaseConfig {
                 path: "/test/db.db".to_string(),
             },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Test User".to_string(),
+                    assistant: "Test Assistant".to_string(),
+                },
+            },
             ollama: OllamaConfig {
                 api: ApiConfig {
-                    url: "http://test.com".to_string(),
+                    url: "http://test.com/api".to_string(),
+                    chat: "/chat".to_string(),
+                    create: "/create".to_string(),
+                    show: "/show".to_string(),
+                    load: "/generate".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 },
+                },
+            },
+            assistant: AssistantConfig {
+                root: AssistantRootConfig {
+                    name: "test-assistant-".to_string(),
                 },
             },
         };
 
         assert_eq!(config.database.path, "/test/db.db");
-        assert_eq!(config.ollama.api.url, "http://test.com");
+        assert_eq!(config.user.settings.name, "Test User");
+        assert_eq!(config.user.settings.assistant, "Test Assistant");
+        assert_eq!(config.ollama.api.url, "http://test.com/api");
+        assert_eq!(config.ollama.api.chat, "/chat");
+        assert_eq!(config.ollama.api.create, "/create");
+        assert_eq!(config.ollama.api.show, "/show");
+        assert_eq!(config.ollama.api.load, "/generate");
         assert_eq!(config.ollama.api.model, "test-model");
+        assert_eq!(config.ollama.api.options.temperature, 0.0);
+        assert_eq!(config.assistant.root.name, "test-assistant-");
     }
 
     #[test]
@@ -296,10 +523,26 @@ model = "模型-test-ñoño"
             database: DatabaseConfig {
                 path: "/test/db.db".to_string(),
             },
+            user: UserConfig {
+                settings: UserSettings {
+                    name: "Debug User".to_string(),
+                    assistant: "Debug Assistant".to_string(),
+                },
+            },
             ollama: OllamaConfig {
                 api: ApiConfig {
-                    url: "http://test.com".to_string(),
+                    url: "http://test.com/api".to_string(),
+                    chat: "/chat".to_string(),
+                    create: "/create".to_string(),
+                    show: "/show".to_string(),
+                    load: "/generate".to_string(),
                     model: "test-model".to_string(),
+                    options: ApiOptions { temperature: 0.0 },
+                },
+            },
+            assistant: AssistantConfig {
+                root: AssistantRootConfig {
+                    name: "debug-assistant-".to_string(),
                 },
             },
         };
@@ -307,7 +550,460 @@ model = "模型-test-ñoño"
         let debug_string = format!("{:?}", config);
         assert!(debug_string.contains("Config"));
         assert!(debug_string.contains("/test/db.db"));
-        assert!(debug_string.contains("http://test.com"));
+        assert!(debug_string.contains("Debug User"));
+        assert!(debug_string.contains("Debug Assistant"));
+        assert!(debug_string.contains("http://test.com/api"));
+        assert!(debug_string.contains("/chat"));
+        assert!(debug_string.contains("/create"));
+        assert!(debug_string.contains("/show"));
+        assert!(debug_string.contains("/generate"));
+        assert!(debug_string.contains("0.0"));
         assert!(debug_string.contains("test-model"));
+        assert!(debug_string.contains("debug-assistant-"));
+    }
+
+    #[test]
+    fn test_assistant_config_creation() {
+        let assistant_config = AssistantConfig {
+            root: AssistantRootConfig {
+                name: "custom-assistant-".to_string(),
+            },
+        };
+
+        assert_eq!(assistant_config.root.name, "custom-assistant-");
+    }
+
+    #[test]
+    fn test_assistant_root_config_creation() {
+        let root_config = AssistantRootConfig {
+            name: "prefix-".to_string(),
+        };
+
+        assert_eq!(root_config.name, "prefix-");
+    }
+
+    #[test]
+    fn test_assistant_config_with_empty_name() {
+        let assistant_config = AssistantConfig {
+            root: AssistantRootConfig {
+                name: "".to_string(),
+            },
+        };
+
+        assert_eq!(assistant_config.root.name, "");
+    }
+
+    #[test]
+    fn test_assistant_config_with_special_characters() {
+        let assistant_config = AssistantConfig {
+            root: AssistantRootConfig {
+                name: "special-chars_123-".to_string(),
+            },
+        };
+
+        assert_eq!(assistant_config.root.name, "special-chars_123-");
+    }
+
+    #[test]
+    fn test_assistant_config_with_unicode() {
+        let assistant_config = AssistantConfig {
+            root: AssistantRootConfig {
+                name: "助理-prefix-café-".to_string(),
+            },
+        };
+
+        assert_eq!(assistant_config.root.name, "助理-prefix-café-");
+    }
+
+    #[test]
+    fn test_assistant_config_serialization() {
+        let assistant_config = AssistantConfig {
+            root: AssistantRootConfig {
+                name: "serialization-test-".to_string(),
+            },
+        };
+
+        let serialized = toml::to_string(&assistant_config).expect("Serialization should succeed");
+        let deserialized: AssistantConfig =
+            toml::from_str(&serialized).expect("Deserialization should succeed");
+
+        assert_eq!(assistant_config, deserialized);
+        assert_eq!(deserialized.root.name, "serialization-test-");
+    }
+
+    #[test]
+    fn test_config_load_from_file_missing_assistant_section() {
+        let test_path = "test_config_no_assistant.toml";
+        let test_content = r#"
+[database]
+path = "/test/database.db"
+
+[ollama.api]
+url = "http://localhost:8080/api/chat"
+model = "test-model"
+"#;
+
+        create_test_config_file(test_path, test_content).expect("Failed to create test file");
+
+        let result = Config::load_from_file(test_path);
+        assert!(
+            result.is_err(),
+            "Config should fail to load without assistant section"
+        );
+
+        cleanup_test_file(test_path);
+    }
+
+    #[test]
+    fn test_config_load_from_file_missing_assistant_root_name() {
+        let test_path = "test_config_no_assistant_name.toml";
+        let test_content = r#"
+[database]
+path = "/test/database.db"
+
+[ollama.api]
+url = "http://localhost:8080/api/chat"
+model = "test-model"
+
+[assistant.root]
+"#;
+
+        create_test_config_file(test_path, test_content).expect("Failed to create test file");
+
+        let result = Config::load_from_file(test_path);
+        assert!(
+            result.is_err(),
+            "Config should fail to load without assistant.root.name"
+        );
+
+        cleanup_test_file(test_path);
+    }
+
+    #[test]
+    fn test_config_get_includes_assistant() {
+        let config = Config::get();
+
+        // Verify that assistant configuration is accessible
+        assert!(
+            !config.assistant.root.name.is_empty(),
+            "Assistant root name should not be empty from config file"
+        );
+    }
+
+    // New tests for endpoint configuration
+    #[test]
+    fn test_api_config_chat_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.chat_url(), "http://localhost:11434/api/chat");
+    }
+
+    #[test]
+    fn test_api_config_create_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.create_url(), "http://localhost:11434/api/create");
+    }
+
+    #[test]
+    fn test_api_config_show_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api/show");
+    }
+
+    #[test]
+    fn test_api_config_base_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.base_url(), "http://localhost:11434/api");
+    }
+
+    #[test]
+    fn test_api_config_endpoint_url() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(
+            api_config.endpoint_url("/models"),
+            "http://localhost:11434/api/models"
+        );
+        assert_eq!(
+            api_config.endpoint_url("/generate"),
+            "http://localhost:11434/api/generate"
+        );
+    }
+
+    #[test]
+    fn test_api_config_urls_with_trailing_slash() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api/".to_string(),
+            chat: "/chat".to_string(),
+            create: "/create".to_string(),
+            show: "/show".to_string(),
+            load: "/generate".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.chat_url(), "http://localhost:11434/api//chat");
+        assert_eq!(
+            api_config.create_url(),
+            "http://localhost:11434/api//create"
+        );
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api//show");
+    }
+
+    #[test]
+    fn test_api_config_urls_with_query_parameters() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/chat?stream=false".to_string(),
+            create: "/create?format=json".to_string(),
+            show: "/show?details=true".to_string(),
+            load: "/generate?details=true".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(
+            api_config.chat_url(),
+            "http://localhost:11434/api/chat?stream=false"
+        );
+        assert_eq!(
+            api_config.create_url(),
+            "http://localhost:11434/api/create?format=json"
+        );
+        assert_eq!(
+            api_config.show_url(),
+            "http://localhost:11434/api/show?details=true"
+        );
+    }
+
+    #[test]
+    fn test_api_config_urls_with_unicode() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "/聊天".to_string(),
+            create: "/创建".to_string(),
+            show: "/显示".to_string(),
+            load: "/显示".to_string(),
+            model: "测试模型".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.chat_url(), "http://localhost:11434/api/聊天");
+        assert_eq!(api_config.create_url(), "http://localhost:11434/api/创建");
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api/显示");
+        assert_eq!(api_config.load_url(), "http://localhost:11434/api/显示");
+    }
+
+    #[test]
+    fn test_api_config_endpoints_empty_paths() {
+        let api_config = ApiConfig {
+            url: "http://localhost:11434/api".to_string(),
+            chat: "".to_string(),
+            create: "".to_string(),
+            show: "".to_string(),
+            load: "".to_string(),
+            model: "gemma3".to_string(),
+            options: ApiOptions { temperature: 0.0 },
+        };
+
+        assert_eq!(api_config.chat_url(), "http://localhost:11434/api");
+        assert_eq!(api_config.create_url(), "http://localhost:11434/api");
+        assert_eq!(api_config.show_url(), "http://localhost:11434/api");
+        assert_eq!(api_config.load_url(), "http://localhost:11434/api");
+    }
+
+    #[test]
+    fn test_config_load_from_file_missing_ollama_endpoints() {
+        let test_path = "test_config_no_endpoints.toml";
+        let test_content = r#"
+[database]
+path = "/test/database.db"
+
+[ollama.api]
+url = "http://localhost:8080/api"
+model = "test-model"
+
+[assistant.root]
+name = "test-assistant-"
+"#;
+
+        create_test_config_file(test_path, test_content).expect("Failed to create test file");
+
+        let result = Config::load_from_file(test_path);
+        assert!(
+            result.is_err(),
+            "Config should fail to load without chat and create endpoints"
+        );
+
+        cleanup_test_file(test_path);
+    }
+
+    #[test]
+    fn test_api_config_from_actual_config() {
+        let config = Config::get();
+
+        // Verify the endpoints are accessible and properly formatted
+        let chat_url = config.ollama.api.chat_url();
+        let create_url = config.ollama.api.create_url();
+        let show_url = config.ollama.api.show_url();
+        let load_url = config.ollama.api.load_url();
+
+        assert!(chat_url.starts_with("http"));
+        assert!(create_url.starts_with("http"));
+        assert!(show_url.starts_with("http"));
+        assert!(chat_url.contains("/chat") || chat_url.ends_with("/api"));
+        assert!(create_url.contains("/create") || create_url.ends_with("/api"));
+        assert!(show_url.contains("/show") || show_url.ends_with("/api"));
+        assert!(load_url.contains("/generate") || load_url.ends_with("/api"));
+    }
+
+    #[test]
+    fn test_assistant_root_config_to_name_method() {
+        let root_config = AssistantRootConfig {
+            name: "assistant".to_string(),
+        };
+
+        assert_eq!(root_config.to_name("personal"), "assistant-personal");
+        assert_eq!(
+            root_config.to_name("professional"),
+            "assistant-professional"
+        );
+        assert_eq!(root_config.to_name(""), "assistant-");
+    }
+
+    // Tests for UserSettings and UserConfig
+    #[test]
+    fn test_user_settings_creation() {
+        let user_settings = UserSettings {
+            name: "Ana".to_string(),
+            assistant: "Tereza".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "Ana");
+        assert_eq!(user_settings.assistant, "Tereza");
+    }
+
+    #[test]
+    fn test_user_config_creation() {
+        let user_config = UserConfig {
+            settings: UserSettings {
+                name: "Test User".to_string(),
+                assistant: "Test Assistant".to_string(),
+            },
+        };
+
+        assert_eq!(user_config.settings.name, "Test User");
+        assert_eq!(user_config.settings.assistant, "Test Assistant");
+    }
+
+    #[test]
+    fn test_user_settings_with_empty_values() {
+        let user_settings = UserSettings {
+            name: "".to_string(),
+            assistant: "".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "");
+        assert_eq!(user_settings.assistant, "");
+    }
+
+    #[test]
+    fn test_user_settings_with_unicode() {
+        let user_settings = UserSettings {
+            name: "用户-María".to_string(),
+            assistant: "助理-José".to_string(),
+        };
+
+        assert_eq!(user_settings.name, "用户-María");
+        assert_eq!(user_settings.assistant, "助理-José");
+    }
+
+    #[test]
+    fn test_user_settings_serialization() {
+        let user_settings = UserSettings {
+            name: "Serialization Test".to_string(),
+            assistant: "Test Assistant".to_string(),
+        };
+
+        let serialized = toml::to_string(&user_settings).expect("Serialization should succeed");
+        let deserialized: UserSettings =
+            toml::from_str(&serialized).expect("Deserialization should succeed");
+
+        assert_eq!(user_settings, deserialized);
+        assert_eq!(deserialized.name, "Serialization Test");
+        assert_eq!(deserialized.assistant, "Test Assistant");
+    }
+
+    #[test]
+    fn test_config_load_missing_user_section() {
+        let test_path = "test_config_no_user.toml";
+        let test_content = r#"
+[database]
+path = "/test/database.db"
+
+[ollama.api]
+url = "http://localhost:8080/api"
+chat = "/chat"
+create = "/create"
+model = "test-model"
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = "test-assistant-"
+"#;
+
+        create_test_config_file(test_path, test_content).expect("Failed to create test file");
+
+        let result = Config::load_from_file(test_path);
+        assert!(
+            result.is_err(),
+            "Config should fail to load without user section"
+        );
+
+        cleanup_test_file(test_path);
     }
 }

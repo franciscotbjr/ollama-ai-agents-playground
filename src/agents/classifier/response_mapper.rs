@@ -1,4 +1,4 @@
-use crate::agent::classifier::ClassificationResult;
+use crate::agents::classifier::ClassificationResult;
 use crate::infra::ollama::OllamaResponseMessage;
 use std::error::Error;
 use std::fmt;
@@ -14,9 +14,9 @@ pub enum MapperError {
 impl fmt::Display for MapperError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            MapperError::ParseError(msg) => write!(f, "Parse error: {}", msg),
-            MapperError::InvalidContent(msg) => write!(f, "Invalid content: {}", msg),
-            MapperError::MissingData(msg) => write!(f, "Missing data: {}", msg),
+            MapperError::ParseError(msg) => write!(f, "Parse error: {msg}"),
+            MapperError::InvalidContent(msg) => write!(f, "Invalid content: {msg}"),
+            MapperError::MissingData(msg) => write!(f, "Missing data: {msg}"),
         }
     }
 }
@@ -70,7 +70,7 @@ impl ToClassificationResult for OllamaResponseMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::agent::Intent;
+    use crate::agents::Intent;
 
     fn create_test_response_message(content: &str) -> OllamaResponseMessage {
         serde_json::from_str(&format!(

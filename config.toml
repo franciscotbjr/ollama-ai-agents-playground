@@ -1,6 +1,19 @@
 [database]
 path = "D:\\development\\assistant.db"
 
+[user.settings]
+name = "Ana"
+assistant = "Tereza"
+
 [ollama.api]
-url = "http://localhost:11434/api/chat"
-model = "gemma3"
+url = "http://localhost:11434/api"
+chat = "/chat"
+create = "/create"
+show = "/show"
+load = "/generate"
+model = "qwen3:0.6b"
+[ollama.api.options]
+temperature = 0
+
+[assistant.root]
+name = "assistant"

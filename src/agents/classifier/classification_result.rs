@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::agent::{AgentResult, Intent, classifier::Params};
+use crate::agents::{AgentResult, Intent, classifier::Params};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ClassificationResult {
@@ -27,7 +27,7 @@ impl AgentResult for ClassificationResult {}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::agent::Intent;
+    use crate::agents::Intent;
 
     #[test]
     fn test_new_classification_result() {

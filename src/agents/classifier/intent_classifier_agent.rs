@@ -1,10 +1,12 @@
 use crate::{
-    agent::{
-        agent::AgentParam, classifier::{ClassifierPrompt, ToClassificationResult}, Agent, AgentError, ClassificationResult
+    agents::{
+        Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
+        classifier::ToClassificationResult,
     },
     infra::ollama::OllamaClient,
 };
 
+#[derive(Debug, Default)]
 pub struct IntentClassifierAgent {}
 
 impl IntentClassifierAgent {
@@ -14,18 +16,17 @@ impl IntentClassifierAgent {
 }
 
 pub struct IntentParam {
-    input: String
+    input: String,
+    assistant: String,
 }
 
 impl IntentParam {
-    pub fn new(input: String) -> Self {
-        Self { 
-            input
-        }
+    pub fn new(input: String, assistant: String) -> Self {
+        Self { input, assistant }
     }
 }
 
-impl AgentParam for  IntentParam {}
+impl AgentParam for IntentParam {}
 
 impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
     fn process(
@@ -37,7 +38,9 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
             let prompt = build_prompt(&input.input);
 
             // Send to Ollama API
-            let result = OllamaClient::new().send_message(&prompt.as_str()).await;
+            let result = OllamaClient::new()
+                .send_message(&prompt.as_str(), &input.assistant)
+                .await;
 
             match result {
                 Ok(ollama_response) => {
@@ -51,8 +54,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
                     }
                 }
                 Err(e) => Err(AgentError::ParseError(format!(
-                    "Classification failed: {}",
-                    e
+                    "Classification failed: {e}"
                 ))),
             }
         }
@@ -60,7 +62,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
 }
 
 fn build_prompt(input: &str) -> String {
-    ClassifierPrompt::builder()
+    AgentPrompt::builder()
         .add_instruction(CLASSIFY_INTENT_TO_JSON)
         .add_instruction(SPACE)
         .add_instruction(OUTPUT_FORMART)

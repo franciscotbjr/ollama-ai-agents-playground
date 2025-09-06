@@ -2,9 +2,9 @@ use crate::{
     agents::{
         Agent, AgentError,
         agent::AgentParam,
-        assistant::{CheckResult, LoadResult},
+        assistant::{CheckResult},
     },
-    infra::ollama::{OllamaCheckRequest, OllamaClient},
+    infra::ollama::{OllamaClient},
 };
 
 #[derive(Debug, Default)]
@@ -34,7 +34,7 @@ impl Agent<CheckParam, CheckResult> for CheckAssistantAgent {
 
             match check_result {
                 Ok(check) => Ok(CheckResult::new(check.exists)),
-                Err(e) => Err(AgentError::ParseError(format!("Failed to check: {e}",))),
+                Err(e) => Err(AgentError::ParseError(format!("Failed to check: {e}"))),
             }
         }
     }

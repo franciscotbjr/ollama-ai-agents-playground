@@ -27,13 +27,13 @@ mod tests {
         let request = OllamaCheckRequest::new("test-model".to_string());
         let serialized = serde_json::to_string(&request).expect("Serialization should succeed");
 
-        let expected = r#"{"name":"test-model"}"#;
+        let expected = r#"{"model":"test-model"}"#;
         assert_eq!(serialized, expected);
     }
 
     #[test]
     fn test_ollama_check_request_deserialization() {
-        let json = r#"{"name":"deserialized-model"}"#;
+        let json = r#"{"model":"deserialized-model"}"#;
         let request: OllamaCheckRequest =
             serde_json::from_str(json).expect("Deserialization should succeed");
 
@@ -75,7 +75,7 @@ mod tests {
         let debug_string = format!("{:?}", request);
 
         assert!(debug_string.contains("OllamaCheckRequest"));
-        assert!(debug_string.contains("name: \"debug-model\""));
+        assert!(debug_string.contains("model: \"debug-model\""));
     }
 
     #[test]

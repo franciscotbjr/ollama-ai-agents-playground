@@ -39,7 +39,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
 
             // Send to Ollama API
             let result = OllamaClient::new()
-                .send_message(&prompt.as_str(), &input.assistant)
+                .send_classifier_message(&prompt.as_str(), &input.assistant)
                 .await;
 
             match result {

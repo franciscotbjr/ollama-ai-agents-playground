@@ -18,7 +18,47 @@ impl HttpClient {
         }
     }
 
-    pub async fn send_request<T>(
+    pub async fn send_request_for_status<T>(
+        &self,
+        body: &str,
+    ) -> Result<HttpResponse<T>, Box<dyn std::error::Error>>
+    where
+        T: serde::de::DeserializeOwned,
+    {
+        let url = &self.base_url;
+        let end_point = &self.end_point;
+
+        let response = self
+            .client
+            .post(format!("{url}{end_point}"))
+            .header("Content-Type", "application/json")
+            .body(body.to_string())
+            .send()
+            .await?;
+
+        let status = response.status().as_u16();
+        if response.status().is_success() {
+            Ok(HttpResponse {
+                success: true,
+                data: None,
+                error: None,
+                status,
+            })
+        } else {
+            let error_text = response.text().await?;
+            Ok(HttpResponse {
+                success: false,
+                data: None,
+                error: Some(HttpError {
+                    error: "HTTP Error".to_string(),
+                    message: error_text,
+                }),
+                status,
+            })
+        }
+    }
+
+    pub async fn send_request_for_json_response<T>(
         &self,
         body: &str,
     ) -> Result<HttpResponse<T>, Box<dyn std::error::Error>>
@@ -61,7 +101,7 @@ impl HttpClient {
 
     /// Sends a request expecting NDJSON (Newline Delimited JSON) response format
     /// Specifically designed for Ollama create endpoint which returns multiple JSON objects
-    pub async fn send_ndjson_request(
+    pub async fn send_request_for_ndjson_response(
         &self,
         body: &str,
     ) -> Result<HttpResponse<OllamaCreateResponse>, Box<dyn std::error::Error>> {

@@ -59,7 +59,7 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
     }
 }
 
-fn build_assistant_name(name: &str) -> String {
+pub fn build_assistant_name(name: &str) -> String {
     let config = Config::get();
     config.assistant.root.to_name(name)
 }

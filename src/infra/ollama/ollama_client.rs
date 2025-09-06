@@ -26,7 +26,7 @@ impl OllamaClient {
         match json_request {
             Ok(request_body) => {
                 let response = http_client
-                    .send_request::<String>(request_body.as_str())
+                    .send_request_for_status::<OllamaResponse>(request_body.as_str())
                     .await?;
                 let status_code = response.status;
                 match status_code {
@@ -48,11 +48,12 @@ impl OllamaClient {
 
         let ollama_request = OllamaCheckRequest::new(model.to_string());
         let json_request = serde_json::to_string(&ollama_request);
+        let http_client = HttpClient::new(config_api.url.clone(), config_api.chat.clone());
 
         match json_request {
             Ok(request_body) => {
                 let response = http_client
-                    .send_request::<OllamaLoadResult>(request_body.as_str())
+                    .send_request_for_json_response::<OllamaLoadResult>(request_body.as_str())
                     .await?;
                 if response.success {
                     response
@@ -70,19 +71,10 @@ impl OllamaClient {
         }
     }
 
-    pub async fn send_chat_request(
+    async fn send_chat_request(
         &self,
-        body: &str,
-        named_to: &str,
+        ollama_request: OllamaChatRequest,
     ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
-        let ollama_request = OllamaChatRequest::new(
-            Config::get().assistant.root.to_name(named_to),
-            body.to_string(),
-            Some(OllamaOptions {
-                temperature: Config::get().ollama.api.options.temperature,
-            }),
-        );
-
         let config_api = &Config::get().ollama.api;
         let json_request = serde_json::to_string(&ollama_request);
         let http_client = HttpClient::new(config_api.url.clone(), config_api.chat.clone());
@@ -90,7 +82,7 @@ impl OllamaClient {
         match json_request {
             Ok(request_body) => {
                 let response = http_client
-                    .send_request::<OllamaResponse>(request_body.as_str())
+                    .send_request_for_json_response::<OllamaResponse>(request_body.as_str())
                     .await?;
 
                 if response.success {
@@ -109,13 +101,22 @@ impl OllamaClient {
         }
     }
 
-    pub async fn send_message(
+    pub async fn send_classifier_message(
         &self,
         prompt: &str,
         named_to: &str,
     ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
         let request_body = format!(r#"{}"#, prompt.replace('"', "\\\""));
-        self.send_chat_request(&request_body, named_to).await
+
+        let ollama_request = OllamaChatRequest::new(
+            Config::get().assistant.root.to_name(named_to),
+            request_body.to_string(),
+            Some(OllamaOptions {
+                temperature: Config::get().ollama.api.options.temperature,
+            }),
+        );
+
+        self.send_chat_request(ollama_request).await
     }
 
     pub async fn create_assistant(
@@ -137,7 +138,7 @@ impl OllamaClient {
         match json_request {
             Ok(request_body) => {
                 let response = http_client
-                    .send_ndjson_request(request_body.as_str())
+                    .send_request_for_ndjson_response(request_body.as_str())
                     .await?;
                 if response.success {
                     response

@@ -2,11 +2,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OllamaLoadResult {
-    model: String,
-    created_at: String,
-    response: String,
+    pub model: String,
+    pub created_at: String,
+    pub response: String,
     #[serde(default)]
-    done: bool,
-    #[serde(default)]
-    done_reason: bool,
+    pub done: bool,
+    pub done_reason: String,
 }

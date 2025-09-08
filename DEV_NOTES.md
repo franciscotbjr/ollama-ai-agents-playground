@@ -18,7 +18,7 @@
 - **Ollama API Base**: http://localhost:11434/api
 - **Chat Endpoint**: /chat
 - **Create Endpoint**: /create
-- **Default Model**: gemma3
+- **Default Model**: qwen3:0.6b
 - **Database Path**: D:\\development\\assistant.db
 - **Assistant Name Prefix**: assistant
 

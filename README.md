@@ -4,7 +4,7 @@ A Rust-based AI agent system that leverages Ollama for intent classification and
 
 ## Features
 
-- **Intent Classification**: Uses Ollama with Gemma3 model to classify user intents
+- **Intent Classification**: Uses Ollama with qwen3:0.6b model to classify user intents
 - **Modular Agent Architecture**: Extensible system for creating specialized AI agents
 - **HTTP Client Infrastructure**: Robust HTTP communication layer
 - **Configuration Management**: Lazy-loaded configuration system
@@ -24,16 +24,41 @@ You must have Ollama installed and running locally on your system.
 
 1. **Install Ollama**: Visit [Ollama's official website](https://ollama.ai/) and follow the installation instructions for your platform.
 
-2. **Pull the Gemma3 model**:
+2. **Pull the qwen3:0.6b model**:
    ```bash
-   ollama pull gemma3
+   ollama pull qwen3:0.6b
    ```
 
 3. **Verify Ollama is running**:
    ```bash
    ollama list
    ```
-   You should see `gemma3` in the model list.
+   You should see `qwen3:0.6b` in the model list.
+
+### Model Selection: qwen3:0.6b
+
+The `qwen3:0.6b` model has been selected after testing against several alternatives including `deepseek-r1:1.5b`, `llama3.1`, `mistral-nemo`, and `gemma3`. For the specific use case of intent classification in this project, `qwen3:0.6b` demonstrated:
+
+- **Consistent Results**: Most reliable intent classification accuracy
+- **Optimal Response Time**: Best balance between processing speed and accuracy
+- **Enhanced User Experience**: Faster interaction cycles for real-time applications
+- **System Performance**: Lower resource consumption while maintaining quality
+
+**Note**: While `qwen3:0.6b` excels for this specific intent classification scenario, it doesn't mean it's the optimal choice for all AI use cases. For small-scale classification tasks like this project, it provides an excellent tool that balances performance, accuracy, and resource efficiency.
+
+### Optimization Settings
+
+Through extensive testing, the following configuration optimizations were discovered:
+
+- **Temperature = 0.0**: Setting temperature to zero eliminates randomness, ensuring deterministic and consistent classification results across multiple requests with identical input.
+
+- **Two-Message Structure**: Splitting the classification prompt into separate `system` and `user` role messages significantly improved result consistency:
+  - **System message**: Contains classification instructions and examples
+  - **User message**: Contains the actual user input to classify
+  
+  This separation makes the model's responses highly idempotent, providing identical results for the same input across many requests, which is crucial for reliable intent classification in production environments.
+
+For detailed implementation of these optimization techniques, refer to `src/agents/classifier/intent_classifier_agent.rs`.
 
 ### Rust Environment
 
@@ -56,7 +81,7 @@ You must have Ollama installed and running locally on your system.
 
    [ollama.api]
    url = "http://localhost:11434/api/chat"
-   model = "gemma3"
+   model = "qwen3:0.6b"
    ```
 
 3. **Build and run**:
@@ -173,7 +198,7 @@ pub enum Intent {
 
 - [Ollama Official Website](https://ollama.ai/)
 - [Ollama GitHub Repository](https://github.com/ollama/ollama)
-- [Gemma3 Model Documentation](https://ollama.ai/library/gemma3)
+- [qwen3:0.6b Model Documentation](https://ollama.ai/library/qwen3:0.6b)
 - [Ollama API Documentation](https://github.com/ollama/ollama/blob/main/docs/api.md)
 
 ## Dependencies
@@ -201,7 +226,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Common Issues
 
 1. **Ollama not responding**: Ensure Ollama is running (`ollama serve`)
-2. **Model not found**: Pull the gemma3 model (`ollama pull gemma3`)
+2. **Model not found**: Pull the qwen3:0.6b model (`ollama pull qwen3:0.6b`)
 3. **Connection refused**: Check if the URL in `config.toml` matches your Ollama installation
 4. **Build errors**: Ensure you're using Rust 2024 edition (1.70+)
 

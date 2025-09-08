@@ -18,8 +18,8 @@ mod tests {
 
     #[test]
     fn test_ollama_load_request_new() {
-        let request = OllamaLoadRequest::new("gemma3".to_string());
-        assert_eq!(request.name, "gemma3");
+        let request = OllamaLoadRequest::new("qwen3:0.6b".to_string());
+        assert_eq!(request.name, "qwen3:0.6b");
     }
 
     #[test]

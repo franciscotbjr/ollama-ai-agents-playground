@@ -699,7 +699,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -714,7 +714,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -729,7 +729,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -744,7 +744,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -759,7 +759,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -781,7 +781,7 @@ model = "test-model"
             create: "/create".to_string(),
             show: "/show".to_string(),
             load: "/generate".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -801,7 +801,7 @@ model = "test-model"
             create: "/create?format=json".to_string(),
             show: "/show?details=true".to_string(),
             load: "/generate?details=true".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 
@@ -845,7 +845,7 @@ model = "test-model"
             create: "".to_string(),
             show: "".to_string(),
             load: "".to_string(),
-            model: "gemma3".to_string(),
+            model: "qwen3:0.6b".to_string(),
             options: ApiOptions { temperature: 0.0 },
         };
 

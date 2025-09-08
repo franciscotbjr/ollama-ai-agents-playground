@@ -11,6 +11,7 @@ pub mod ollama_load_result;
 pub mod ollama_options;
 pub mod ollama_response;
 pub mod ollama_response_message;
+pub mod role;
 
 pub use ollama_chat::OllamaChat;
 pub use ollama_chat_request::OllamaChatRequest;
@@ -24,3 +25,4 @@ pub use ollama_load_result::OllamaLoadResult;
 pub use ollama_options::OllamaOptions;
 pub use ollama_response::OllamaResponse;
 pub use ollama_response_message::OllamaResponseMessage;
+pub use role::Role;

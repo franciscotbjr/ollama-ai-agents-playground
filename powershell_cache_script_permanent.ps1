@@ -56,7 +56,7 @@ $projectContext = @{
     "testFramework" = "cargo test (Rust built-in)"
     "formatter" = "rustfmt"
     "language" = "Rust 2024"
-    "ollamaModel" = "gemma3"
+    "ollamaModel" = "qwen3:0.6b"
     
     # === STATUS ATUAL DO PROJETO ===
     "currentBranch" = "feature/create_assistant_agent"
@@ -76,7 +76,7 @@ $projectContext = @{
     # === HISTÓRICO E APRENDIZADO (cumulativo) ===
     "knownPatterns" = @{
         "agentSystem" = "Generic Agent<T> trait with modular result types"
-        "ollamaIntegration" = "Gemma3 model at localhost:11434"
+        "ollamaIntegration" = "qwen3:0.6b model at localhost:11434"
         "intentClassification" = "17 specialized intents with parameter extraction"
         "testingApproach" = "cargo test with 143 tests"
     }

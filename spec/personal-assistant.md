@@ -1,7 +1,7 @@
 # SPECIFICATION FOR AI AGENTS WITH PERSONAL ASSISTANT ROLE
 
 This personal assistant library in Rust operates primarily in a local environment 
-with Ollama and the Gemma3 model.
+with Ollama and the qwen3:0.6b model.
 
 ## FIRST STEP - FIRST AGENT
 
@@ -38,7 +38,7 @@ Envie um e-mail para Eva informando que não vou poder comparecer à reunião e 
 ### RESPONSE REFERENCE SAMPLE
 ```json
 {
-    "model": "gemma3",
+    "model": "qwen3:0.6b",
     "created_at": "2025-08-17T17:48:31.6221749Z",
     "message": {
         "role": "assistant",

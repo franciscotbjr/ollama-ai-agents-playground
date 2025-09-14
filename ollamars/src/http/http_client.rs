@@ -1,7 +1,4 @@
-use crate::http::{HttpError, HttpResponse};
-use crate::infra::ollama::ollama_create_reponse::{
-    OllamaCreateResponse, OllamaCreateStatusMessage,
-};
+use crate::{http::{HttpError, HttpResponse}, model::create::{ollama_create_reponse::OllamaCreateStatusMessage, OllamaCreateResponse}};
 
 pub struct HttpClient {
     client: reqwest::Client,

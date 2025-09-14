@@ -345,13 +345,13 @@ let personal_assistant = OllamaCreateRequest::new(
 ## Usage Example for Personal Assistant
 
 ```rust
-use crate::infra::ollama::{OllamaClient, OllamaCreateRequest, OllamaChatRequest};
+use crate::infra::ollama::{AssistantOllamaClient, OllamaCreateRequest, OllamaChatRequest};
 
 pub struct PersonalAssistantDemo;
 
 impl PersonalAssistantDemo {
     pub async fn create_and_test_personal_assistant() -> Result<(), Box<dyn std::error::Error>> {
-        let client = OllamaClient::new();
+        let client = AssistantOllamaClient::new();
         
         // Create the personal assistant
         let assistant_response = client.create_assistant(
@@ -375,7 +375,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_intent_classification(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_intent_classification(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let test_inputs = vec![
             "Send an email to Carlos about the project delay",
             "Schedule a meeting with Sarah for next Tuesday at 2 PM",
@@ -426,7 +426,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_scheduling_management(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_scheduling_management(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let prompt = r#"
             I have these meetings tomorrow:
             - 9:00 AM - Team standup (30 min)
@@ -447,7 +447,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_email_drafting(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_email_drafting(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let prompt = r#"
             Draft a professional email to decline a meeting invitation for Friday 
             because I'll be traveling. Suggest alternative dates next week and 
@@ -463,7 +463,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_travel_planning(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_travel_planning(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let prompt = r#"
             I need to travel from São Paulo to New York for a 3-day business trip
             next month (March 15-18). Please create a comprehensive travel plan
@@ -479,7 +479,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_task_prioritization(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_task_prioritization(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let prompt = r#"
             Here are my current tasks:
             1. Finish quarterly report (due Friday)
@@ -502,7 +502,7 @@ impl PersonalAssistantDemo {
         Ok(())
     }
     
-    async fn test_research_assistance(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_research_assistance(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         let prompt = r#"
             Research the top 5 project management tools for a 50-person tech team.
             Compare features, pricing, and integration capabilities. 
@@ -520,7 +520,7 @@ impl PersonalAssistantDemo {
     }
 <<<<<<< HEAD
     
-    async fn test_enhanced_support_features(client: &OllamaClient) -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_enhanced_support_features(client: &AssistantOllamaClient) -> Result<(), Box<dyn std::error::Error>> {
         // Test quick research
         let research_prompt = r#"
             Quick research: "What are the main benefits of regular physical exercise?"
@@ -758,7 +758,7 @@ impl CreateAssistantAgent {
             - Show calculation steps when appropriate
         "#;
         
-        let client = OllamaClient::new();
+        let client = AssistantOllamaClient::new();
         let response = client.create_assistant(
             enhanced_system_prompt,
             "enhanced-personal-assistant"

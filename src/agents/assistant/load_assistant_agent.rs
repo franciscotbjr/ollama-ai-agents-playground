@@ -1,6 +1,5 @@
 use crate::{
-    agents::{Agent, AgentError, agent::AgentParam, assistant::LoadResult},
-    infra::ollama::{OllamaCheckRequest, OllamaClient},
+    agents::{agent::AgentParam, assistant::LoadResult, Agent, AgentError}, infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Debug, Default)]
@@ -26,7 +25,7 @@ impl Agent<LoadParam, LoadResult> for LoadAssistantAgent {
     ) -> impl std::future::Future<Output = Result<LoadResult, crate::agents::AgentError>> + Send
     {
         async move {
-            let load_result = OllamaClient::new()
+            let load_result = AssistantOllamaClient::new()
             .load_model(&input.name)
             .await;
             match load_result {

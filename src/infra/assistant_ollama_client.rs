@@ -1,14 +1,10 @@
-use ollamars::http::HttpClient;
+use ollamars::{http::HttpClient, model::{create::{OllamaCreateRequest, OllamaCreateResponse}, load::OllamaLoadResult}, ollama_chat::OllamaChat, ollama_chat_request::OllamaChatRequest, ollama_check_request::OllamaCheckRequest, ollama_check_result::OllamaCheckResult, ollama_options::OllamaOptions, ollama_response::OllamaResponse};
 
 use crate::config::Config;
-use crate::infra::ollama::ollama_check_result::OllamaCheckResult;
-use crate::infra::ollama::{
-    OllamaChat, OllamaChatRequest, OllamaCheckRequest, OllamaCreateRequest, OllamaCreateResponse, OllamaLoadResult, OllamaOptions, OllamaResponse, Role
-};
 
-pub struct OllamaClient {}
+pub struct AssistantOllamaClient {}
 
-impl OllamaClient {
+impl AssistantOllamaClient {
     pub fn new() -> Self {
         Self {}
     }
@@ -159,12 +155,12 @@ impl OllamaClient {
 mod tests {
     use super::*;
 
-    // Mock OllamaClient for testing without actual HTTP calls
-    struct MockOllamaClient {
+    // Mock AssistantOllamaClient for testing without actual HTTP calls
+    struct MockAssistantOllamaClient {
         mock_responses: std::collections::HashMap<String, Result<bool, String>>,
     }
 
-    impl MockOllamaClient {
+    impl MockAssistantOllamaClient {
         fn new() -> Self {
             Self {
                 mock_responses: std::collections::HashMap::new(),
@@ -198,7 +194,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_status_200_model_found() {
-        let client = MockOllamaClient::new().with_model_exists("qwen3:0.6b", true);
+        let client = MockAssistantOllamaClient::new().with_model_exists("qwen3:0.6b", true);
 
         let result = client.check_model_exists("qwen3:0.6b").await;
         assert!(result.is_ok());
@@ -218,7 +214,7 @@ mod tests {
         let _messages = vec![system_message, user_message];
         
         // Create mock client (we can't test actual HTTP calls)
-        let _client = OllamaClient::new();
+        let _client = AssistantOllamaClient::new();
         
         // Test that the method signature works correctly
         // Note: This will fail in real execution due to no mock HTTP client,
@@ -232,7 +228,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_status_404_model_not_found() {
-        let client = MockOllamaClient::new().with_model_exists("non-existent-model", false);
+        let client = MockAssistantOllamaClient::new().with_model_exists("non-existent-model", false);
 
         let result = client.check_model_exists("non-existent-model").await;
         assert!(result.is_ok());
@@ -243,7 +239,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_status_500_server_error() {
-        let client = MockOllamaClient::new()
+        let client = MockAssistantOllamaClient::new()
             .with_model_error("error-model", "HTTP Error 500: Internal Server Error");
 
         let result = client.check_model_exists("error-model").await;
@@ -256,7 +252,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_status_400_bad_request() {
         let client =
-            MockOllamaClient::new().with_model_error("bad-model", "HTTP Error 400: Bad Request");
+            MockAssistantOllamaClient::new().with_model_error("bad-model", "HTTP Error 400: Bad Request");
 
         let result = client.check_model_exists("bad-model").await;
         assert!(result.is_err());
@@ -267,7 +263,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_empty_model_name() {
-        let client = MockOllamaClient::new().with_model_exists("", false);
+        let client = MockAssistantOllamaClient::new().with_model_exists("", false);
 
         let result = client.check_model_exists("").await;
         assert!(result.is_ok());
@@ -279,7 +275,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_with_special_characters() {
         let model_name = "model-with_special.chars@123";
-        let client = MockOllamaClient::new().with_model_exists(model_name, true);
+        let client = MockAssistantOllamaClient::new().with_model_exists(model_name, true);
 
         let result = client.check_model_exists(model_name).await;
         assert!(result.is_ok());
@@ -291,7 +287,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_with_unicode() {
         let model_name = "模型-test-café";
-        let client = MockOllamaClient::new().with_model_exists(model_name, true);
+        let client = MockAssistantOllamaClient::new().with_model_exists(model_name, true);
 
         let result = client.check_model_exists(model_name).await;
         assert!(result.is_ok());
@@ -302,7 +298,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_multiple_status_codes() {
-        let client = MockOllamaClient::new()
+        let client = MockAssistantOllamaClient::new()
             .with_model_exists("qwen3:0.6b", true) // 200
             .with_model_exists("missing-model", false) // 404
             .with_model_error(
@@ -332,7 +328,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_case_sensitivity() {
-        let client = MockOllamaClient::new()
+        let client = MockAssistantOllamaClient::new()
             .with_model_exists("QWEN3:0.6B", true)
             .with_model_exists("qwen3:0.6b", false);
 
@@ -346,7 +342,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_long_model_name() {
         let long_model_name = "very-long-model-name-with-many-characters-and-numbers-123456789-abcdefghijklmnopqrstuvwxyz";
-        let client = MockOllamaClient::new().with_model_exists(long_model_name, true);
+        let client = MockAssistantOllamaClient::new().with_model_exists(long_model_name, true);
 
         let result = client.check_model_exists(long_model_name).await.unwrap();
         assert_eq!(result.exists, true);
@@ -355,7 +351,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_with_spaces() {
         let model_with_spaces = "model with spaces";
-        let client = MockOllamaClient::new().with_model_exists(model_with_spaces, false);
+        let client = MockAssistantOllamaClient::new().with_model_exists(model_with_spaces, false);
 
         let result = client.check_model_exists(model_with_spaces).await.unwrap();
         assert_eq!(result.exists, false);
@@ -363,7 +359,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_consistency() {
-        let client = MockOllamaClient::new().with_model_exists("consistent-model", true);
+        let client = MockAssistantOllamaClient::new().with_model_exists("consistent-model", true);
 
         // Call multiple times to ensure consistency
         for _ in 0..3 {
@@ -375,7 +371,7 @@ mod tests {
     #[tokio::test]
     async fn test_check_model_exists_http_status_codes_validation() {
         // Test different HTTP status code scenarios
-        let client = MockOllamaClient::new()
+        let client = MockAssistantOllamaClient::new()
             .with_model_error("status-401", "HTTP Error 401: Unauthorized")
             .with_model_error("status-403", "HTTP Error 403: Forbidden")
             .with_model_error("status-502", "HTTP Error 502: Bad Gateway")

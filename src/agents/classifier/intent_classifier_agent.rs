@@ -1,8 +1,10 @@
+use ollamars::ollama_chat::OllamaChat;
+
 use crate::{
     agents::{
-        agent::AgentParam, agent_prompt::AgentPrompt, classifier::ToClassificationResult, Agent, AgentError, ClassificationResult
+        agent::AgentParam, agent_prompt::AgentPrompt, classifier::{classification_result::OllamaIntentResponseParser}, Agent, AgentError, ClassificationResult
     },
-    infra::ollama::{OllamaChat, OllamaClient},
+    infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Debug, Default)]
@@ -41,7 +43,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
 
 
             // Send to Ollama API
-            let result = OllamaClient::new()
+            let result = AssistantOllamaClient::new()
                 .send_classifier_message(vec![
                     OllamaChat::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
                     OllamaChat::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
@@ -51,7 +53,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
             match result {
                 Ok(ollama_response) => {
                     // Parse JSON response and convert to ClassificationResult
-                    match ollama_response.message.to_classification_result() {
+                    match ollama_response.message.parsed_content(OllamaIntentResponseParser::default()) {
                         Ok(classification_result) => Ok(classification_result),
                         Err(mapper_error) => Err(AgentError::ParseError(format!(
                             "Classification failed: {}",
@@ -292,7 +294,7 @@ mod tests {
     }
 
     // Note: We cannot easily test the actual async process method without complex mocking
-    // of the OllamaClient HTTP calls. The process method requires real HTTP infrastructure
+    // of the AssistantOllamaClient HTTP calls. The process method requires real HTTP infrastructure
     // or comprehensive mocking framework which is beyond the scope of unit tests.
     // Integration tests would be more appropriate for testing the full process flow.
 

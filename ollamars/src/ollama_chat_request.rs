@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::infra::ollama::{OllamaChat, OllamaOptions};
+use crate::{ollama_chat::OllamaChat, ollama_options::OllamaOptions};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OllamaChatRequest {

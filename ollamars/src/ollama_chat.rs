@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::infra::ollama::Role;
+use crate::role::Role;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OllamaChat {

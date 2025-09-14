@@ -1,7 +1,6 @@
 use crate::{
-    agents::{
-        agent::AgentParam, assistant::CheckResult, Agent, AgentError
-    }, infra::assistant_ollama_client::AssistantOllamaClient,
+    agents::{Agent, AgentError, agent::AgentParam, assistant::CheckResult},
+    infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Debug, Default)]
@@ -27,7 +26,9 @@ impl Agent<CheckParam, CheckResult> for CheckAssistantAgent {
     ) -> impl std::future::Future<Output = Result<CheckResult, crate::agents::AgentError>> + Send
     {
         async move {
-            let check_result = AssistantOllamaClient::new().check_model_exists(&input.name).await;
+            let check_result = AssistantOllamaClient::new()
+                .check_model_exists(&input.name)
+                .await;
 
             match check_result {
                 Ok(check) => Ok(CheckResult::new(check.exists)),

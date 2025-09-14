@@ -1,4 +1,4 @@
-use crate::from_markdown_json::{FromMarkdownJson};
+use crate::from_markdown_json::FromMarkdownJson;
 
 use serde::Deserialize;
 
@@ -16,12 +16,10 @@ impl OllamaResponseMessage {
     }
 
     /// Parses the content to extract structured JSON data
-    pub fn parsed_content<T, P>(&self, parser: P) 
-    -> Result<T, Box<dyn std::error::Error>>        
+    pub fn parsed_content<T, P>(&self, parser: P) -> Result<T, Box<dyn std::error::Error>>
     where
         P: FromMarkdownJson<T>,
     {
         P::from_markdown_text(&self.raw_content)
     }
-
 }

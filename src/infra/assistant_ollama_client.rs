@@ -1,4 +1,16 @@
-use ollamars::{http::HttpClient, model::{create::{OllamaCreateRequest, OllamaCreateResponse}, load::OllamaLoadResult}, ollama_chat::OllamaChat, ollama_chat_request::OllamaChatRequest, ollama_check_request::OllamaCheckRequest, ollama_check_result::OllamaCheckResult, ollama_options::OllamaOptions, ollama_response::OllamaResponse};
+use ollamars::{
+    http::HttpClient,
+    model::{
+        create::{OllamaCreateRequest, OllamaCreateResponse},
+        load::OllamaLoadResult,
+    },
+    ollama_chat::OllamaChat,
+    ollama_chat_request::OllamaChatRequest,
+    ollama_check_request::OllamaCheckRequest,
+    ollama_check_result::OllamaCheckResult,
+    ollama_options::OllamaOptions,
+    ollama_response::OllamaResponse,
+};
 
 use crate::config::Config;
 
@@ -40,7 +52,7 @@ impl AssistantOllamaClient {
         model: &str,
     ) -> Result<OllamaLoadResult, Box<dyn std::error::Error>> {
         let config_api = &Config::get().ollama.api;
-        
+
         let ollama_request = OllamaCheckRequest::new(model.to_string());
         let json_request = serde_json::to_string(&ollama_request);
         let http_client = HttpClient::new(config_api.url.clone(), config_api.load.clone());
@@ -101,7 +113,6 @@ impl AssistantOllamaClient {
         messages: Vec<OllamaChat>,
         named_to: &str,
     ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
-        
         let ollama_request = OllamaChatRequest::new(
             Config::get().assistant.root.to_name(named_to),
             messages,
@@ -207,20 +218,20 @@ mod tests {
     async fn test_send_classifier_message_with_messages_vector() {
         // This test verifies the updated send_classifier_message method signature
         // that now accepts Vec<OllamaChat> instead of a single prompt string
-        
+
         // Create test messages
         let system_message = OllamaChat::system("You are a classifier".to_string());
         let user_message = OllamaChat::user("Test input".to_string());
         let _messages = vec![system_message, user_message];
-        
+
         // Create mock client (we can't test actual HTTP calls)
         let _client = AssistantOllamaClient::new();
-        
+
         // Test that the method signature works correctly
         // Note: This will fail in real execution due to no mock HTTP client,
         // but it validates the signature and basic structure
         let _named_to = "test-assistant";
-        
+
         // We can only test the method exists and has correct signature
         // Real testing would require HTTP mocking infrastructure
         assert!(true); // Placeholder - method signature validation passed
@@ -228,7 +239,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_status_404_model_not_found() {
-        let client = MockAssistantOllamaClient::new().with_model_exists("non-existent-model", false);
+        let client =
+            MockAssistantOllamaClient::new().with_model_exists("non-existent-model", false);
 
         let result = client.check_model_exists("non-existent-model").await;
         assert!(result.is_ok());
@@ -251,8 +263,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_model_exists_status_400_bad_request() {
-        let client =
-            MockAssistantOllamaClient::new().with_model_error("bad-model", "HTTP Error 400: Bad Request");
+        let client = MockAssistantOllamaClient::new()
+            .with_model_error("bad-model", "HTTP Error 400: Bad Request");
 
         let result = client.check_model_exists("bad-model").await;
         assert!(result.is_err());

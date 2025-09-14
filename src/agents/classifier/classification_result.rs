@@ -25,13 +25,10 @@ impl ClassificationResult {
 
 impl AgentResult for ClassificationResult {}
 
-
 #[derive(Default)]
-pub struct OllamaIntentResponseParser {
-}
+pub struct OllamaIntentResponseParser {}
 
 impl OllamaIntentResponseParser {
-
     /// Extracts JSON content from markdown code block
     fn extract_json_from_markdown(content: &str) -> Result<String, Box<dyn std::error::Error>> {
         // Find the start and end of the JSON code block
@@ -50,18 +47,17 @@ impl OllamaIntentResponseParser {
 
         Err(format!("Could not extract JSON from content: {content}").into())
     }
-
 }
 
 impl FromMarkdownJson<ClassificationResult> for OllamaIntentResponseParser {
-
     /// Extracts JSON from ```json ... ``` markdown format and parses it
-    fn from_markdown_text(markdown_text: &str) -> Result<ClassificationResult, Box<dyn std::error::Error>> {
+    fn from_markdown_text(
+        markdown_text: &str,
+    ) -> Result<ClassificationResult, Box<dyn std::error::Error>> {
         let json_content = OllamaIntentResponseParser::extract_json_from_markdown(markdown_text)?;
         let parsed = serde_json::from_str(&json_content)?;
         Ok(parsed)
     }
-
 }
 
 #[cfg(test)]

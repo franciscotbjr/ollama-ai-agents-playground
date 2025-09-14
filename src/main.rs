@@ -2,9 +2,14 @@ mod config;
 
 use ollama_ai_agents_playground::{
     agents::{
+        Agent,
         assistant::{
-            build_assistant_name, check_assistant_agent::CheckParam, create_assistant_agent::CreateParam, load_assistant_agent::{self, LoadParam}, CheckAssistantAgent, CreateAssistantAgent, LoadAssistantAgent
-        }, classifier::{IntentClassifierAgent, IntentParam}, Agent
+            CheckAssistantAgent, CreateAssistantAgent, LoadAssistantAgent, build_assistant_name,
+            check_assistant_agent::CheckParam,
+            create_assistant_agent::CreateParam,
+            load_assistant_agent::{self, LoadParam},
+        },
+        classifier::{IntentClassifierAgent, IntentParam},
     },
     config::Config,
 };
@@ -24,7 +29,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Checking if assistant already created...");
     // Check if user assistant exists
     let check_result = CheckAssistantAgent::default()
-        .process(CheckParam::new(build_assistant_name(user_settings.assistant.as_str())))
+        .process(CheckParam::new(build_assistant_name(
+            user_settings.assistant.as_str(),
+        )))
         .await;
 
     match check_result {
@@ -34,7 +41,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("🚀 Loading assistant into system memory...");
                 // If user assistant exists, load it
                 let load_result = LoadAssistantAgent::default()
-                    .process(LoadParam::new(build_assistant_name(user_settings.assistant.as_str())))
+                    .process(LoadParam::new(build_assistant_name(
+                        user_settings.assistant.as_str(),
+                    )))
                     .await;
                 // Just log result
                 match load_result {

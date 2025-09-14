@@ -1,6 +1,7 @@
 use crate::{
-    agents::{agent::AgentParam, assistant::CreateResult, Agent, AgentError, AgentPrompt},
-    config::Config, infra::assistant_ollama_client::AssistantOllamaClient,
+    agents::{Agent, AgentError, AgentPrompt, agent::AgentParam, assistant::CreateResult},
+    config::Config,
+    infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Default)]

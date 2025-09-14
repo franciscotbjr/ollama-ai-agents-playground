@@ -609,5 +609,4 @@ model = "test-model"
         assert!(show_url.contains("/show") || show_url.ends_with("/api"));
         assert!(load_url.contains("/generate") || load_url.ends_with("/api"));
     }
-
 }

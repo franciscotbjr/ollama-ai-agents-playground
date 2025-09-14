@@ -18,13 +18,12 @@ impl FromStr for Role {
             SYSTEM => Ok(Role::System),
             USER => Ok(Role::User),
             ASSISTANT => Ok(Role::Assistant),
-            _ => Err(RoleError)
+            _ => Err(RoleError),
         }
     }
 
     type Err = RoleError;
 }
-
 
 impl Role {
     pub fn to_str(&self) -> &str {

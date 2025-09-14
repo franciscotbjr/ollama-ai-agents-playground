@@ -1,6 +1,8 @@
-pub mod http;
 pub mod chat;
 pub mod completion;
+pub mod config;
+pub mod from_markdown_json;
+pub mod http;
 pub mod model;
 pub mod ollama_chat;
 pub mod ollama_chat_request;
@@ -10,5 +12,3 @@ pub mod ollama_options;
 pub mod ollama_response;
 pub mod ollama_response_message;
 pub mod role;
-pub mod config;
-pub mod from_markdown_json;

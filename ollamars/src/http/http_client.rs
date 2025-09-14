@@ -1,4 +1,4 @@
-use crate::infra::http::{HttpError, HttpResponse};
+use crate::http::{HttpError, HttpResponse};
 use crate::infra::ollama::ollama_create_reponse::{
     OllamaCreateResponse, OllamaCreateStatusMessage,
 };

@@ -1,5 +1,6 @@
+use ollamars::http::HttpClient;
+
 use crate::config::Config;
-use crate::infra::http::HttpClient;
 use crate::infra::ollama::ollama_check_result::OllamaCheckResult;
 use crate::infra::ollama::{
     OllamaChat, OllamaChatRequest, OllamaCheckRequest, OllamaCreateRequest, OllamaCreateResponse, OllamaLoadResult, OllamaOptions, OllamaResponse, Role

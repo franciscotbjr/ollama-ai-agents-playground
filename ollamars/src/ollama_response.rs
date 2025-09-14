@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::infra::ollama::OllamaResponseMessage;
+use crate::ollama_response_message::OllamaResponseMessage;
 
 #[derive(Debug, Deserialize)]
 pub struct OllamaResponse {

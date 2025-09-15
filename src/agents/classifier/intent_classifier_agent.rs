@@ -1,8 +1,11 @@
+use ollamars::ollama_chat::OllamaChat;
+
 use crate::{
     agents::{
-        agent::AgentParam, agent_prompt::AgentPrompt, classifier::ToClassificationResult, Agent, AgentError, ClassificationResult
+        Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
+        classifier::classification_result::OllamaIntentResponseParser,
     },
-    infra::ollama::{OllamaChat, OllamaClient},
+    infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Debug, Default)]
@@ -39,19 +42,24 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
 
             let user_prompt = build_user_prompt(&input.input);
 
-
             // Send to Ollama API
-            let result = OllamaClient::new()
-                .send_classifier_message(vec![
-                    OllamaChat::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
-                    OllamaChat::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
-                ], &input.assistant)
+            let result = AssistantOllamaClient::new()
+                .send_classifier_message(
+                    vec![
+                        OllamaChat::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
+                        OllamaChat::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
+                    ],
+                    &input.assistant,
+                )
                 .await;
 
             match result {
                 Ok(ollama_response) => {
                     // Parse JSON response and convert to ClassificationResult
-                    match ollama_response.message.to_classification_result() {
+                    match ollama_response
+                        .message
+                        .parsed_content(OllamaIntentResponseParser::default())
+                    {
                         Ok(classification_result) => Ok(classification_result),
                         Err(mapper_error) => Err(AgentError::ParseError(format!(
                             "Classification failed: {}",
@@ -146,7 +154,7 @@ mod tests {
     fn test_build_user_prompt() {
         let input = "Send an email to Eva";
         let result = build_user_prompt(input);
-        
+
         assert!(result.contains("Send an email to Eva"));
         assert!(result.contains("Input:"));
         assert!(result.contains("Output:"));
@@ -156,7 +164,7 @@ mod tests {
     fn test_build_user_prompt_with_special_characters() {
         let input = "Send email with \"quotes\" and 'apostrophes'";
         let result = build_user_prompt(input);
-        
+
         assert!(result.contains("quotes"));
         assert!(result.contains("apostrophes"));
     }
@@ -165,7 +173,7 @@ mod tests {
     fn test_build_user_prompt_with_unicode() {
         let input = "Envie um email para João sobre café";
         let result = build_user_prompt(input);
-        
+
         assert!(result.contains("João"));
         assert!(result.contains("café"));
     }
@@ -173,7 +181,7 @@ mod tests {
     #[test]
     fn test_build_system_prompt() {
         let result = build_system_prompt();
-        
+
         assert!(result.contains("You are a helpful assistant"));
         assert!(result.contains("JSON object"));
         assert!(result.contains("Example 1"));
@@ -186,7 +194,7 @@ mod tests {
     #[test]
     fn test_build_system_prompt_contains_format() {
         let result = build_system_prompt();
-        
+
         assert!(result.contains("Output-Format"));
         assert!(result.contains("intent"));
         assert!(result.contains("params"));
@@ -197,7 +205,7 @@ mod tests {
     #[test]
     fn test_build_system_prompt_contains_examples() {
         let result = build_system_prompt();
-        
+
         assert!(result.contains("Carlos"));
         assert!(result.contains("Sofia"));
         assert!(result.contains("delay"));
@@ -223,14 +231,14 @@ mod tests {
     fn test_build_user_prompt_formatting() {
         let input = "Test message";
         let result = build_user_prompt(input);
-        
+
         // Should contain the formatted input
         assert!(result.contains("\"Test message\""));
-        
+
         // Should have proper structure
         let lines: Vec<&str> = result.lines().collect();
         assert!(lines.len() > 0);
-        
+
         // Should end with "Output: "
         assert!(result.contains("Output: "));
     }
@@ -238,13 +246,13 @@ mod tests {
     #[test]
     fn test_build_system_prompt_no_markdown() {
         let result = build_system_prompt();
-        
+
         // Should not contain markdown formatting
         assert!(!result.contains("```"));
         assert!(!result.contains("**"));
         assert!(!result.contains("##"));
         assert!(!result.contains("###"));
-        
+
         // Should contain instruction about no markdown
         assert!(result.contains("never use markdown"));
     }
@@ -266,7 +274,7 @@ mod tests {
     #[test]
     fn test_agent_param_trait_implementation() {
         let param = IntentParam::new("test".to_string(), "assistant".to_string());
-        
+
         // This test verifies that IntentParam implements AgentParam trait
         // If it doesn't implement the trait, this won't compile
         fn accepts_agent_param<T: AgentParam>(_param: T) {}
@@ -278,21 +286,21 @@ mod tests {
         let input = "Send email to test@example.com";
         let user_prompt = build_user_prompt(input);
         let system_prompt = build_system_prompt();
-        
+
         // Both prompts should be non-empty
         assert!(!user_prompt.is_empty());
         assert!(!system_prompt.is_empty());
-        
+
         // System prompt should contain instructions
         assert!(system_prompt.contains("assistant"));
         assert!(system_prompt.contains("JSON"));
-        
+
         // User prompt should contain the input
         assert!(user_prompt.contains("test@example.com"));
     }
 
     // Note: We cannot easily test the actual async process method without complex mocking
-    // of the OllamaClient HTTP calls. The process method requires real HTTP infrastructure
+    // of the AssistantOllamaClient HTTP calls. The process method requires real HTTP infrastructure
     // or comprehensive mocking framework which is beyond the scope of unit tests.
     // Integration tests would be more appropriate for testing the full process flow.
 
@@ -300,7 +308,7 @@ mod tests {
     fn test_intent_param_debug() {
         let param = IntentParam::new("debug test".to_string(), "debug-assistant".to_string());
         let debug_str = format!("{:?}", param);
-        
+
         // Debug output should contain the struct name and fields
         assert!(debug_str.contains("IntentParam"));
     }

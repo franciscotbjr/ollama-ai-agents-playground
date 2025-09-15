@@ -1,6 +1,6 @@
-use crate::infra::http::{HttpError, HttpResponse};
-use crate::infra::ollama::ollama_create_reponse::{
-    OllamaCreateResponse, OllamaCreateStatusMessage,
+use crate::{
+    http::{HttpError, HttpResponse},
+    model::create::{OllamaCreateResponse, ollama_create_reponse::OllamaCreateStatusMessage},
 };
 
 pub struct HttpClient {

@@ -178,7 +178,7 @@
 #### 3. Ollama Integration Fix
 - **Fixed**: "error decoding response body" in `create_assistant` function
 - **Root Cause**: Mismatch between expected JSON format and actual NDJSON response
-- **Solution**: Updated `OllamaClient::create_assistant` to use `send_ndjson_request()`
+- **Solution**: Updated `AssistantOllamaClient::create_assistant` to use `send_ndjson_request()`
 - **Verification**: Successfully processes real Ollama responses with layer status messages
 
 #### 4. Assistant Agent Configuration

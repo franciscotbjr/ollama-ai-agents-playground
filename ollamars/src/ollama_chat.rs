@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::infra::ollama::Role;
+use crate::role::Role;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct OllamaChat {
@@ -115,7 +115,7 @@ mod tests {
     fn test_ollama_chat_clone() {
         let original = OllamaChat::user("Original message".to_string());
         let cloned = original.clone();
-        
+
         assert_eq!(original, cloned);
         assert_eq!(original.role, cloned.role);
         assert_eq!(original.content, cloned.content);
@@ -137,7 +137,7 @@ mod tests {
     fn test_ollama_chat_serialization() {
         let chat = OllamaChat::user("Test message".to_string());
         let json = serde_json::to_string(&chat).expect("Serialization should succeed");
-        
+
         let expected_json = r#"{"role":"user","content":"Test message"}"#;
         assert_eq!(json, expected_json);
     }
@@ -146,7 +146,7 @@ mod tests {
     fn test_ollama_chat_serialization_with_none_role() {
         let chat = OllamaChat::new(None, "No role message".to_string());
         let json = serde_json::to_string(&chat).expect("Serialization should succeed");
-        
+
         let expected_json = r#"{"role":null,"content":"No role message"}"#;
         assert_eq!(json, expected_json);
     }
@@ -162,7 +162,10 @@ mod tests {
         let system_json = serde_json::to_string(&system_chat).unwrap();
 
         assert_eq!(user_json, r#"{"role":"user","content":"User msg"}"#);
-        assert_eq!(assistant_json, r#"{"role":"assistant","content":"Assistant msg"}"#);
+        assert_eq!(
+            assistant_json,
+            r#"{"role":"assistant","content":"Assistant msg"}"#
+        );
         assert_eq!(system_json, r#"{"role":"system","content":"System msg"}"#);
     }
 
@@ -170,7 +173,7 @@ mod tests {
     fn test_ollama_chat_deserialization() {
         let json = r#"{"role":"user","content":"Test message"}"#;
         let chat: OllamaChat = serde_json::from_str(json).expect("Deserialization should succeed");
-        
+
         assert_eq!(chat.role, Some(Role::User));
         assert_eq!(chat.content, "Test message");
     }
@@ -179,7 +182,7 @@ mod tests {
     fn test_ollama_chat_deserialization_with_null_role() {
         let json = r#"{"role":null,"content":"No role message"}"#;
         let chat: OllamaChat = serde_json::from_str(json).expect("Deserialization should succeed");
-        
+
         assert_eq!(chat.role, None);
         assert_eq!(chat.content, "No role message");
     }
@@ -203,8 +206,9 @@ mod tests {
     fn test_ollama_chat_roundtrip_serialization() {
         let original = OllamaChat::assistant("Roundtrip test".to_string());
         let json = serde_json::to_string(&original).expect("Serialization should succeed");
-        let deserialized: OllamaChat = serde_json::from_str(&json).expect("Deserialization should succeed");
-        
+        let deserialized: OllamaChat =
+            serde_json::from_str(&json).expect("Deserialization should succeed");
+
         assert_eq!(original, deserialized);
     }
 
@@ -241,7 +245,9 @@ mod tests {
 
     #[test]
     fn test_ollama_chat_with_json_content() {
-        let json_content = r#"{"intent":"send_email","params":{"recipient":"test","message":"hello"}}"#.to_string();
+        let json_content =
+            r#"{"intent":"send_email","params":{"recipient":"test","message":"hello"}}"#
+                .to_string();
         let chat = OllamaChat::assistant(json_content.clone());
         assert_eq!(chat.content, json_content);
         assert_eq!(chat.role, Some(Role::Assistant));
@@ -252,8 +258,9 @@ mod tests {
         let content_with_escapes = "Line 1\nLine 2\tTabbed\r\nWindows line ending".to_string();
         let chat = OllamaChat::system(content_with_escapes.clone());
         let json = serde_json::to_string(&chat).expect("Serialization should succeed");
-        let deserialized: OllamaChat = serde_json::from_str(&json).expect("Deserialization should succeed");
-        
+        let deserialized: OllamaChat =
+            serde_json::from_str(&json).expect("Deserialization should succeed");
+
         assert_eq!(chat, deserialized);
         assert_eq!(deserialized.content, content_with_escapes);
     }

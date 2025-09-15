@@ -1,7 +1,7 @@
 use crate::{
     agents::{Agent, AgentError, AgentPrompt, agent::AgentParam, assistant::CreateResult},
     config::Config,
-    infra::ollama::OllamaClient,
+    infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
 #[derive(Default)]
@@ -33,7 +33,7 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
         input: CreateParam,
     ) -> impl std::future::Future<Output = Result<CreateResult, AgentError>> + Send {
         async move {
-            let result = OllamaClient::new()
+            let result = AssistantOllamaClient::new()
                 .create_assistant(
                     build_system_prompt(&input),
                     build_assistant_name(&input.name),

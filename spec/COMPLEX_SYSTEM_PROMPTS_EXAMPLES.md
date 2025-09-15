@@ -725,13 +725,13 @@ let cybersecurity_analyst = OllamaCreateRequest::new(
 ## Usage Examples in Rust
 
 ```rust
-use crate::infra::ollama::{OllamaClient, OllamaCreateRequest, OllamaChatRequest};
+use crate::infra::ollama::{AssistantOllamaClient, OllamaCreateRequest, OllamaChatRequest};
 
 pub struct ComplexSystemPrompts;
 
 impl ComplexSystemPrompts {
     pub async fn create_specialized_models() -> Result<(), Box<dyn std::error::Error>> {
-        let client = OllamaClient::new();
+        let client = AssistantOllamaClient::new();
         
         // Create code reviewer
         let code_reviewer_response = client.create_assistant(
@@ -763,7 +763,7 @@ impl ComplexSystemPrompts {
     }
     
     async fn test_specialized_model(
-        client: &OllamaClient,
+        client: &AssistantOllamaClient,
         model: &str,
         prompt: &str
     ) -> Result<(), Box<dyn std::error::Error>> {

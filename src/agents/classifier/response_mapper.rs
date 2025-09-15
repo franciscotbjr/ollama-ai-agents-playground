@@ -1,5 +1,7 @@
+use ollamars::ollama_response_message::OllamaResponseMessage;
+
 use crate::agents::classifier::ClassificationResult;
-use crate::infra::ollama::OllamaResponseMessage;
+use crate::agents::classifier::classification_result::OllamaIntentResponseParser;
 use std::error::Error;
 use std::fmt;
 
@@ -39,7 +41,7 @@ impl Mapper<&OllamaResponseMessage, ClassificationResult> for OllamaToClassifica
     fn map(source: &OllamaResponseMessage) -> Result<ClassificationResult, Self::Error> {
         // Try to parse the structured content from the response
         let parsed_content = source
-            .parsed_content()
+            .parsed_content(OllamaIntentResponseParser::default())
             .map_err(|e| MapperError::ParseError(e.to_string()))?;
 
         // Create ClassificationResult from the parsed content

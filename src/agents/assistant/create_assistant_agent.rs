@@ -41,14 +41,8 @@ impl Agent<CreateParam, CreateResult> for CreateAssistantAgent {
                 .await;
 
             match result {
-                Ok(create_result) => {
-                    let success_messages: Vec<bool> = create_result
-                        .messages
-                        .iter()
-                        .map(|m| m.status.eq_ignore_ascii_case(SUCCESS))
-                        .collect();
-                    let has_success = success_messages.iter().any(|&success| success);
-                    Ok(CreateResult::new(has_success))
+                Ok(create_response) => {
+                    Ok(CreateResult::new(create_response.is_success()))
                 }
                 Err(e) => Err(AgentError::ParseError(format!(
                     "Model creation failed: {}",

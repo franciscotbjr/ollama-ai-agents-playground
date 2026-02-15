@@ -1,18 +1,8 @@
-use ollamars::{
-    http::HttpClient,
-    model::{
-        create::{OllamaCreateRequest, OllamaCreateResponse},
-        load::OllamaLoadResult,
-    },
-    ollama_chat::OllamaChat,
-    ollama_chat_request::OllamaChatRequest,
-    ollama_check_request::OllamaCheckRequest,
-    ollama_check_result::OllamaCheckResult,
-    ollama_options::OllamaOptions,
-    ollama_response::OllamaResponse,
-};
+use crate::{agents::assistant::CheckResult, config::Config};
 
-use crate::config::Config;
+use ollama_oxide::{
+    ChatMessage, ChatRequest, ChatResponse, CreateRequest, CreateResponse, ModelOptions, OllamaApiAsync, OllamaClient, ShowRequest
+};
 
 pub struct AssistantOllamaClient {}
 
@@ -24,140 +14,93 @@ impl AssistantOllamaClient {
     pub async fn check_model_exists(
         &self,
         model: &str,
-    ) -> Result<OllamaCheckResult, Box<dyn std::error::Error>> {
-        let config_api = &Config::get().ollama.api;
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.show.clone());
-
-        let ollama_request = OllamaCheckRequest::new(model.to_string());
-        let json_request = serde_json::to_string(&ollama_request);
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_status::<OllamaResponse>(request_body.as_str())
-                    .await?;
-                let status_code = response.status;
-                match status_code {
-                    200 => Ok(OllamaCheckResult::new(true)),
-                    404 => Ok(OllamaCheckResult::new(false)),
-                    _ => Err(format!("Fail to check model {}", model.to_string()).into()),
+    ) -> Result<CheckResult, Box<dyn std::error::Error>> {
+        let client = OllamaClient::with_base_url(&Config::get().ollama.api.url.clone());
+        match client {
+            Ok(ollama_client) => {
+                let request = ShowRequest::new(model.to_string());
+                match ollama_client.show_model(&request).await {
+                    Ok(response) => {
+                        return Ok(CheckResult::new(true));
+                    }
+                    Err(e) => {
+                        return Ok(CheckResult::new(false));
+                    }
                 }
             }
-            Err(e) => Err(e.to_string().into()),
-        }
-    }
-
-    pub async fn load_model(
-        &self,
-        model: &str,
-    ) -> Result<OllamaLoadResult, Box<dyn std::error::Error>> {
-        let config_api = &Config::get().ollama.api;
-
-        let ollama_request = OllamaCheckRequest::new(model.to_string());
-        let json_request = serde_json::to_string(&ollama_request);
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.load.clone());
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_json_response::<OllamaLoadResult>(request_body.as_str())
-                    .await?;
-                if response.success {
-                    response
-                        .data
-                        .ok_or_else(|| "No data received from Ollama API".into())
-                } else {
-                    let error_msg = response
-                        .error
-                        .map(|e| format!("{}: {}", e.error, e.message))
-                        .unwrap_or_else(|| "Unknown error occurred".to_string());
-                    Err(error_msg.into())
-                }
-            }
-            Err(e) => Err(e.to_string().into()),
+            Err(e) => return Err(e.into()),
         }
     }
 
     async fn send_chat_request(
         &self,
-        ollama_request: OllamaChatRequest,
-    ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
-        let config_api = &Config::get().ollama.api;
-        let json_request = serde_json::to_string(&ollama_request);
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.chat.clone());
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_json_response::<OllamaResponse>(request_body.as_str())
-                    .await?;
-
-                if response.success {
-                    response
-                        .data
-                        .ok_or_else(|| "No data received from Ollama API".into())
-                } else {
-                    let error_msg = response
-                        .error
-                        .map(|e| format!("{}: {}", e.error, e.message))
-                        .unwrap_or_else(|| "Unknown error occurred".to_string());
-                    Err(error_msg.into())
+        chat_request: ChatRequest,
+    ) -> Result<ChatResponse, Box<dyn std::error::Error>> {
+        let client = OllamaClient::with_base_url(&Config::get().ollama.api.url.clone());
+        match client {
+            Ok(ollama_client) => match ollama_client.chat(&chat_request).await {
+                Ok(response) => {
+                    return Ok(response.clone());
                 }
+                Err(e) => {
+                    return Err(e.into());
+                }
+            },
+            Err(e) => {
+                return Err(e.into());
             }
-            Err(e) => Err(e.to_string().into()),
         }
     }
 
     pub async fn send_classifier_message(
         &self,
-        messages: Vec<OllamaChat>,
-        named_to: &str,
-    ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
-        let ollama_request = OllamaChatRequest::new(
-            Config::get().assistant.root.to_name(named_to),
-            messages,
-            Some(OllamaOptions {
-                temperature: Config::get().ollama.api.options.temperature,
-            }),
+        messages: Vec<ChatMessage>,
+        model: &str,
+    ) -> Result<ChatResponse, Box<dyn std::error::Error>> {
+        let chat_request = ChatRequest::new(model, messages).with_options(
+            ModelOptions::new().with_temperature(Config::get().ollama.api.options.temperature),
         );
 
-        self.send_chat_request(ollama_request).await
+        let client = OllamaClient::with_base_url(&Config::get().ollama.api.url.clone());
+        match client {
+            Ok(ollama_client) => match ollama_client.chat(&chat_request).await {
+                Ok(respose) => {
+                    return Ok(respose.clone());
+                }
+                Err(e) => {
+                    return Err(e.into());
+                }
+            },
+            Err(e) => {
+                return Err(e.into());
+            }
+        }
     }
 
     pub async fn create_assistant(
         &self,
         system: String,
         name: String,
-    ) -> Result<OllamaCreateResponse, Box<dyn std::error::Error>> {
-        let create_request = OllamaCreateRequest::new(
-            Config::get().ollama.api.model.clone(),
-            system.clone(),
-            name.clone(),
-        );
+    ) -> Result<CreateResponse, Box<dyn std::error::Error>> {
+        let create_request =
+            CreateRequest::from_model(name.clone(), Config::get().ollama.api.model.clone())
+                .with_system(system.clone());
 
-        let json_request = serde_json::to_string(&create_request);
-
-        let config_api = &Config::get().ollama.api;
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.create.clone());
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_ndjson_response(request_body.as_str())
-                    .await?;
-                if response.success {
-                    response
-                        .data
-                        .ok_or_else(|| "No data received from Ollama API".into())
-                } else {
-                    let error_msg = response
-                        .error
-                        .map(|e| format!("{}: {}", e.error, e.message))
-                        .unwrap_or_else(|| "Unknown error occurred".to_string());
-                    Err(error_msg.into())
+        let client = OllamaClient::with_base_url(&Config::get().ollama.api.url.clone());
+        match client {
+            Ok(ollama_client) => {
+                match ollama_client.create_model(&create_request).await {
+                    Ok(create_response) => {
+                        return Ok(create_response);
+                    }
+                    Err(e) => {
+                        return Err(e.into());
+                    }
                 }
             }
-            Err(e) => Err(e.to_string().into()),
+            Err(e) => {
+                return Err(e.into());
+            }
         }
     }
 }
@@ -194,11 +137,11 @@ mod tests {
         async fn check_model_exists(
             &self,
             model: &str,
-        ) -> Result<OllamaCheckResult, Box<dyn std::error::Error>> {
+        ) -> Result<CheckResult, Box<dyn std::error::Error>> {
             match self.mock_responses.get(model) {
-                Some(Ok(exists)) => Ok(OllamaCheckResult::new(*exists)),
+                Some(Ok(exists)) => Ok(CheckResult::new(*exists)),
                 Some(Err(error)) => Err(error.clone().into()),
-                None => Ok(OllamaCheckResult::new(false)), // Default: model doesn't exist
+                None => Ok(CheckResult::new(false)), // Default: model doesn't exist
             }
         }
     }
@@ -217,11 +160,11 @@ mod tests {
     #[tokio::test]
     async fn test_send_classifier_message_with_messages_vector() {
         // This test verifies the updated send_classifier_message method signature
-        // that now accepts Vec<OllamaChat> instead of a single prompt string
+        // that now accepts Vec<ChatMessage> instead of a single prompt string
 
         // Create test messages
-        let system_message = OllamaChat::system("You are a classifier".to_string());
-        let user_message = OllamaChat::user("Test input".to_string());
+        let system_message = ChatMessage::system("You are a classifier".to_string());
+        let user_message = ChatMessage::user("Test input".to_string());
         let _messages = vec![system_message, user_message];
 
         // Create mock client (we can't test actual HTTP calls)

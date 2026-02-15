@@ -4,10 +4,9 @@ use ollama_ai_agents_playground::{
     agents::{
         Agent,
         assistant::{
-            CheckAssistantAgent, CreateAssistantAgent, LoadAssistantAgent, build_assistant_name,
+            CheckAssistantAgent, CreateAssistantAgent, build_assistant_name,
             check_assistant_agent::CheckParam,
             create_assistant_agent::CreateParam,
-            load_assistant_agent::{self, LoadParam},
         },
         classifier::{IntentClassifierAgent, IntentParam},
     },
@@ -38,22 +37,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(check) => {
             if check.exists {
                 println!(" Assistant already created...");
-                println!("🚀 Loading assistant into system memory...");
-                // If user assistant exists, load it
-                let load_result = LoadAssistantAgent::default()
-                    .process(LoadParam::new(build_assistant_name(
-                        user_settings.assistant.as_str(),
-                    )))
-                    .await;
-                // Just log result
-                match load_result {
-                    Ok(load) => {
-                        println!(" Assistant loaded into system memory: {}", load.success)
-                    }
-                    Err(e) => {
-                        println!(" Failed to load assistant: {e}")
-                    }
-                }
             } else {
                 println!(" Assistant will be created...");
                 println!("🚀 Creating assistant...");

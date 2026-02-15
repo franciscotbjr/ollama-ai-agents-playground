@@ -1,7 +1,7 @@
-use ollamars::ollama_response_message::OllamaResponseMessage;
+use ollama_oxide::ResponseMessage;
 
 use crate::agents::classifier::ClassificationResult;
-use crate::agents::classifier::classification_result::OllamaIntentResponseParser;
+use crate::agents::classifier::FromMarkdownJson;
 use std::error::Error;
 use std::fmt;
 
@@ -32,17 +32,17 @@ pub trait Mapper<T, U> {
     fn map(source: T) -> Result<U, Self::Error>;
 }
 
-/// Implementation of mapper from OllamaResponseMessage to ClassificationResult
+/// Implementation of mapper from ResponseMessage to ClassificationResult
 pub struct OllamaToClassificationMapper;
 
-impl Mapper<&OllamaResponseMessage, ClassificationResult> for OllamaToClassificationMapper {
+impl Mapper<&ResponseMessage, ClassificationResult> for OllamaToClassificationMapper {
     type Error = MapperError;
 
-    fn map(source: &OllamaResponseMessage) -> Result<ClassificationResult, Self::Error> {
+    fn map(source: &ResponseMessage) -> Result<ClassificationResult, Self::Error> {
         // Try to parse the structured content from the response
-        let parsed_content = source
-            .parsed_content(OllamaIntentResponseParser::default())
-            .map_err(|e| MapperError::ParseError(e.to_string()))?;
+        let parsed_content =
+            ResponseMessage::from_markdown_text(&source.content().unwrap())
+                .map_err(|e| MapperError::ParseError(e.to_string()))?;
 
         // Create ClassificationResult from the parsed content
         let result = ClassificationResult::new(parsed_content.intent, parsed_content.params);
@@ -53,17 +53,17 @@ impl Mapper<&OllamaResponseMessage, ClassificationResult> for OllamaToClassifica
 
 /// Convenience function for mapping
 pub fn map_ollama_to_classification(
-    response: &OllamaResponseMessage,
+    response: &ResponseMessage,
 ) -> Result<ClassificationResult, MapperError> {
     OllamaToClassificationMapper::map(response)
 }
 
-/// Extension trait for OllamaResponseMessage to provide convenient mapping
+/// Extension trait for ResponseMessage to provide convenient mapping
 pub trait ToClassificationResult {
     fn to_classification_result(&self) -> Result<ClassificationResult, MapperError>;
 }
 
-impl ToClassificationResult for OllamaResponseMessage {
+impl ToClassificationResult for ResponseMessage {
     fn to_classification_result(&self) -> Result<ClassificationResult, MapperError> {
         OllamaToClassificationMapper::map(self)
     }
@@ -74,7 +74,7 @@ mod tests {
     use super::*;
     use crate::agents::Intent;
 
-    fn create_test_response_message(content: &str) -> OllamaResponseMessage {
+    fn create_test_response_message(content: &str) -> ResponseMessage {
         serde_json::from_str(&format!(
             r#"{{"role": "assistant", "content": "{}"}}"#,
             content.replace('"', r#"\""#).replace('\n', r#"\n"#)

@@ -6,7 +6,7 @@ name = "Ana"
 assistant = "Tereza"
 
 [ollama.api]
-url = "http://localhost:11434/api"
+url = "http://localhost:11434"
 chat = "/chat"
 create = "/create"
 show = "/show"

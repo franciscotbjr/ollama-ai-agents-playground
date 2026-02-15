@@ -1,6 +1,6 @@
-use crate::{agents::assistant::{CheckResult, LoadResult}, config::Config};
+use crate::{agents::assistant::{CheckResult, LoadResult}, config::Config, infra::assistant_ollama_client};
 
-use ollama_oxide::{ClientConfig, OllamaApiAsync, OllamaClient, ShowRequest};
+use ollama_oxide::{ChatRequest, ChatResponse, ClientConfig, OllamaApiAsync, OllamaClient, ShowRequest};
 
 pub struct AssistantOllamaClient {}
 
@@ -36,31 +36,25 @@ impl AssistantOllamaClient {
 
     async fn send_chat_request(
         &self,
-        ollama_request: OllamaChatRequest,
-    ) -> Result<OllamaResponse, Box<dyn std::error::Error>> {
+        ollama_request: ChatRequest,
+    ) -> Result<ChatResponse, Box<dyn std::error::Error>> {
         let config_api = &Config::get().ollama.api;
-        let json_request = serde_json::to_string(&ollama_request);
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.chat.clone());
 
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_json_response::<OllamaResponse>(request_body.as_str())
-                    .await?;
-
-                if response.success {
-                    response
-                        .data
-                        .ok_or_else(|| "No data received from Ollama API".into())
-                } else {
-                    let error_msg = response
-                        .error
-                        .map(|e| format!("{}: {}", e.error, e.message))
-                        .unwrap_or_else(|| "Unknown error occurred".to_string());
-                    Err(error_msg.into())
-                }
+        let client = OllamaClient::new(ClientConfig::with_base_url(config_api.url.clone()));
+        match client {
+            Ok(ollama_client) => {
+                match ollama_client.chat(&ollama_request).await {
+                    Ok(response) => {
+                        return Ok(response.clone());
+                    }
+                    Err(e) => {
+                        return Err(e.into());
+                    }
+                } 
             }
-            Err(e) => Err(e.to_string().into()),
+            Err(e) => {
+                return Err(e.into());
+            }
         }
     }
 

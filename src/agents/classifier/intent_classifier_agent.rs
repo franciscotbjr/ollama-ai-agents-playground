@@ -2,8 +2,7 @@ use ollama_oxide::{ChatMessage, ResponseMessage};
 
 use crate::{
     agents::{
-        Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
-        classifier::{FromMarkdownJson, classification_result::OllamaIntentResponseParser},
+        Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt, assistant::build_assistant_name, classifier::{FromMarkdownJson, classification_result::OllamaIntentResponseParser}
     },
     infra::assistant_ollama_client::AssistantOllamaClient,
 };
@@ -57,7 +56,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
                         ChatMessage::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
                         ChatMessage::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
                     ],
-                    &input.assistant,
+                    build_assistant_name(&input.assistant).as_str(),
                 )
                 .await;
 

@@ -21,4 +21,4 @@ toml = { workspace = true }
 tokio = { version = "1.47.1", features = ["full"] }
 markdown-harvest = "0.1.6"
 workflowrs = { path = "workflowrs" }
-ollama-oxide = {version = "0.1.1", features = ["model"]}
+ollama-oxide = {version = "0.1.2", features = ["model"]}

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::agents::{AgentResult, Intent, classifier::Params};
+use crate::agents::{AgentResult, Intent, classifier::{FromMarkdownJson, Params}};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ClassificationResult {

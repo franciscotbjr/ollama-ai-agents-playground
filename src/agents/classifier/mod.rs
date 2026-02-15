@@ -2,6 +2,7 @@ pub mod classification_result;
 pub mod intent_classifier_agent;
 pub mod params;
 pub mod response_mapper;
+pub mod from_markdown_json;
 
 pub use classification_result::ClassificationResult;
 pub use intent_classifier_agent::{IntentClassifierAgent, IntentParam};
@@ -10,3 +11,4 @@ pub use response_mapper::{
     Mapper, MapperError, OllamaToClassificationMapper, ToClassificationResult,
     map_ollama_to_classification,
 };
+pub use from_markdown_json::FromMarkdownJson;

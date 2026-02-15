@@ -1,4 +1,6 @@
-use crate::config::Config;
+use crate::{agents::assistant::{CheckResult, LoadResult}, config::Config};
+
+use ollama_oxide::{ClientConfig, OllamaApiAsync, OllamaClient, ShowRequest};
 
 pub struct AssistantOllamaClient {}
 
@@ -10,57 +12,25 @@ impl AssistantOllamaClient {
     pub async fn check_model_exists(
         &self,
         model: &str,
-    ) -> Result<OllamaCheckResult, Box<dyn std::error::Error>> {
-        let config_api = &Config::get().ollama.api;
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.show.clone());
-
-        let ollama_request = OllamaCheckRequest::new(model.to_string());
-        let json_request = serde_json::to_string(&ollama_request);
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_status::<OllamaResponse>(request_body.as_str())
-                    .await?;
-                let status_code = response.status;
-                match status_code {
-                    200 => Ok(OllamaCheckResult::new(true)),
-                    404 => Ok(OllamaCheckResult::new(false)),
-                    _ => Err(format!("Fail to check model {}", model.to_string()).into()),
-                }
-            }
-            Err(e) => Err(e.to_string().into()),
-        }
-    }
-
-    pub async fn load_model(
-        &self,
-        model: &str,
-    ) -> Result<OllamaLoadResult, Box<dyn std::error::Error>> {
+    ) -> Result<CheckResult, Box<dyn std::error::Error>> {
         let config_api = &Config::get().ollama.api;
 
-        let ollama_request = OllamaCheckRequest::new(model.to_string());
-        let json_request = serde_json::to_string(&ollama_request);
-        let http_client = HttpClient::new(config_api.url.clone(), config_api.load.clone());
-
-        match json_request {
-            Ok(request_body) => {
-                let response = http_client
-                    .send_request_for_json_response::<OllamaLoadResult>(request_body.as_str())
-                    .await?;
-                if response.success {
-                    response
-                        .data
-                        .ok_or_else(|| "No data received from Ollama API".into())
-                } else {
-                    let error_msg = response
-                        .error
-                        .map(|e| format!("{}: {}", e.error, e.message))
-                        .unwrap_or_else(|| "Unknown error occurred".to_string());
-                    Err(error_msg.into())
+        let client = OllamaClient::new(ClientConfig::with_base_url(config_api.url.clone()));
+        match client {
+            Ok(ollama_client) => {
+                let request = ShowRequest::new(model.to_string());
+                match ollama_client.show_model(&request).await {
+                    Ok(response) => {
+                        return Ok(CheckResult::new(true));
+                    }
+                    Err(e) => {
+                        return Ok(CheckResult::new(false));
+                    }
                 }
             }
-            Err(e) => Err(e.to_string().into()),
+            Err(e) => {
+                return Err(e.into())
+            }
         }
     }
 
@@ -180,11 +150,11 @@ mod tests {
         async fn check_model_exists(
             &self,
             model: &str,
-        ) -> Result<OllamaCheckResult, Box<dyn std::error::Error>> {
+        ) -> Result<CheckResult, Box<dyn std::error::Error>> {
             match self.mock_responses.get(model) {
-                Some(Ok(exists)) => Ok(OllamaCheckResult::new(*exists)),
+                Some(Ok(exists)) => Ok(CheckResult::new(*exists)),
                 Some(Err(error)) => Err(error.clone().into()),
-                None => Ok(OllamaCheckResult::new(false)), // Default: model doesn't exist
+                None => Ok(CheckResult::new(false)), // Default: model doesn't exist
             }
         }
     }

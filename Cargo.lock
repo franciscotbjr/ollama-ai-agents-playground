@@ -926,9 +926,9 @@ dependencies = [
 
 [[package]]
 name = "ollama-oxide"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef64ddbd88b648de6f3a5771b530a6a011fd4d933d001c05bbe38063b5d1368d"
+checksum = "61ce5d9de536262fe25858506e604428df09d39e898ea388f3c5cf0cfa24bd52"
 dependencies = [
  "async-trait",
  "reqwest",

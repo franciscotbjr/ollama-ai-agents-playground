@@ -26,11 +26,7 @@ impl Agent<LoadParam, LoadResult> for LoadAssistantAgent {
     ) -> impl std::future::Future<Output = Result<LoadResult, crate::agents::AgentError>> + Send
     {
         async move {
-            let load_result = AssistantOllamaClient::new().load_model(&input.name).await;
-            match load_result {
-                Ok(load) => Ok(LoadResult::new(load.done)),
-                Err(e) => Err(AgentError::ParseError(format!("Failed to load: {}", e))),
-            }
+            todo!();
         }
     }
 }

@@ -1,5 +1,3 @@
-use ollamars::ollama_chat::OllamaChat;
-
 use crate::{
     agents::{
         Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,

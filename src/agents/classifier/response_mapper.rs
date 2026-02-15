@@ -1,5 +1,3 @@
-use ollamars::ollama_response_message::OllamaResponseMessage;
-
 use crate::agents::classifier::ClassificationResult;
 use crate::agents::classifier::classification_result::OllamaIntentResponseParser;
 use std::error::Error;

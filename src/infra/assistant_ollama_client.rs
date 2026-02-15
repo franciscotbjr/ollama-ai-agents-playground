@@ -1,17 +1,3 @@
-use ollamars::{
-    http::HttpClient,
-    model::{
-        create::{OllamaCreateRequest, OllamaCreateResponse},
-        load::OllamaLoadResult,
-    },
-    ollama_chat::OllamaChat,
-    ollama_chat_request::OllamaChatRequest,
-    ollama_check_request::OllamaCheckRequest,
-    ollama_check_result::OllamaCheckResult,
-    ollama_options::OllamaOptions,
-    ollama_response::OllamaResponse,
-};
-
 use crate::config::Config;
 
 pub struct AssistantOllamaClient {}

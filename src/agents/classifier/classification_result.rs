@@ -1,4 +1,3 @@
-use ollamars::from_markdown_json::FromMarkdownJson;
 use serde::{Deserialize, Serialize};
 
 use crate::agents::{AgentResult, Intent, classifier::Params};

@@ -1,9 +1,9 @@
-use ollama_oxide::ChatMessage;
+use ollama_oxide::{ChatMessage, ResponseMessage};
 
 use crate::{
     agents::{
         Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
-        classifier::classification_result::OllamaIntentResponseParser,
+        classifier::{FromMarkdownJson, classification_result::OllamaIntentResponseParser},
     },
     infra::assistant_ollama_client::AssistantOllamaClient,
 };
@@ -31,6 +31,14 @@ impl IntentParam {
 
 impl AgentParam for IntentParam {}
 
+impl FromMarkdownJson<ClassificationResult> for ResponseMessage {
+    fn from_markdown_text(
+        markdown_text: &str,
+    ) -> Result<ClassificationResult, Box<dyn std::error::Error>> {
+        OllamaIntentResponseParser::from_markdown_text(markdown_text)
+    }
+}
+
 impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
     fn process(
         &self,
@@ -56,9 +64,9 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
             match result {
                 Ok(ollama_response) => {
                     // Parse JSON response and convert to ClassificationResult
-                    match ollama_response
-                        .message.unwrap()
-                        .parsed_content(OllamaIntentResponseParser::default())
+                    match ResponseMessage::from_markdown_text(
+                        &ollama_response.message.unwrap().content().unwrap(),
+                    )
                     {
                         Ok(classification_result) => Ok(classification_result),
                         Err(mapper_error) => Err(AgentError::ParseError(format!(

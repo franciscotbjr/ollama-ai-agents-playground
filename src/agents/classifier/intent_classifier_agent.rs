@@ -1,3 +1,5 @@
+use ollama_oxide::ChatMessage;
+
 use crate::{
     agents::{
         Agent, AgentError, ClassificationResult, agent::AgentParam, agent_prompt::AgentPrompt,
@@ -44,8 +46,8 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
             let result = AssistantOllamaClient::new()
                 .send_classifier_message(
                     vec![
-                        OllamaChat::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
-                        OllamaChat::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
+                        ChatMessage::system(format!(r#"{}"#, systen_prompt.replace('"', "\\\""))),
+                        ChatMessage::user(format!(r#"{}"#, user_prompt.replace('"', "\\\""))),
                     ],
                     &input.assistant,
                 )
@@ -55,7 +57,7 @@ impl Agent<IntentParam, ClassificationResult> for IntentClassifierAgent {
                 Ok(ollama_response) => {
                     // Parse JSON response and convert to ClassificationResult
                     match ollama_response
-                        .message
+                        .message.unwrap()
                         .parsed_content(OllamaIntentResponseParser::default())
                     {
                         Ok(classification_result) => Ok(classification_result),

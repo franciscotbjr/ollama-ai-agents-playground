@@ -1,4 +1,4 @@
-use crate::agents::{Agent, AgentError, agent::AgentParam, contact::contact_result::ContactResult};
+use crate::agents::{Agent, AgentError, AgentParam, contact::contact_result::ContactResult};
 
 pub struct ContactAgent {}
 

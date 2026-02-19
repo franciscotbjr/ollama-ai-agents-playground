@@ -1,23 +1,12 @@
 use crate::{
-    agents::{Agent, AgentError, agent::AgentParam, assistant::CheckResult},
+    agents::{Agent, AgentError, assistant::CheckResult},
     infra::assistant_ollama_client::AssistantOllamaClient,
 };
 
+use super::check_param::CheckParam;
+
 #[derive(Debug, Default)]
 pub struct CheckAssistantAgent {}
-
-#[derive(Debug, Clone)]
-pub struct CheckParam {
-    name: String,
-}
-
-impl CheckParam {
-    pub fn new(name: String) -> Self {
-        Self { name }
-    }
-}
-
-impl AgentParam for CheckParam {}
 
 impl Agent<CheckParam, CheckResult> for CheckAssistantAgent {
     fn process(
@@ -27,7 +16,7 @@ impl Agent<CheckParam, CheckResult> for CheckAssistantAgent {
     {
         async move {
             let check_result = AssistantOllamaClient::new()
-                .check_model_exists(&input.name)
+                .check_model_exists(input.name())
                 .await;
 
             match check_result {

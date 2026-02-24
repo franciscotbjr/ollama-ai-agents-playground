@@ -3,4 +3,8 @@ name = "workflowrs"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "workflowrs"
+path = "src/lib.rs"
+
 [dependencies]

@@ -1,4 +1,4 @@
-use crate::agents::{Agent, AgentError, agent::AgentParam, email::EmailResult};
+use crate::agents::{Agent, AgentError, AgentParam, email::EmailResult};
 
 #[derive(Debug, Default)]
 pub struct EmailAgent {}

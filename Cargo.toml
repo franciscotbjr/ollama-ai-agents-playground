@@ -22,3 +22,11 @@ tokio = { version = "1.47.1", features = ["full"] }
 markdown-harvest = "0.1.6"
 workflowrs = { path = "workflowrs" }
 ollama-oxide = {version = "0.1.2", features = ["model"]}
+
+[[example]]
+name = "classify_intent"
+path = "examples/classify_intent.rs"
+
+[[example]]
+name = "check_assistant"
+path = "examples/check_assistant.rs"

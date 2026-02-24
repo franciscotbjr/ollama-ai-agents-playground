@@ -4,9 +4,8 @@ use ollama_ai_agents_playground::{
     agents::{
         Agent,
         assistant::{
-            CheckAssistantAgent, CreateAssistantAgent, build_assistant_name,
-            check_assistant_agent::CheckParam,
-            create_assistant_agent::CreateParam,
+            CheckAssistantAgent, CheckParam, CreateAssistantAgent, CreateParam,
+            build_assistant_name,
         },
         classifier::{IntentClassifierAgent, IntentParam},
     },

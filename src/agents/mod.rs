@@ -1,5 +1,8 @@
 pub mod agent;
+pub mod agent_error;
+pub mod agent_param;
 pub mod agent_prompt;
+pub mod agent_prompt_builder;
 pub mod agent_result;
 pub mod assistant;
 pub mod classifier;
@@ -7,8 +10,11 @@ pub mod contact;
 pub mod email;
 pub mod intent;
 
-pub use agent::{Agent, AgentError};
-pub use agent_prompt::{AgentPrompt, AgentPromptBuilder};
+pub use agent::Agent;
+pub use agent_error::AgentError;
+pub use agent_param::AgentParam;
+pub use agent_prompt::AgentPrompt;
+pub use agent_prompt_builder::AgentPromptBuilder;
 pub use agent_result::AgentResult;
 pub use classifier::ClassificationResult;
 pub use intent::Intent;
